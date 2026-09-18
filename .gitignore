@@ -1,0 +1,42 @@
+# Secrets and local deployment overrides
+.env
+.env.*
+!.env.example
+deploy/.env
+deploy/secrets/
+*.pem
+*.key
+*.p12
+*.jks
+
+# IDE and OS metadata
+.idea/
+.vscode/
+.run/
+.DS_Store
+Thumbs.db
+
+# Java
+backend/target/
+backend/data/
+*.log
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.cache/
+frontend/.npm-cache/
+
+# Python
+markitdown-worker/.venv/
+markitdown-worker/dist/
+markitdown-worker/.pytest_cache/
+markitdown-worker/.mypy_cache/
+markitdown-worker/.ruff_cache/
+**/__pycache__/
+*.py[cod]
+
+# Local data and backups
+data/
+backups/
+*.sql.gz

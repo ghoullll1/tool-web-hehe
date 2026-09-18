@@ -1,0 +1,126 @@
+services:
+  mysql:
+    image: ${MYSQL_IMAGE:-mysql:8.4}
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-tool_web}
+      MYSQL_USER: ${MYSQL_USER:-tool_web}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?MYSQL_PASSWORD is required}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required}
+      TZ: ${TZ:-Asia/Shanghai}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+  rustfs:
+    image: ${RUSTFS_IMAGE:-rustfs/rustfs:latest}
+    restart: unless-stopped
+    command: ["/data"]
+    environment:
+      RUSTFS_ACCESS_KEY: ${RUSTFS_ACCESS_KEY:?RUSTFS_ACCESS_KEY is required}
+      RUSTFS_SECRET_KEY: ${RUSTFS_SECRET_KEY:?RUSTFS_SECRET_KEY is required}
+      RUSTFS_ADDRESS: ":9000"
+      RUSTFS_CONSOLE_ADDRESS: ":9001"
+      RUSTFS_CONSOLE_ENABLE: "true"
+      RUSTFS_OBS_LOGGER_LEVEL: error
+      RUSTFS_OBS_LOG_DIRECTORY: /var/log/rustfs/
+    volumes:
+      - rustfs-data:/data
+    expose:
+      - "9000"
+    ports:
+      - "127.0.0.1:${RUSTFS_CONSOLE_PORT:-9001}:9001"
+
+  markitdown-worker:
+    build:
+      context: ../markitdown-worker
+      args:
+        INSTALL_MARKITDOWN: "true"
+    restart: unless-stopped
+    environment:
+      MARKITDOWN_WORKER_ENVIRONMENT: production
+      MARKITDOWN_WORKER_API_TOKEN: ${DOCUMENT_CONVERSION_WORKER_TOKEN:?DOCUMENT_CONVERSION_WORKER_TOKEN is required}
+      MARKITDOWN_WORKER_TEMP_DIRECTORY: /run/markitdown-worker
+      MARKITDOWN_WORKER_MAX_UPLOAD_BYTES: ${MARKITDOWN_WORKER_MAX_UPLOAD_BYTES:-10485760}
+      MARKITDOWN_WORKER_MAX_OUTPUT_CHARACTERS: ${MARKITDOWN_WORKER_MAX_OUTPUT_CHARACTERS:-16777216}
+      MARKITDOWN_WORKER_MAX_CONCURRENT_CONVERSIONS: ${MARKITDOWN_WORKER_MAX_CONCURRENT_CONVERSIONS:-2}
+      MARKITDOWN_WORKER_QUEUE_TIMEOUT_SECONDS: ${MARKITDOWN_WORKER_QUEUE_TIMEOUT_SECONDS:-5}
+      MARKITDOWN_WORKER_CONVERSION_TIMEOUT_SECONDS: ${MARKITDOWN_WORKER_CONVERSION_TIMEOUT_SECONDS:-120}
+      MARKITDOWN_WORKER_ALLOWED_EXTENSIONS: ${MARKITDOWN_WORKER_ALLOWED_EXTENSIONS:-pdf,docx,pptx,xlsx,xls,html,htm,csv,json,xml,txt,md,rtf,eml,msg}
+    expose:
+      - "8091"
+    security_opt:
+      - no-new-privileges:true
+
+  backend:
+    build:
+      context: ../backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rustfs:
+        condition: service_started
+      markitdown-worker:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SERVER_PORT: "8080"
+      DB_URL: "jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-tool_web}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&sslMode=DISABLED&allowPublicKeyRetrieval=true"
+      DB_USERNAME: ${MYSQL_USER:-tool_web}
+      DB_PASSWORD: ${MYSQL_PASSWORD:?MYSQL_PASSWORD is required}
+      DB_POOL_MAX_SIZE: ${DB_POOL_MAX_SIZE:-10}
+      DB_POOL_MIN_IDLE: ${DB_POOL_MIN_IDLE:-2}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:?ADMIN_USERNAME is required}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?ADMIN_PASSWORD is required}
+      CORS_ALLOWED_ORIGINS: ${PUBLIC_ORIGIN:?PUBLIC_ORIGIN is required}
+      HTTP_DIAGNOSTICS_ALLOW_PRIVATE_TARGETS: "false"
+      HTTP_DIAGNOSTICS_ALLOWED_PORTS: ${HTTP_DIAGNOSTICS_ALLOWED_PORTS:-80,443}
+      TEMPORARY_FILE_SHARE_STORAGE_PROVIDER: rustfs
+      TEMPORARY_FILE_SHARE_MAX_FILE_SIZE: ${TEMPORARY_FILE_SHARE_MAX_FILE_SIZE:-30MB}
+      TEMPORARY_FILE_SHARE_MAX_REQUEST_SIZE: ${TEMPORARY_FILE_SHARE_MAX_REQUEST_SIZE:-31MB}
+      TEMPORARY_FILE_SHARE_MAX_STORED_BYTES: ${TEMPORARY_FILE_SHARE_MAX_STORED_BYTES:-1GB}
+      OBJECT_STORAGE_ENDPOINT: http://rustfs:9000
+      OBJECT_STORAGE_REGION: ${OBJECT_STORAGE_REGION:-us-east-1}
+      OBJECT_STORAGE_BUCKET: ${OBJECT_STORAGE_BUCKET:-temp-files}
+      OBJECT_STORAGE_BASE_PREFIX: ${OBJECT_STORAGE_BASE_PREFIX:-tool-web/}
+      OBJECT_STORAGE_ACCESS_KEY: ${OBJECT_STORAGE_ACCESS_KEY:?OBJECT_STORAGE_ACCESS_KEY is required}
+      OBJECT_STORAGE_SECRET_KEY: ${OBJECT_STORAGE_SECRET_KEY:?OBJECT_STORAGE_SECRET_KEY is required}
+      OBJECT_STORAGE_PATH_STYLE_ACCESS: "true"
+      DOCUMENT_CONVERSION_WORKER_BASE_URL: http://markitdown-worker:8091
+      DOCUMENT_CONVERSION_WORKER_TOKEN: ${DOCUMENT_CONVERSION_WORKER_TOKEN:?DOCUMENT_CONVERSION_WORKER_TOKEN is required}
+      DOCUMENT_CONVERSION_MAX_CONCURRENT: ${DOCUMENT_CONVERSION_MAX_CONCURRENT:-4}
+    expose:
+      - "8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:8080/actuator/health/readiness"]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+      start_period: 45s
+    security_opt:
+      - no-new-privileges:true
+
+  frontend:
+    build:
+      context: ../frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "${WEB_BIND_ADDRESS:-127.0.0.1}:${WEB_PORT:-8088}:8080"
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  mysql-data:
+  rustfs-data:

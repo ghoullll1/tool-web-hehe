@@ -1,0 +1,108 @@
+.ts-date-input>label{font-size:var(--tool-font-secondary);color:var(--tool-text-secondary);font-weight:750}
+.dt-field{display:flex;align-items:center;gap:4px;padding-right:5px;border:1px solid #d7e0d3;border-radius:11px;background:#fafcf8;transition:border-color .18s,box-shadow .18s,background .18s}
+.dt-field:hover{border-color:#a2b895;background:#fff}
+.dt-field:focus-within,.dt-field.is-open{border-color:#729465;background:#fff;box-shadow:0 0 0 4px #72946518,0 5px 15px #3459310a}
+.ts-date-input .dt-field input{width:100%;height:44px;border:0;background:none;box-shadow:none;outline:none}
+.ts-date-input .dt-field input:focus{background:none;box-shadow:none;outline:none}
+.ts-date-input .dt-field input[readonly]{cursor:pointer}
+.dt-field button{display:grid;place-items:center;flex-shrink:0;width:36px;height:36px;padding:8px;border:0;border-radius:8px;background:#edf4e7;color:#406437;transition:background .18s,transform .18s}
+.dt-field button:hover{background:#dfecd5;transform:translateY(-1px)}
+.dt-field svg{width:20px;height:20px}
+.dt-dialog{box-sizing:border-box;width:min(700px,calc(100vw - 32px));max-width:none;max-height:calc(100dvh - 32px);margin:auto;padding:0;overflow:auto;overscroll-behavior:contain;border:1px solid #d5e0cf;border-radius:22px;background:#fff;color:#233c2d;box-shadow:0 30px 100px #13362333;font-size:var(--tool-font-body);line-height:1.6;scrollbar-width:thin;animation:dt-open .22s cubic-bezier(.16,1,.3,1)}
+.dt-dialog::backdrop{background:#112d2360;backdrop-filter:blur(5px);animation:dt-backdrop .2s ease-out}
+.dt-dialog *{box-sizing:border-box}
+.dt-dialog button,.dt-dialog input{font-family:inherit;font-size:var(--tool-font-secondary)}
+.dt-dialog button{cursor:pointer;transition:background .16s,border-color .16s,transform .16s,box-shadow .16s}
+.dt-dialog button:active:not(:disabled){transform:scale(.96)}
+.dt-dialog button:disabled{opacity:.45;cursor:not-allowed}
+.dt-dialog button:focus-visible,.dt-dialog input:focus-visible{outline:3px solid #6a945555;outline-offset:2px}
+.dt-dialog-header{display:flex;align-items:center;gap:12px;padding:22px 24px;border-bottom:1px solid #e3eadd}
+.dt-heading-icon{display:grid;place-items:center;width:44px;height:44px;border-radius:13px;background:#edf4e5;color:#426c33}
+.dt-heading-icon svg{width:25px;height:25px}
+.dt-dialog-header h3{margin:0;font-size:20px;line-height:1.4}
+.dt-dialog-header p{margin:3px 0 0;color:var(--tool-text-secondary);font-size:var(--tool-font-secondary);overflow-wrap:anywhere}
+.dt-dialog-header>.dt-icon-button{margin-left:auto;flex-shrink:0}
+.dt-icon-button{display:grid;place-items:center;width:36px;height:36px;padding:8px;border:1px solid transparent;border-radius:10px;background:transparent;color:#52674d}
+.dt-icon-button svg{width:20px;height:20px}
+.dt-icon-button:hover{background:#eef4e8;border-color:#d4e2ca}
+.dt-dialog-body{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}
+.dt-calendar{min-width:0;padding:20px 24px 14px}
+.dt-month-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:16px}
+.dt-month-title{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:0;padding:5px 8px;border:0;border-radius:8px;background:transparent;color:#233c2d;font-size:18px!important;font-weight:750;line-height:1.4}
+.dt-month-title:hover{background:#f0f5eb}
+.dt-month-title span{white-space:nowrap}
+.dt-month-title svg{display:block;flex:0 0 16px;width:16px;height:16px;color:#738b68;transition:transform .18s}
+.dt-month-title[aria-expanded=true] svg{transform:rotate(180deg)}
+.dt-calendar-page{animation:dt-calendar-in .18s ease-out}
+.dt-weekdays,.dt-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.dt-weekdays{margin-bottom:8px;color:var(--tool-text-secondary);font-size:14px;text-align:center}
+.dt-days button{position:relative;display:grid;place-items:center;min-width:0;height:36px;padding:0;border:1px solid transparent;border-radius:10px;background:transparent;color:#2d4436;font:600 16px ui-monospace,SFMono-Regular,Consolas,monospace}
+.dt-days button:hover{background:#edf4e6;border-color:#d0e1c3;transform:translateY(-1px)}
+.dt-days button.is-outside{color:#7b8776;font-weight:400}
+.dt-days button[aria-pressed=true]{border-color:#1b4936;background:#1b4936;color:#efffdc;box-shadow:0 3px 9px #1b49362a}
+.dt-days button i{position:absolute;bottom:3px;width:4px;height:4px;border-radius:50%;background:#7eae50}
+.dt-days button[aria-pressed=true] i{background:#bafa65}
+.dt-calendar-footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid #e6ecdf;font-size:14px}
+.dt-calendar-footer span{display:flex;align-items:center;gap:7px;color:var(--tool-text-secondary)}
+.dt-calendar-footer i{width:6px;height:6px;border-radius:50%;background:#7eae50}
+.dt-calendar-footer button{padding:3px 8px;border:0;border-radius:6px;background:transparent;color:#476d36;font-weight:700}
+.dt-calendar-footer button:hover{background:#eef4e8}
+.dt-month-picker{min-height:266px;animation:dt-calendar-in .18s ease-out}
+.dt-month-picker>p{margin:0 0 14px;color:var(--tool-text-secondary);font-size:14px}
+.dt-month-picker>div{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.dt-month-picker button{height:41px;border:1px solid #e0e8da;border-radius:9px;background:#fff;color:#3b5831}
+.dt-month-picker button:hover,.dt-month-picker button[aria-pressed=true]{background:#edf5e4;border-color:#aac197}
+.dt-year-picker{min-height:266px;animation:dt-calendar-in .18s ease-out}
+.dt-year-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.dt-year-grid button{min-width:0;height:40px;padding:0 2px;border:1px solid transparent;border-radius:8px;background:#fff;color:#35532d;white-space:nowrap;font-size:16px}
+.dt-year-grid button:hover{background:#eff5e9;border-color:#d4e4c7}
+.dt-year-grid button[aria-pressed=true]{background:#1b4936;color:#fff;border-color:#1b4936;font-weight:700}
+.dt-year-jumps{display:flex;justify-content:space-between;gap:12px;margin-top:12px}
+.dt-year-jumps button{padding:4px 8px;border:1px solid #d7e3ce;border-radius:7px;background:#f3f8ed;color:#486b38;font-size:14px}
+.dt-time-panel{min-width:0;padding:23px 22px;background:#f5f8f0;border-left:1px solid #e4ebde}
+.dt-time-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:20px}
+.dt-time-heading h4{margin:0;font-size:18px}
+.dt-time-heading>span{font-size:14px;color:var(--tool-text-secondary)}
+.dt-time-wheels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.dt-wheel{min-width:0}
+.dt-wheel>span{display:block;margin-bottom:9px;text-align:center;color:var(--tool-text-secondary);font-size:14px}
+.dt-wheel-shell{position:relative;border:1px solid #dbe5d3;border-radius:12px;background:#fff;transition:border-color .18s,box-shadow .18s}
+.dt-wheel-shell:focus-within{border-color:#83a06e;box-shadow:0 0 0 3px #83a06e22}
+.dt-wheel-scroll{position:relative;z-index:1;height:180px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scroll-snap-type:y mandatory;scrollbar-width:none;outline:none;cursor:grab;user-select:none;touch-action:pan-y;mask-image:linear-gradient(transparent,#000 25%,#000 75%,transparent)}
+.dt-wheel-scroll[data-dragging=true]{scroll-snap-type:none;cursor:grabbing}
+.dt-wheel-scroll button{cursor:inherit}
+.dt-wheel-scroll::-webkit-scrollbar{display:none}
+.dt-wheel-track{position:relative;width:100%}
+.dt-wheel-track button{position:absolute;left:0;width:100%;height:36px;padding:0;border:0;background:transparent;color:#788671;font:500 16px/36px ui-monospace,SFMono-Regular,Consolas,monospace;text-align:center;scroll-snap-align:center;white-space:nowrap}
+.dt-wheel-track button:hover{color:#24462f}
+.dt-wheel-track button[aria-selected=true]{color:#23452e;font-size:20px;font-weight:800}
+.dt-wheel-selection{position:absolute;top:calc(50% - 18px);left:3px;right:3px;height:36px;pointer-events:none;border:1px solid #c7dab7;border-radius:8px;background:#eaf3e1}
+.dt-millisecond-field{display:grid;gap:7px;margin-top:14px}
+.dt-millisecond-field>label{display:flex;align-items:center;justify-content:space-between;color:var(--tool-text-secondary);font-size:14px}
+.dt-millisecond-field>div{position:relative}
+.dt-millisecond-field input{width:100%;height:42px;padding:7px 45px 7px 14px;border:1px solid #d3dfc9;border-radius:10px;background:#fff;color:#214530;font:650 20px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;transition:border-color .18s,box-shadow .18s}
+.dt-millisecond-field input:focus{border-color:#83a06e;box-shadow:0 0 0 3px #83a06e22}
+.dt-millisecond-field input[aria-invalid=true]{border-color:#bd765f;background:#fff8f4}
+.dt-millisecond-field>div>span{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--tool-text-secondary);font-size:14px;pointer-events:none}
+.dt-time-shortcuts{display:flex;gap:8px;margin-top:18px}
+.dt-time-shortcuts button{flex:1;min-height:36px;padding:4px 9px;white-space:nowrap;border:1px solid #cfdfc2;border-radius:8px;background:#edf4e5;color:#426732;font-weight:700}
+.dt-time-shortcuts button:hover{background:#e1edda;border-color:#a8c094}
+.dt-time-hint{margin:16px 0 0;color:var(--tool-text-secondary);font-size:14px;line-height:1.7}
+.dt-dialog-footer{position:sticky;bottom:0;z-index:3;padding:18px 24px 22px;border-top:1px solid #e3eadd;background:#fff}
+.dt-selection{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 16px;padding-bottom:17px}
+.dt-selection>span{font-size:14px;color:var(--tool-text-secondary)}
+.dt-selection output{font:600 16px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;color:#254b34}
+.dt-footer-actions{display:flex;justify-content:flex-end;gap:10px}
+.dt-footer-actions button{height:42px;padding:0 22px;border:1px solid #d5e0cc;border-radius:10px;background:#fff;color:#52674a;font-weight:700}
+.dt-footer-actions button:hover{background:#f4f8ef}
+.dt-footer-actions button.dt-apply{display:flex;align-items:center;gap:18px;border-color:#1b4936;background:#1b4936;color:#fff}
+.dt-footer-actions button.dt-apply:hover{background:#285d44;box-shadow:0 4px 12px #1b493628}
+.dt-apply span{font-size:20px;color:#b6ee73}
+.dt-picker-error,.dt-picker-warning{margin:0 0 14px;padding:9px 12px;border-radius:8px;font-size:14px;line-height:1.6}
+.dt-picker-error{background:#fff0e9;color:#9a452b}.dt-picker-warning{background:#fff7df;color:#82601c}
+@keyframes dt-open{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes dt-backdrop{from{opacity:0}to{opacity:1}}
+@keyframes dt-calendar-in{from{opacity:.3;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media(max-width:600px){.dt-dialog{width:calc(100vw - 24px);max-height:calc(100dvh - 24px);border-radius:18px}.dt-dialog-header{padding:16px}.dt-dialog-body{grid-template-columns:minmax(0,1fr)}.dt-calendar{padding:16px}.dt-days button{height:38px}.dt-time-panel{padding:18px 16px;border-left:0;border-top:1px solid #e4ebde}.dt-time-heading{margin-bottom:12px}.dt-time-shortcuts{margin-top:12px}.dt-time-hint{display:none}.dt-dialog-footer{padding:16px}.dt-selection{justify-content:flex-start}.dt-footer-actions button{flex:1;justify-content:center}}
+@media(prefers-reduced-motion:reduce){.dt-dialog,.dt-dialog::backdrop,.dt-dialog *,.dt-field,.dt-field *{animation:none!important;transition:none!important}}
+@media(max-width:600px){.dt-dialog-header{position:sticky;top:0;z-index:3;background:#fff}.dt-dialog-footer{position:sticky;bottom:0;z-index:3;background:#fff;box-shadow:0 -8px 20px #26442d08}}

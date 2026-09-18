@@ -1,0 +1,9 @@
+node_modules
+dist
+.cache
+.npm-cache
+.git
+.idea
+*.log
+.env
+.env.*

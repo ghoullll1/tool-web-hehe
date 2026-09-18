@@ -1,0 +1,54 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tool-web-markitdown-worker"
+version = "0.1.0"
+description = "Internal FastAPI worker that exposes bounded MarkItDown document conversion."
+readme = "README.md"
+requires-python = ">=3.11,<3.15"
+dependencies = [
+  "fastapi==0.141.1",
+  "uvicorn[standard]==0.53.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "httpx==0.28.1",
+  "mypy==1.20.2",
+  "pytest==9.1.1",
+  "pytest-asyncio==1.4.0",
+  "ruff==0.16.7",
+]
+# Declared for the later server build only. It is intentionally not installed in
+# the current workspace. Keep the version pinned so deployments are reproducible.
+markitdown = [
+  "markitdown[pdf,docx,pptx,xlsx,xls,outlook]==0.1.7",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/markitdown_worker"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "ASYNC", "S", "RUF"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+packages = ["markitdown_worker"]
+
+[[tool.mypy.overrides]]
+module = "markitdown"
+ignore_missing_imports = true

@@ -1,0 +1,111 @@
+spring:
+  application:
+    name: tool-platform-api
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+  mvc:
+    problemdetails:
+      enabled: true
+  servlet:
+    multipart:
+      max-file-size: ${TEMPORARY_FILE_SHARE_MAX_FILE_SIZE:30MB}
+      max-request-size: ${TEMPORARY_FILE_SHARE_MAX_REQUEST_SIZE:31MB}
+  datasource:
+    url: ${DB_URL:jdbc:mysql://127.0.0.1:3306/tool_web?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&sslMode=DISABLED&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:tool_web}
+    password: ${DB_PASSWORD:}
+    hikari:
+      connection-timeout: 5000
+      validation-timeout: 3000
+      maximum-pool-size: ${DB_POOL_MAX_SIZE:10}
+      minimum-idle: ${DB_POOL_MIN_IDLE:2}
+      max-lifetime: 1700000
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 13
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    banner: false
+
+server:
+  port: ${SERVER_PORT:8090}
+  shutdown: graceful
+  forward-headers-strategy: framework
+  compression:
+    enabled: true
+  error:
+    include-message: never
+    include-stacktrace: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never
+  observations:
+    annotations:
+      enabled: true
+
+logging:
+  pattern:
+    level: "%5p [requestId:%X{requestId:-}]"
+
+tool-platform:
+  security:
+    admin-username: ${ADMIN_USERNAME:admin}
+    admin-password: ${ADMIN_PASSWORD:dev-only-change-me}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://127.0.0.1:5173}
+  http-diagnostics:
+    connect-timeout: ${HTTP_DIAGNOSTICS_CONNECT_TIMEOUT:4s}
+    response-timeout: ${HTTP_DIAGNOSTICS_RESPONSE_TIMEOUT:12s}
+    max-redirects: ${HTTP_DIAGNOSTICS_MAX_REDIRECTS:6}
+    max-response-headers: ${HTTP_DIAGNOSTICS_MAX_RESPONSE_HEADERS:128}
+    max-header-value-length: ${HTTP_DIAGNOSTICS_MAX_HEADER_VALUE_LENGTH:4096}
+    max-concurrent-requests: ${HTTP_DIAGNOSTICS_MAX_CONCURRENT_REQUESTS:16}
+    allow-private-targets: ${HTTP_DIAGNOSTICS_ALLOW_PRIVATE_TARGETS:false}
+    trusted-private-hosts: ${HTTP_DIAGNOSTICS_TRUSTED_PRIVATE_HOSTS:}
+    allowed-ports: ${HTTP_DIAGNOSTICS_ALLOWED_PORTS:80,443}
+  temporary-file-share:
+    storage-provider: ${TEMPORARY_FILE_SHARE_STORAGE_PROVIDER:filesystem}
+    storage-root: ${TEMPORARY_FILE_SHARE_STORAGE_ROOT:./data/temporary-file-shares}
+    max-file-size: ${TEMPORARY_FILE_SHARE_MAX_FILE_SIZE:30MB}
+    max-stored-bytes: ${TEMPORARY_FILE_SHARE_MAX_STORED_BYTES:1GB}
+    expires-after: 5m
+    max-downloads: 1
+    max-concurrent-uploads: ${TEMPORARY_FILE_SHARE_MAX_CONCURRENT_UPLOADS:8}
+    cleanup-interval: ${TEMPORARY_FILE_SHARE_CLEANUP_INTERVAL:30s}
+    cleanup-grace: ${TEMPORARY_FILE_SHARE_CLEANUP_GRACE:2m}
+    cleanup-batch-size: ${TEMPORARY_FILE_SHARE_CLEANUP_BATCH_SIZE:100}
+  object-storage:
+    endpoint: ${OBJECT_STORAGE_ENDPOINT:http://127.0.0.1:9000}
+    region: ${OBJECT_STORAGE_REGION:us-east-1}
+    bucket: ${OBJECT_STORAGE_BUCKET:temp-files}
+    base-prefix: ${OBJECT_STORAGE_BASE_PREFIX:tool-web/}
+    access-key: ${OBJECT_STORAGE_ACCESS_KEY:}
+    secret-key: ${OBJECT_STORAGE_SECRET_KEY:}
+    path-style-access: ${OBJECT_STORAGE_PATH_STYLE_ACCESS:true}
+    connect-timeout: ${OBJECT_STORAGE_CONNECT_TIMEOUT:3s}
+    socket-timeout: ${OBJECT_STORAGE_SOCKET_TIMEOUT:30s}
+    api-call-timeout: ${OBJECT_STORAGE_API_CALL_TIMEOUT:40s}
+    connection-acquire-timeout: ${OBJECT_STORAGE_CONNECTION_ACQUIRE_TIMEOUT:5s}
+    max-connections: ${OBJECT_STORAGE_MAX_CONNECTIONS:32}
+  document-conversion:
+    worker-base-url: ${DOCUMENT_CONVERSION_WORKER_BASE_URL:http://127.0.0.1:8091}
+    worker-token: ${DOCUMENT_CONVERSION_WORKER_TOKEN:}
+    max-file-size: 10MB
+    max-response-size: ${DOCUMENT_CONVERSION_MAX_RESPONSE_SIZE:68MB}
+    connect-timeout: ${DOCUMENT_CONVERSION_CONNECT_TIMEOUT:3s}
+    response-timeout: ${DOCUMENT_CONVERSION_RESPONSE_TIMEOUT:130s}
+    max-concurrent-conversions: ${DOCUMENT_CONVERSION_MAX_CONCURRENT:4}

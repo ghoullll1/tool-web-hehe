@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toolweb.platform.tool.catalog.dao.ToolDefinitionMapper">
+
+    <sql id="toolDefinitionColumns">
+        id, slug, display_name, description, category_code, icon_key, route_path,
+        execution_mode, frontend_key, backend_key, enabled, sort_order, usage_count, version,
+        created_at, updated_at
+    </sql>
+
+    <select id="selectPublished" resultType="com.toolweb.platform.tool.catalog.entity.ToolDefinition">
+        SELECT <include refid="toolDefinitionColumns"/>
+        FROM tool_definition
+        WHERE enabled = TRUE
+        ORDER BY category_code, sort_order, display_name
+    </select>
+
+    <select id="selectAllOrdered" resultType="com.toolweb.platform.tool.catalog.entity.ToolDefinition">
+        SELECT <include refid="toolDefinitionColumns"/>
+        FROM tool_definition
+        ORDER BY category_code, sort_order, display_name
+    </select>
+
+    <select id="selectBySlug" resultType="com.toolweb.platform.tool.catalog.entity.ToolDefinition">
+        SELECT <include refid="toolDefinitionColumns"/>
+        FROM tool_definition
+        WHERE slug = #{slug}
+    </select>
+
+    <select id="selectPublishedBySlug" resultType="com.toolweb.platform.tool.catalog.entity.ToolDefinition">
+        SELECT <include refid="toolDefinitionColumns"/>
+        FROM tool_definition
+        WHERE slug = #{slug}
+          AND enabled = TRUE
+    </select>
+
+    <update id="incrementPublishedUsage">
+        UPDATE tool_definition
+        SET usage_count = usage_count + 1
+        WHERE slug = #{slug}
+          AND enabled = TRUE
+    </update>
+
+</mapper>
