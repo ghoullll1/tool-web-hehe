@@ -1,12 +1,45 @@
 # Tool Web
 
-Tool Web is a full-stack collection of browser-local and server-backed utilities. This public distribution contains the complete React frontend, Spring Boot backend, document-conversion worker, database migrations, automated tests, and a container-first deployment bundle.
+Tool Web 是一个面向开发者与日常办公场景的开源在线工具箱，集成 18 个即开即用的工具。当前有 15 个工具主要在浏览器本地处理数据；需要网络探测、临时存储或文档解析的能力由受限的后端服务完成。
+
+Tool Web is an open-source toolbox for developers and everyday productivity, with 18 ready-to-use utilities. Fifteen tools process data primarily in the browser, while network diagnostics, temporary storage, and document parsing are handled by constrained backend services.
 
 **在线体验 / Live demo:** [https://tool.hehesakura.cn/](https://tool.hehesakura.cn/)
 
 **部署文档 / Deployment:** [中文](deploy/DEPLOYMENT.zh-CN.md) · [English](deploy/DEPLOYMENT.en.md)
 
+## 网站包含的工具 / Included tools
+
+- **开发工具 / Developer tools（11）**：时间戳转换、常用端口查询、JSON 格式化、配置格式转换、JSON 对比、哈希计算、SQL 格式化、地图坐标系转换、接口测试、HTTP 响应诊断和 DNS 查询。
+- **图片工具 / Image tools（1）**：JPG、PNG、WebP 批量格式转换、压缩、缩放和透明背景处理。
+- **密码工具 / Password tools（1）**：随机密码、开发者令牌与口令短语生成，并提供强度评估和批量输出。
+- **PDF 与文档工具 / PDF and document tools（3）**：PDF 合并、PDF 与图片互转，以及 PDF、Word、PowerPoint、Excel、HTML 等文档转 Markdown。
+- **其他工具 / Other utilities（2）**：世界时间与时区换算、五分钟有效且限下载一次的临时文件分享。
+
+所有工具的详细功能、在线地址和实际页面截图见下方[工具一览](#tool-gallery)。
+
+See the [tool gallery](#tool-gallery) below for detailed capabilities, direct links, and live screenshots of every tool.
+
+## 技术架构与技术栈 / Architecture and technology stack
+
+| 层级 / Layer | 核心技术 / Core technologies | 职责 / Responsibilities |
+|---|---|---|
+| 前端 / Frontend | React 19、TypeScript 6、Vite 8、React Router 7 | 单页应用、工具注册与路由、本地数据处理、文件预览与下载。Single-page UI, tool routing, browser-local processing, file preview, and downloads. |
+| 浏览器工具库 / Browser libraries | PDF.js、pdf-lib、Noble Hashes、SQL Formatter、Lossless JSON、YAML、fflate | 在客户端完成 PDF、图片、哈希、JSON/YAML、SQL 与压缩相关处理，减少数据上传。Client-side PDF, image, hashing, structured-data, SQL, and archive processing. |
+| 后端 API / Backend API | Java 25、Spring Boot 4.1、Spring MVC、Spring Security、Validation、Actuator | 提供工具目录、受控网络诊断、临时文件分享、文档转换编排、健康检查与安全边界。Catalog APIs, controlled diagnostics, temporary sharing, conversion orchestration, health checks, and security boundaries. |
+| 数据访问 / Data access | MyBatis-Plus、Flyway、MySQL 8.4 | 保存工具目录与临时分享元数据，并通过版本化迁移初始化数据库。Tool catalog and temporary-share metadata with versioned database migrations. |
+| 文档转换 / Document conversion | Python 3.11–3.14、FastAPI、Uvicorn、MarkItDown | 在隔离 Worker 中将常见办公文档转换为 Markdown，并限制文件大小、并发量和处理时长。Isolated, bounded conversion of common office documents to Markdown. |
+| 对象存储 / Object storage | RustFS、AWS SDK for Java（S3 API） | 保存临时分享文件；生产环境使用私有 Bucket 和短生命周期访问流程。Private S3-compatible storage for short-lived shared files. |
+| 部署与入口 / Delivery | Docker Compose、Nginx、Docker | 编排 MySQL、RustFS、Worker、后端和前端；仅由 Nginx 对外提供统一入口。Container orchestration and a single public Nginx entry point. |
+| 质量保障 / Quality | Vitest、Testing Library、ESLint、JUnit、Maven、pytest、Ruff、mypy | 覆盖前后端与 Worker 的测试、静态检查和生产构建。Tests, static analysis, and production builds across all components. |
+
+整体采用“**浏览器本地优先 + 服务端能力隔离**”的架构：格式化、转换、计算等工具尽量在客户端完成；只有必须依赖服务器的功能才进入 Spring Boot API，并将文档解析进一步隔离到独立 Worker。生产部署通过私有网络连接 MySQL、RustFS 和 Worker，只公开 Nginx 前端入口。
+
+The architecture is **browser-local first with isolated server capabilities**. Formatting, conversion, and calculation stay client-side whenever possible. Server-only operations enter the Spring Boot API, while document parsing runs in a separate worker. In production, MySQL, RustFS, and the worker remain on the private network, with only the Nginx frontend exposed publicly.
+
 [![Tool Web 在线工具箱首页 / Tool Web live dashboard](docs/screenshots/home.png)](https://tool.hehesakura.cn/)
+
+<a id="tool-gallery"></a>
 
 ## 工具一览 / Tool gallery
 
