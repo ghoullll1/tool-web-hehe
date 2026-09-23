@@ -33,6 +33,7 @@ class TemporaryFileShareServiceTest {
     private TemporaryFileShareMapper mapper;
     private TemporaryObjectStore objectStore;
     private TemporaryFileShareService service;
+    private final PickupCodes codes = new PickupCodes("test-only-secret-at-least-thirty-two-bytes");
 
     @BeforeEach
     void setUp() {
@@ -43,7 +44,7 @@ class TemporaryFileShareServiceTest {
                 objectStore,
                 properties(),
                 new java.security.SecureRandom(),
-                Clock.fixed(NOW, ZoneOffset.UTC));
+                Clock.fixed(NOW, ZoneOffset.UTC), codes);
     }
 
     @Test
@@ -60,13 +61,13 @@ class TemporaryFileShareServiceTest {
         assertThat(created.originalFilename()).isEqualTo("报告.txt");
         assertThat(created.expiresAt()).isEqualTo(NOW.plus(Duration.ofMinutes(5)));
         assertThat(created.maxDownloads()).isOne();
-        assertThat(created.accessKey()).hasSize(43);
+        assertThat(created.pickupCode()).matches("[0-9]{8}");
         var persisted = org.mockito.ArgumentCaptor.forClass(TemporaryFileShare.class);
         verify(mapper).insert(persisted.capture());
-        assertThat(persisted.getValue().accessKeyDigest())
+        assertThat(persisted.getValue().pickupCodeDigest())
                 .hasSize(64)
                 .matches("[0-9a-f]{64}")
-                .isNotEqualTo(created.accessKey());
+                .isEqualTo(codes.digest(created.pickupCode()));
         assertThat(persisted.getValue().deleted()).isFalse();
         assertThat(persisted.getValue().deletedAt()).isNull();
         assertThat(persisted.getValue().objectPath()).isEqualTo(objectPath);
@@ -75,9 +76,7 @@ class TemporaryFileShareServiceTest {
     @Test
     void wrongKeyDoesNotConsumeTheShare() throws Exception {
         var share = activeShare("correct-key", NOW.plusSeconds(60));
-        when(mapper.selectForUpdate(share.shareId())).thenReturn(Optional.of(share));
-
-        assertThatThrownBy(() -> service.authorizeDownload(share.shareId(), "wrong-key"))
+        assertThatThrownBy(() -> service.authorizeDownload("87654321"))
                 .isInstanceOfSatisfying(FileShareAccessException.class,
                         exception -> assertThat(exception.reason()).isEqualTo(FileShareAccessException.Reason.INVALID));
 
@@ -86,20 +85,51 @@ class TemporaryFileShareServiceTest {
     }
 
     @Test
+    void retriesCodeCollisionsWithoutUploadingAgain() throws Exception {
+        var file = new MockMultipartFile("file", "report.txt", "text/plain", "hello".getBytes());
+        var allocator = mock(PickupCodes.class);
+        when(allocator.generate()).thenReturn("01234567", "87654321");
+        when(allocator.digest(any())).thenAnswer(call -> codes.digest(call.getArgument(0)));
+        var collisionService = new TemporaryFileShareService(mapper, objectStore, properties(),
+                new java.security.SecureRandom(), Clock.fixed(NOW, ZoneOffset.UTC), allocator);
+        when(objectStore.store(any(), org.mockito.ArgumentMatchers.eq(5L), any()))
+                .thenReturn(new TemporaryObjectStore.StoredObject("object", "path/report.txt", 5, "sha"));
+        when(mapper.insert(any(TemporaryFileShare.class)))
+                .thenThrow(new org.springframework.dao.DuplicateKeyException("collision")).thenReturn(1);
+        assertThat(collisionService.create(file).pickupCode()).isEqualTo("87654321");
+        verify(mapper, org.mockito.Mockito.times(2)).insert(any(TemporaryFileShare.class));
+        verify(objectStore).store(any(), org.mockito.ArgumentMatchers.eq(5L), any());
+        verify(objectStore, never()).delete(any());
+    }
+
+    @Test
+    void cleansTheUploadedObjectWhenCodeAllocationFails() throws Exception {
+        var file = new MockMultipartFile("file", "report.txt", "text/plain", "hello".getBytes());
+        when(objectStore.store(any(), org.mockito.ArgumentMatchers.eq(5L), any()))
+                .thenReturn(new TemporaryObjectStore.StoredObject("object", "path/report.txt", 5, "sha"));
+        when(mapper.insert(any(TemporaryFileShare.class)))
+                .thenThrow(new org.springframework.dao.DuplicateKeyException("collision"));
+        assertThatThrownBy(() -> service.create(file)).isInstanceOf(
+                com.toolweb.platform.tool.fileshare.exception.FileShareStorageException.class);
+        verify(objectStore).delete("path/report.txt");
+        verify(mapper, org.mockito.Mockito.times(16)).insert(any(TemporaryFileShare.class));
+    }
+
+    @Test
     void consumesTheOnlyDownloadAuthorizationAtomically() throws Exception {
         var share = activeShare("correct-key", NOW.plusSeconds(60));
-        when(mapper.selectForUpdate(share.shareId())).thenReturn(Optional.of(share));
+        when(mapper.selectForUpdate(codes.digest("01234567"))).thenReturn(Optional.of(share));
         when(mapper.updateById(share)).thenReturn(1);
         when(objectStore.open(share.storagePath()))
                 .thenReturn(new org.springframework.core.io.InputStreamResource(new ByteArrayInputStream("hello".getBytes())));
 
-        var grant = service.authorizeDownload(share.shareId(), "correct-key");
+        var grant = service.authorizeDownload("01234567");
 
         assertThat(grant.originalFilename()).isEqualTo("report.txt");
         assertThat(share.downloadCount()).isOne();
         assertThat(share.status()).isEqualTo(TemporaryFileShare.Status.CONSUMED);
         verify(mapper).updateById(share);
-        assertThatThrownBy(() -> service.authorizeDownload(share.shareId(), "correct-key"))
+        assertThatThrownBy(() -> service.authorizeDownload("01234567"))
                 .isInstanceOfSatisfying(FileShareAccessException.class,
                         exception -> assertThat(exception.reason()).isEqualTo(FileShareAccessException.Reason.CONSUMED));
     }
@@ -107,9 +137,9 @@ class TemporaryFileShareServiceTest {
     @Test
     void rejectsAnExpiredShareBeforeOpeningStorage() throws Exception {
         var share = activeShare("correct-key", NOW);
-        when(mapper.selectForUpdate(share.shareId())).thenReturn(Optional.of(share));
+        when(mapper.selectForUpdate(codes.digest("01234567"))).thenReturn(Optional.of(share));
 
-        assertThatThrownBy(() -> service.authorizeDownload(share.shareId(), "correct-key"))
+        assertThatThrownBy(() -> service.authorizeDownload("01234567"))
                 .isInstanceOfSatisfying(FileShareAccessException.class,
                         exception -> assertThat(exception.reason()).isEqualTo(FileShareAccessException.Reason.EXPIRED));
         verify(objectStore, never()).open(any());

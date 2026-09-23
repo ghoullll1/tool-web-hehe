@@ -1,3 +1,4 @@
+import { Icon } from "../../components/Icon"
 import { useMemo, useRef, useState, type ChangeEvent } from 'react'
 import type { ToolViewProps } from '../registry'
 import {
@@ -207,7 +208,7 @@ export default function CoordinateTool({ tool }: ToolViewProps) {
       </div>
 
       <div className={`coordinate-notice is-${activeNotice.tone}`} role={activeNotice.tone === 'error' ? 'alert' : 'status'}>
-        <span>{activeNotice.tone === 'error' ? '!' : activeNotice.tone === 'success' ? '✓' : 'i'}</span>
+        <span>{activeNotice.tone === 'error' ? <Icon name="alert" /> : activeNotice.tone === 'success' ? <Icon name="check" /> : <Icon name="info" />}</span>
         <p>{activeNotice.message}</p>
       </div>
 
@@ -261,7 +262,7 @@ export default function CoordinateTool({ tool }: ToolViewProps) {
         <div className="coordinate-batch-shell">
           <div className="coordinate-batch-route">
             <SystemCards label="转换到" value={targetSystem} onChange={(value) => { setTargetSystem(value); invalidateBatch('目标坐标系已更新，请重新转换') }} />
-            <button type="button" className="coordinate-swap" onClick={swapBatchSystems} aria-label="互换来源和目标">⇄</button>
+            <button type="button" className="coordinate-swap" onClick={swapBatchSystems} aria-label="互换来源和目标"><Icon name="swap" /></button>
           </div>
           <div className="coordinate-batch-settings">
             <Segmented label="输入顺序" value={inputOrder} options={orderOptions} onChange={chooseInputOrder} />
@@ -281,8 +282,8 @@ export default function CoordinateTool({ tool }: ToolViewProps) {
                   <div className="coordinate-batch-table-head"><span>#</span><span>名称</span><span>{getCoordinateSystem(targetSystem).label} 结果</span></div>
                   {batchRows.map((row) => <div key={`${row.line}-${row.label}`}><span>{row.line}</span><span>{row.label || '—'}</span><code>{formatCoordinate(row.target, outputOrder, precision)}</code></div>)}
                 </div>
-              ) : <div className="coordinate-empty"><span>↗</span><strong>等待批量转换</strong><p>检查来源、顺序和目标后开始转换</p></div>}
-              <footer><span>{batchRows.length.toLocaleString()} 个坐标</span><span>{getCoordinateSystem(sourceSystem).label} → {getCoordinateSystem(targetSystem).label}</span></footer>
+              ) : <div className="coordinate-empty"><span><Icon name="external" /></span><strong>等待批量转换</strong><p>检查来源、顺序和目标后开始转换</p></div>}
+              <footer><span>{batchRows.length.toLocaleString()} 个坐标</span><span>{getCoordinateSystem(sourceSystem).label} <Icon name="arrowRight" />{getCoordinateSystem(targetSystem).label}</span></footer>
             </section>
           </div>
         </div>

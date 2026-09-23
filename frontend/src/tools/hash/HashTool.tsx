@@ -1,3 +1,4 @@
+import { Icon, type IconName } from "../../components/Icon"
 import {
   useMemo,
   useRef,
@@ -186,7 +187,7 @@ export default function HashTool({ tool }: ToolViewProps) {
   return (
     <div className="hash-tool" data-tool={tool.slug}>
       <div className={`hash-notice is-${shownNotice.tone}`} role={shownNotice.tone === 'error' ? 'alert' : 'status'}>
-        <span aria-hidden="true">{shownNotice.tone === 'error' ? '!' : shownNotice.tone === 'success' ? '✓' : 'i'}</span>
+        <span aria-hidden="true">{shownNotice.tone === 'error' ? <Icon name="alert" /> : shownNotice.tone === 'success' ? <Icon name="check" /> : <Icon name="info" />}</span>
         <p>{shownNotice.message}</p>
         <b>仅在浏览器本地处理</b>
       </div>
@@ -286,7 +287,7 @@ function AlgorithmGroup({ title, ids, selectedIds, mode, legacy = false, onToggl
         {ids.map((id) => {
           const algorithm = getAlgorithm(id)
           const selected = selectedIds.includes(id)
-          return <button type="button" key={id} className={selected ? 'is-selected' : ''} aria-label={`选择算法 ${modeLabel(mode, algorithm.label)}`} aria-pressed={selected} onClick={() => onToggle(id)}><span>{selected ? '✓' : '+'}</span>{modeLabel(mode, algorithm.label)}</button>
+          return <button type="button" key={id} className={selected ? 'is-selected' : ''} aria-label={`选择算法 ${modeLabel(mode, algorithm.label)}`} aria-pressed={selected} onClick={() => onToggle(id)}><span>{selected ? <Icon name="check" /> : <Icon name="plus" />}</span>{modeLabel(mode, algorithm.label)}</button>
         })}
       </div>
     </div>
@@ -298,7 +299,7 @@ function FileInput({ file, progress, busy, fileInputRef, onChoose, onChange, onD
   return (
     <div className="hash-file-area" onDragOver={(event) => event.preventDefault()} onDrop={handleDrop}>
       <input ref={fileInputRef} type="file" hidden aria-label="选择哈希文件" onChange={onChange} />
-      <div className="hash-file-icon" aria-hidden="true">#</div>
+      <div className="hash-file-icon" aria-hidden="true"><Icon name="file" size={28} /></div>
       {file ? <><strong>{file.name}</strong><p>{formatHashBytes(file.size)} · {file.type || '未知类型'}</p></> : <><strong>拖入文件开始计算</strong><p>采用 4 MB 分块读取，不会上传文件。</p></>}
       <div className="hash-file-buttons">
         <button type="button" onClick={onChoose}>{file ? '更换文件' : '选择文件'}</button>
@@ -311,8 +312,8 @@ function FileInput({ file, progress, busy, fileInputRef, onChoose, onChange, onD
 }
 
 function TextResults({ result, error, selectedIds, uppercase, mode, onCopy }: { result: TextHashResult | null; error: string | null; selectedIds: HashAlgorithmId[]; uppercase: boolean; mode: HashMode; onCopy: (value: string, message: string) => void }) {
-  if (error) return <ResultEmpty symbol="!" title="暂时无法计算" detail={error} error />
-  if (!result) return <ResultEmpty symbol="#" title="等待输入" detail="输入文本后，结果会在这里实时更新。" />
+  if (error) return <ResultEmpty symbol="alert" title="暂时无法计算" detail={error} error />
+  if (!result) return <ResultEmpty symbol="hash" title="等待输入" detail="输入文本后，结果会在这里实时更新。" />
   return (
     <div className="hash-result-list">
       {result.rows.map((row, index) => (
@@ -329,9 +330,9 @@ function TextResults({ result, error, selectedIds, uppercase, mode, onCopy }: { 
 }
 
 function FileResults({ file, result, busy, selectedIds, uppercase, mode, onCopy }: { file: File | null; result: FileHashResult | null; busy: boolean; selectedIds: HashAlgorithmId[]; uppercase: boolean; mode: HashMode; onCopy: (value: string, message: string) => void }) {
-  if (busy) return <ResultEmpty symbol="…" title="正在分块计算" detail="大文件会逐块读取，页面仍可继续响应。" />
-  if (!file) return <ResultEmpty symbol="#" title="等待文件" detail="切换到左侧文件输入，选择或拖入一个文件。" />
-  if (!result) return <ResultEmpty symbol="↻" title="等待重新计算" detail="算法或密钥已改变，请重新计算文件。" />
+  if (busy) return <ResultEmpty symbol="refresh" title="正在分块计算" detail="大文件会逐块读取，页面仍可继续响应。" />
+  if (!file) return <ResultEmpty symbol="hash" title="等待文件" detail="切换到左侧文件输入，选择或拖入一个文件。" />
+  if (!result) return <ResultEmpty symbol="refresh" title="等待重新计算" detail="算法或密钥已改变，请重新计算文件。" />
   return <div className="hash-result-list"><article className="hash-result-group"><header><span>FILE</span><p title={file.name}>{file.name}</p></header><div>{selectedIds.map((id) => <DigestCard key={id} id={id} digest={result.digests[id]} uppercase={uppercase} mode={mode} onCopy={onCopy} />)}</div></article></div>
 }
 
@@ -347,8 +348,8 @@ function DigestCard({ id, digest, uppercase, mode, onCopy }: { id: HashAlgorithm
   )
 }
 
-function ResultEmpty({ symbol, title, detail, error = false }: { symbol: string; title: string; detail: string; error?: boolean }) {
-  return <div className={`hash-result-empty${error ? ' is-error' : ''}`}><span aria-hidden="true">{symbol}</span><strong>{title}</strong><p>{detail}</p></div>
+function ResultEmpty({ symbol, title, detail, error = false }: { symbol: IconName; title: string; detail: string; error?: boolean }) {
+  return <div className={`hash-result-empty${error ? ' is-error' : ''}`}><span aria-hidden="true"><Icon name={symbol} size={28} /></span><strong>{title}</strong><p>{detail}</p></div>
 }
 
 function modeLabel(mode: HashMode, algorithmLabel: string) {

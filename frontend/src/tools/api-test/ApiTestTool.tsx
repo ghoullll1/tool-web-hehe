@@ -1,3 +1,4 @@
+import { Icon, type IconName } from '../../components/Icon'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import type { ToolViewProps } from '../registry'
@@ -121,7 +122,7 @@ export default function ApiTestTool({ tool }: ToolViewProps) {
 
   return <div className="api-tool" data-tool={tool.slug}>
     <div className={`api-notice is-${notice.tone}`} role={notice.tone === 'error' ? 'alert' : 'status'}>
-      <span aria-hidden="true">{busy ? '↗' : notice.tone === 'success' ? '✓' : notice.tone === 'error' ? '!' : 'i'}</span>
+      <span aria-hidden="true">{busy ? <Icon name="external" /> : notice.tone === 'success' ? <Icon name="check" /> : notice.tone === 'error' ? <Icon name="alert" /> : <Icon name="info" />}</span>
       <p>{notice.message}</p><b>浏览器直连 · 不保存请求数据</b>
     </div>
 
@@ -172,8 +173,8 @@ export default function ApiTestTool({ tool }: ToolViewProps) {
           {responseTab === 'body' && response && <div className="api-response-actions"><button type="button" className={formatted ? 'is-active' : ''} onClick={() => setFormatted(true)}>格式化</button><button type="button" className={!formatted ? 'is-active' : ''} onClick={() => setFormatted(false)}>原始</button><button type="button" onClick={() => void copyResponse()}>复制</button></div>}
         </nav>
         <div className="api-response-content">
-          {busy && <ApiEmpty icon="↗" title="正在等待响应" detail="请求已发出，可以随时取消。" loading />}
-          {!busy && !response && <ApiEmpty icon="↯" title="等待发送请求" detail="响应正文、Headers 和耗时分析将在这里显示。" />}
+          {busy && <ApiEmpty icon="refresh" title="正在等待响应" detail="请求已发出，可以随时取消。" loading />}
+          {!busy && !response && <ApiEmpty icon="terminal" title="等待发送请求" detail="响应正文、Headers 和耗时分析将在这里显示。" />}
           {!busy && response && responseTab === 'body' && <ResponseBody result={response} formatted={formatted} />}
           {!busy && response && responseTab === 'headers' && <ResponseHeaders rows={response.headers} />}
           {!busy && response && responseTab === 'request' && <RequestDetails result={response} format={requestCodeFormat} onFormat={setRequestCodeFormat} onCopy={() => void copyRequestCode()} />}
@@ -212,11 +213,11 @@ function MethodPicker({ value, onChange }: { value: HttpMethod; onChange: (value
     <button type="button" className="api-method-trigger" aria-label="HTTP 请求方法" aria-haspopup="listbox" aria-expanded={open} onClick={() => setOpen((current) => !current)}>
       <span className={`method-dot is-${value.toLowerCase()}`} aria-hidden="true" />
       <strong>{value}</strong>
-      <svg viewBox="0 0 12 8" aria-hidden="true"><path d="m1.5 1.5 4.5 4 4.5-4" /></svg>
+      <Icon name="chevronDown" size={16} />
     </button>
     {open && <div className="api-method-menu" role="listbox" aria-label="HTTP 请求方法选项">
       {METHODS.map((item) => <button type="button" role="option" aria-selected={item === value} className={item === value ? 'is-selected' : ''} key={item} autoFocus={item === value} onClick={() => { onChange(item); setOpen(false) }}>
-        <span className={`method-dot is-${item.toLowerCase()}`} aria-hidden="true" /><strong>{item}</strong><i aria-hidden="true">✓</i>
+        <span className={`method-dot is-${item.toLowerCase()}`} aria-hidden="true" /><strong>{item}</strong><i aria-hidden="true"><Icon name="check" /></i>
       </button>)}
     </div>}
   </div>
@@ -355,7 +356,7 @@ function ParameterTypePicker({ ariaLabel, value, onChange }: { ariaLabel: string
 
   return <div className={`api-pair-type-picker${open ? ' is-open' : ''}`} onKeyDown={handleKeyboard}>
     <button ref={triggerRef} type="button" className="api-pair-type-trigger" aria-label={ariaLabel} aria-haspopup="listbox" aria-expanded={open} aria-controls={open ? listboxId : undefined} onClick={toggle}>
-      <strong>{selected?.label ?? 'String'}</strong><svg viewBox="0 0 12 8" aria-hidden="true"><path d="m1.5 1.5 4.5 4 4.5-4" /></svg>
+      <strong>{selected?.label ?? 'String'}</strong><Icon name="chevronDown" size={16} />
     </button>
     {open && createPortal(<div ref={menuRef} id={listboxId} className={`api-parameter-type-menu${position.openAbove ? ' opens-above' : ''}`} role="listbox" aria-label="Query 参数类型选项" style={{ top: position.top, left: position.left, width: position.width }} onKeyDown={handleKeyboard}>
       <span className="api-parameter-type-menu-label">VALUE TYPE</span>
@@ -368,7 +369,7 @@ function ParameterTypePicker({ ariaLabel, value, onChange }: { ariaLabel: string
 
 function AuthEditor(props: { type: AuthType; onType: (value: AuthType) => void; token: string; onToken: (value: string) => void; username: string; onUsername: (value: string) => void; password: string; onPassword: (value: string) => void; apiKeyName: string; onApiKeyName: (value: string) => void; apiKeyValue: string; onApiKeyValue: (value: string) => void; location: 'header' | 'query'; onLocation: (value: 'header' | 'query') => void }) {
   return <div className="api-auth"><label><span>认证类型</span><select aria-label="认证类型" value={props.type} onChange={(event) => props.onType(event.target.value as AuthType)}><option value="none">无认证</option><option value="bearer">Bearer Token</option><option value="basic">Basic Auth</option><option value="api-key">API Key</option></select></label>
-    {props.type === 'none' && <ApiEmpty icon="⌁" title="此请求不携带认证信息" detail="需要认证时请选择 Bearer、Basic Auth 或 API Key。" />}
+    {props.type === 'none' && <ApiEmpty icon="lock" title="此请求不携带认证信息" detail="需要认证时请选择 Bearer、Basic Auth 或 API Key。" />}
     {props.type === 'bearer' && <label><span>Token</span><input aria-label="Bearer Token" type="password" value={props.token} autoComplete="off" onChange={(event) => props.onToken(event.target.value)} /></label>}
     {props.type === 'basic' && <><label><span>用户名</span><input aria-label="Basic Auth 用户名" value={props.username} autoComplete="off" onChange={(event) => props.onUsername(event.target.value)} /></label><label><span>密码</span><input aria-label="Basic Auth 密码" type="password" value={props.password} autoComplete="off" onChange={(event) => props.onPassword(event.target.value)} /></label></>}
     {props.type === 'api-key' && <><label><span>参数名称</span><input aria-label="API Key 名称" value={props.apiKeyName} onChange={(event) => props.onApiKeyName(event.target.value)} /></label><label><span>参数值</span><input aria-label="API Key 值" type="password" value={props.apiKeyValue} autoComplete="off" onChange={(event) => props.onApiKeyValue(event.target.value)} /></label><label><span>添加到</span><select aria-label="API Key 位置" value={props.location} onChange={(event) => props.onLocation(event.target.value as 'header' | 'query')}><option value="header">Header</option><option value="query">Query</option></select></label></>}
@@ -379,8 +380,8 @@ function AuthEditor(props: { type: AuthType; onType: (value: AuthType) => void; 
 function BodyEditor({ method, type, onType, text, onText, fields, onFields }: { method: HttpMethod; type: BodyType; onType: (value: BodyType) => void; text: string; onText: (value: string) => void; fields: KeyValueRow[]; onFields: (rows: KeyValueRow[]) => void }) {
   const disabled = !BODY_METHODS.includes(method)
   return <div className="api-body"><div className="api-body-types">{BODY_TYPES.map((item) => <button type="button" key={item.id} disabled={disabled && item.id !== 'none'} className={type === item.id ? 'is-active' : ''} onClick={() => onType(item.id)}>{item.label}</button>)}</div>
-    {disabled && <ApiEmpty icon="∅" title={`${method} 请求不发送 Body`} detail="切换到 POST、PUT、PATCH 或 DELETE 后可以配置请求体。" />}
-    {!disabled && type === 'none' && <ApiEmpty icon="∅" title="请求不包含 Body" detail="可选择 JSON、Text 或表单格式。" />}
+    {disabled && <ApiEmpty icon="file" title={`${method} 请求不发送 Body`} detail="切换到 POST、PUT、PATCH 或 DELETE 后可以配置请求体。" />}
+    {!disabled && type === 'none' && <ApiEmpty icon="file" title="请求不包含 Body" detail="可选择 JSON、Text 或表单格式。" />}
     {!disabled && (type === 'json' || type === 'text') && <textarea aria-label={`${type === 'json' ? 'JSON' : 'Text'} Body`} value={text} spellCheck={false} placeholder={type === 'json' ? '{\n  "key": "value"\n}' : '输入文本请求体'} onChange={(event) => onText(event.target.value)} />}
     {!disabled && (type === 'form-urlencoded' || type === 'form-data') && <PairEditor title={type === 'form-data' ? 'Form Data' : '表单参数'} rows={fields} onChange={onFields} keyPlaceholder="字段名" />}
   </div>
@@ -388,7 +389,7 @@ function BodyEditor({ method, type, onType, text, onText, fields, onFields }: { 
 
 function ResponseBadge({ result }: { result: ApiResponseResult }) { return <div className={`api-response-badge is-${result.ok ? 'success' : 'error'}`}><b>{result.status}</b><span>{result.totalMs.toFixed(0)} ms</span><span>{formatByteSize(result.sizeBytes)}</span></div> }
 function ResponseBody({ result, formatted }: { result: ApiResponseResult; formatted: boolean }) { return <div className="api-body-view">{result.truncated && <p role="alert">响应超过 5 MB，仅展示前 5 MB。</p>}<pre><code>{(formatted ? result.formattedBody : result.rawBody) || '（响应正文为空）'}</code></pre></div> }
-function ResponseHeaders({ rows }: { rows: KeyValueRow[] }) { return <div className="api-response-headers">{rows.length ? rows.map((row) => <div key={row.id}><b>{row.key}</b><code>{row.value}</code></div>) : <ApiEmpty icon="∅" title="没有可读取的响应 Header" detail="浏览器仅暴露 CORS 允许读取的响应头。" />}</div> }
+function ResponseHeaders({ rows }: { rows: KeyValueRow[] }) { return <div className="api-response-headers">{rows.length ? rows.map((row) => <div key={row.id}><b>{row.key}</b><code>{row.value}</code></div>) : <ApiEmpty icon="file" title="没有可读取的响应 Header" detail="浏览器仅暴露 CORS 允许读取的响应头。" />}</div> }
 function RequestDetails({ result, format, onFormat, onCopy }: { result: ApiResponseResult; format: RequestCodeFormat; onFormat: (value: RequestCodeFormat) => void; onCopy: () => void }) {
   const parameters = [...new URL(result.request.url).searchParams.entries()]
   return <div className="api-request-details">
@@ -402,4 +403,4 @@ function TimingPanel({ result }: { result: ApiResponseResult }) {
   const headerRatio = result.totalMs ? result.timeToHeadersMs / result.totalMs * 100 : 0
   return <div className="api-timing"><div className="api-stat-grid"><article><span>总耗时</span><strong>{result.totalMs.toFixed(1)}<small>ms</small></strong></article><article><span>等待响应</span><strong>{result.timeToHeadersMs.toFixed(1)}<small>ms</small></strong></article><article><span>下载正文</span><strong>{result.downloadMs.toFixed(1)}<small>ms</small></strong></article><article><span>响应大小</span><strong>{formatByteSize(result.sizeBytes)}</strong></article></div><div className="api-timing-bar"><i style={{ width: `${headerRatio}%` }} /><b style={{ width: `${100 - headerRatio}%` }} /></div><div className="api-timing-legend"><span><i />等待响应头</span><span><i />下载正文</span></div><dl><div><dt>开始时间</dt><dd>{result.startedAt.toLocaleTimeString()}</dd></div><div><dt>最终地址</dt><dd title={result.url}>{result.url}</dd></div><div><dt>Content-Type</dt><dd>{result.contentType || '未提供'}</dd></div></dl><p className="api-hint">浏览器直连仅能可靠统计等待响应头、正文下载和总耗时，不虚构 DNS、TCP 或 TLS 阶段数据。</p></div>
 }
-function ApiEmpty({ icon, title, detail, loading = false }: { icon: string; title: string; detail: string; loading?: boolean }) { return <div className={`api-empty${loading ? ' is-loading' : ''}`}><span aria-hidden="true">{icon}</span><strong>{title}</strong><p>{detail}</p></div> }
+function ApiEmpty({ icon, title, detail, loading = false }: { icon: IconName; title: string; detail: string; loading?: boolean }) { return <div className={`api-empty${loading ? ' is-loading' : ''}`}><span aria-hidden="true"><Icon name={icon} size={28} /></span><strong>{title}</strong><p>{detail}</p></div> }

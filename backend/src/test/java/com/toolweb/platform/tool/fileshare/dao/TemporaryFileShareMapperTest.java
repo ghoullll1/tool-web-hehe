@@ -44,6 +44,7 @@ class TemporaryFileShareMapperTest {
                 .containsIgnoringCase("id, share_id")
                 .containsIgnoringCase("object_key, object_path, original_filename")
                 .containsIgnoringCase("deleted = FALSE")
+                .containsIgnoringCase("WHERE pickup_code_digest = #{pickupCodeDigest}")
                 .containsIgnoringCase("FOR UPDATE");
         assertThat(sql)
                 .containsIgnoringCase("deleted = TRUE")
@@ -64,6 +65,17 @@ class TemporaryFileShareMapperTest {
                 .containsIgnoringCase("ADD COLUMN id BIGINT NOT NULL AUTO_INCREMENT FIRST")
                 .containsIgnoringCase("ADD PRIMARY KEY (id)")
                 .containsIgnoringCase("UNIQUE (share_id)");
+    }
+
+    @Test
+    void addsUniqueNullableDigestWithoutDeletingHistory() throws Exception {
+        try (var input = new ClassPathResource("db/migration/V29__add_temporary_file_pickup_code.sql").getInputStream()) {
+            assertThat(new String(input.readAllBytes(), StandardCharsets.UTF_8))
+                    .containsIgnoringCase("pickup_code_digest CHAR(64) NULL")
+                    .containsIgnoringCase("UNIQUE (pickup_code_digest)")
+                    .doesNotContainIgnoringCase("DROP ")
+                    .doesNotContainIgnoringCase("DELETE FROM");
+        }
     }
 
     @Test

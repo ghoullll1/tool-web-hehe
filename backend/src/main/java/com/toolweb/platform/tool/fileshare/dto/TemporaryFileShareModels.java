@@ -10,8 +10,7 @@ public final class TemporaryFileShareModels {
     }
 
     public record CreatedShare(
-            String shareId,
-            String accessKey,
+            String pickupCode,
             String originalFilename,
             long sizeBytes,
             String sha256,
@@ -19,6 +18,9 @@ public final class TemporaryFileShareModels {
             Instant serverTime,
             int maxDownloads
     ) {
+    }
+
+    public record PickupRequest(String pickupCode) {
     }
 
     public record DownloadGrant(

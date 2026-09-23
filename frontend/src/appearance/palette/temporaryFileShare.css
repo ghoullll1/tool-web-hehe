@@ -1,0 +1,261 @@
+/* Generated color bridge for src/tools/temporary-file-share/temporaryFileShare.css. See scripts/ui-palette.mjs. */
+html[data-ui="modern"] .temporary-share {
+  --share-ink: var(--night-text);
+  --share-green: var(--night-solid);
+  --share-line: var(--night-line);
+  --share-soft: var(--night-panel);
+  color: var(--night-text);
+  font-size: 16px;
+}
+
+html[data-ui="modern"] .temporary-share button,
+html[data-ui="modern"] .temporary-share input { font: inherit; }
+
+html[data-ui="modern"] .temporary-share-intro {
+  border: 1px solid var(--night-line-active);
+  background: radial-gradient(circle at 85% 38%, color-mix(in srgb, var(--night-accent) 18%, transparent), transparent 25%), radial-gradient(circle at 67% 120%, color-mix(in srgb, var(--night-selected) 24%, transparent), transparent 34%), var(--night-solid);
+  box-shadow: 0 22px 46px rgba(0, 0, 0, 0.13);
+}
+
+html[data-ui="modern"] .temporary-share-intro::before {
+  background-image: linear-gradient(color-mix(in srgb, var(--night-raised) 9%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--night-raised) 9%, transparent) 1px, transparent 1px);
+}
+
+html[data-ui="modern"] .temporary-share-intro::after {
+  background: linear-gradient(transparent, color-mix(in srgb, var(--night-accent) 50%, transparent), transparent);
+}
+
+html[data-ui="modern"] .temporary-share-intro-copy {
+  color: var(--night-text);
+}
+
+html[data-ui="modern"] .temporary-share-eyebrow {
+  color: var(--night-accent);
+  font-size: 14px;
+}
+html[data-ui="modern"] .temporary-share-eyebrow i { background: var(--night-accent); box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.11), 0 0 16px rgba(0, 0, 0, 0.58); }
+
+html[data-ui="modern"] .temporary-share-intro-copy h2 {
+  font-size: clamp(34px, 3.25vw, 52px);
+}
+
+html[data-ui="modern"] .temporary-share-intro-copy p {
+  color: var(--night-text);
+}
+
+html[data-ui="modern"] .temporary-share-seal { border: 1px solid color-mix(in srgb, var(--night-line) 20%, transparent); background: color-mix(in srgb, var(--night-panel) 6%, transparent); }
+html[data-ui="modern"] .temporary-share-seal > svg { background: color-mix(in srgb, var(--night-accent) 12%, transparent); color: var(--night-accent); fill: none; stroke: currentColor; }
+html[data-ui="modern"] .temporary-share-seal strong { color: var(--night-text); font-size: 14px; }
+html[data-ui="modern"] .temporary-share-seal small { color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .temporary-vault::after { background: color-mix(in srgb, var(--night-solid) 36%, transparent); }
+html[data-ui="modern"] .temporary-vault-ring { border: 1px solid color-mix(in srgb, var(--night-line) 22%, transparent); }
+html[data-ui="modern"] .temporary-vault-ring::before,
+html[data-ui="modern"] .temporary-vault-ring::after { border: 2px solid var(--night-line-active); background: var(--night-accent); box-shadow: 0 0 14px rgba(0, 0, 0, 0.6); }
+html[data-ui="modern"] .temporary-vault-ring.is-inner { border-color: color-mix(in srgb, var(--night-line) 13%, transparent); }
+html[data-ui="modern"] .temporary-vault-orbit-dot { border: 3px solid color-mix(in srgb, var(--night-line) 75%, transparent); background: var(--night-accent); box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.1), 0 0 20px rgba(0, 0, 0, 0.65); }
+
+html[data-ui="modern"] .temporary-vault-core { border: 1px solid color-mix(in srgb, var(--night-line) 26%, transparent); background: linear-gradient(145deg, color-mix(in srgb, var(--night-panel) 13%, transparent), color-mix(in srgb, var(--night-panel) 6%, transparent)); color: var(--night-text); box-shadow: inset 0 1px rgba(0, 0, 0, 0.12), 0 20px 38px rgba(0, 0, 0, 0.3); }
+html[data-ui="modern"] .temporary-vault-core > span { color: var(--night-accent); font-size: 14px; }
+html[data-ui="modern"] .temporary-vault-core > svg { fill: none; stroke: var(--night-line); }
+html[data-ui="modern"] .temporary-vault-core strong { font-size: 16px; }
+html[data-ui="modern"] .temporary-vault-core small { color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .temporary-vault-core > i { background: color-mix(in srgb, var(--night-accent) 40%, transparent); }
+
+html[data-ui="modern"] .temporary-vault-metric { border: 1px solid color-mix(in srgb, var(--night-line) 24%, transparent); background: color-mix(in srgb, var(--night-solid) 84%, transparent); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22); }
+html[data-ui="modern"] .temporary-vault-metric strong { color: var(--night-text); font-size: 16px; }
+html[data-ui="modern"] .temporary-vault-metric small { color: var(--night-muted); font-size: 14px; }
+
+html[data-ui="modern"] .temporary-share-mode {
+  border: 1px solid var(--share-line);
+  background: var(--night-panel);
+}
+
+html[data-ui="modern"] .temporary-share-mode button {
+  border: 0;
+  background: transparent;
+  color: var(--night-muted);
+}
+
+html[data-ui="modern"] .temporary-share-mode button > span {
+  color: var(--night-muted);
+}
+
+html[data-ui="modern"] .temporary-share-mode button strong { font-size: 18px; }
+html[data-ui="modern"] .temporary-share-mode button small { font-size: 14px; }
+html[data-ui="modern"] .temporary-share-mode button.is-active {
+  background: var(--night-panel);
+  color: var(--share-ink);
+  box-shadow: 0 7px 19px rgba(0, 0, 0, 0.09);
+}
+html[data-ui="modern"] .temporary-share-mode button.is-active::after {
+  background: var(--night-selected);
+}
+
+html[data-ui="modern"] .temporary-share-card {
+  border: 1px solid var(--share-line);
+  background: var(--night-panel);
+}
+
+html[data-ui="modern"] .temporary-section-header {
+  border-bottom: 1px solid var(--share-line);
+  background: linear-gradient(90deg, var(--night-panel), var(--night-panel));
+}
+
+html[data-ui="modern"] .temporary-section-header > span {
+  color: var(--night-muted);
+  font-size: 14px;
+}
+
+html[data-ui="modern"] .temporary-section-header h3 { font-size: 20px; }
+html[data-ui="modern"] .temporary-section-header p { color: var(--night-muted); font-size: 14px; }
+
+html[data-ui="modern"] .temporary-dropzone {
+  border: 1px dashed var(--night-line);
+  background: radial-gradient(circle at 50% 45%, var(--night-panel), var(--night-panel) 54%);
+}
+html[data-ui="modern"] .temporary-pickup-card { border:1px solid var(--line); background:var(--paper); }
+html[data-ui="modern"] .temporary-pickup-card > span { font-size:14px; color:var(--tool-text-secondary); }
+html[data-ui="modern"] .temporary-pickup-card > strong { font:750 clamp(24px,3vw,36px)/1.3 ui-monospace,monospace; color:var(--night-accent); }
+html[data-ui="modern"] .temporary-pickup-card button,html[data-ui="modern"] .temporary-pickup-link button { border:1px solid var(--line); background:var(--paper); color:var(--night-accent); font-size:14px; }
+html[data-ui="modern"] .temporary-qr-share { border:1px solid var(--line); background:var(--paper); }
+html[data-ui="modern"] .temporary-qr-share > svg { background:var(--night-panel); }
+html[data-ui="modern"] .temporary-qr-share h4 { font-size:18px; }
+html[data-ui="modern"] .temporary-qr-share p,html[data-ui="modern"] .temporary-qr-share small,html[data-ui="modern"] .temporary-code-warning { font-size:14px; color:var(--tool-text-secondary); }
+html[data-ui="modern"] .temporary-qr-expired { border:1px dashed var(--line); font-size:16px; color:var(--tool-text-secondary); }
+html[data-ui="modern"] .temporary-pickup-link { font-size:14px; }
+html[data-ui="modern"] .temporary-pickup-link input { border:1px solid var(--line); font-size:16px; color:var(--ink); background:var(--paper); }
+html[data-ui="modern"] .receive-card .temporary-code-entry input { font:700 26px/1.5 ui-monospace,monospace; }
+
+html[data-ui="modern"] .temporary-dropzone.is-dragging {
+  border-color: var(--night-line-active);
+  background: var(--night-panel);
+  box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.18);
+}
+html[data-ui="modern"] .temporary-dropzone-action {
+  border: 0;
+  background: transparent;
+  color: var(--night-accent);
+}
+html[data-ui="modern"] .temporary-dropzone-action svg { fill: none; stroke: currentColor; }
+html[data-ui="modern"] .temporary-dropzone-action strong { font-size: 18px; }
+html[data-ui="modern"] .temporary-dropzone-action small { color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .temporary-file-icon {
+  background: var(--share-green);
+  color: var(--night-accent);
+  font-size: 14px;
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.18);
+}
+html[data-ui="modern"] .temporary-dropzone.has-file strong { font-size: 18px; }
+html[data-ui="modern"] .temporary-dropzone.has-file small { color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .temporary-dropzone.has-file > button {
+  border: 1px solid var(--night-line);
+  background: var(--night-panel);
+  color: var(--night-accent);
+  font-size: 14px;
+}
+
+html[data-ui="modern"] .temporary-upload-actions {
+  border-top: 1px solid var(--share-line);
+}
+html[data-ui="modern"] .temporary-upload-actions > div > span { background: var(--night-raised); }
+html[data-ui="modern"] .temporary-upload-actions > div b { background: linear-gradient(90deg, var(--night-solid), var(--night-accent)); }
+html[data-ui="modern"] .temporary-upload-actions small { color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .temporary-upload-actions button,
+html[data-ui="modern"] .temporary-download-button {
+  border: 1px solid var(--night-line);
+  background: var(--night-panel);
+  color: var(--night-accent);
+  font-size: 15px;
+}
+html[data-ui="modern"] .temporary-upload-actions .is-primary,
+html[data-ui="modern"] .temporary-download-button { border-color: var(--share-green); background: var(--share-green); color: var(--night-text); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.14); }
+html[data-ui="modern"] .temporary-upload-actions button:not(:disabled):hover,
+html[data-ui="modern"] .temporary-download-button:not(:disabled):hover { box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18); }
+html[data-ui="modern"] .temporary-action-icon { background: color-mix(in srgb, var(--night-accent) 14%, transparent); color: var(--night-accent); }
+html[data-ui="modern"] .temporary-action-icon svg { fill: none; stroke: currentColor; }
+html[data-ui="modern"] .temporary-upload-actions button:not(:disabled):hover .temporary-action-icon { background: color-mix(in srgb, var(--night-accent) 22%, transparent); }
+html[data-ui="modern"] .temporary-result-empty {
+  color: var(--night-muted);
+}
+html[data-ui="modern"] .temporary-result-empty svg { fill: none; stroke: var(--night-line); }
+html[data-ui="modern"] .temporary-result-empty strong { color: var(--share-ink); font-size: 18px; }
+html[data-ui="modern"] .temporary-result-empty span { border: 1px solid var(--night-line); color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .temporary-countdown {
+  background: var(--share-green);
+  color: var(--night-text);
+}
+html[data-ui="modern"] .temporary-countdown > span { font-size: 14px; }
+html[data-ui="modern"] .temporary-countdown strong { color: var(--night-accent); font-size: 36px; }
+html[data-ui="modern"] .temporary-countdown small { color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .temporary-countdown.is-expired { background: var(--night-selected); }
+html[data-ui="modern"] .temporary-countdown.is-expired strong { color: var(--night-text); font-size: 24px; }
+html[data-ui="modern"] .temporary-result-field > span { font-size: 14px; }
+html[data-ui="modern"] .temporary-result-control { border: 1px solid var(--night-line); background: linear-gradient(100deg, var(--night-panel), var(--night-panel)); }
+html[data-ui="modern"] .temporary-result-field.is-revealed .temporary-result-control { border-color: var(--night-line); box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12); }
+html[data-ui="modern"] .temporary-result-field code { color: var(--night-text); font-size: 16px; }
+html[data-ui="modern"] .temporary-result-field:not(.is-revealed) code { color: var(--night-muted); }
+html[data-ui="modern"] .temporary-result-field.is-revealed code:focus-visible { outline: 2px solid var(--night-line-active); }
+html[data-ui="modern"] .temporary-result-actions { border-left: 1px solid var(--night-line); }
+html[data-ui="modern"] .temporary-result-actions button { border: 0; background: transparent; color: var(--night-accent); }
+html[data-ui="modern"] .temporary-result-actions button:hover:not(:disabled) { background: var(--night-panel); color: var(--night-text); }
+html[data-ui="modern"] .temporary-result-actions button:focus-visible { outline: 2px solid var(--night-line-active); }
+html[data-ui="modern"] .temporary-visibility-button svg { fill: none; stroke: currentColor; }
+html[data-ui="modern"] .temporary-copy-button { border-left: 1px solid var(--night-line) !important; font-size: 14px; }
+html[data-ui="modern"] .temporary-file-proof span { color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .temporary-file-proof code { border: 1px solid var(--night-line); color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .receive-card > label { font-size: 14px; }
+html[data-ui="modern"] .receive-card input { border: 1px solid var(--night-line); outline: 0; color: var(--share-ink); background: var(--night-panel); font-size: 16px; }
+html[data-ui="modern"] .receive-card input:focus { border-color: var(--night-line-active); box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.14); }
+html[data-ui="modern"] .temporary-receive-visual { border: 1px solid var(--night-line); background: radial-gradient(circle at 82% 36%, color-mix(in srgb, var(--night-accent) 14%, transparent), transparent 28%), linear-gradient(135deg, var(--night-panel), var(--night-panel)); }
+html[data-ui="modern"] .temporary-receive-visual::before { border: 1px solid color-mix(in srgb, var(--night-line-active) 13%, transparent); }
+html[data-ui="modern"] .temporary-receive-node { color: var(--night-muted); }
+html[data-ui="modern"] .temporary-receive-node > span { border: 1px solid var(--night-line); background: color-mix(in srgb, var(--night-panel) 88%, transparent); color: var(--night-accent); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07); }
+html[data-ui="modern"] .temporary-receive-node svg { fill: none; stroke: currentColor; }
+html[data-ui="modern"] .temporary-receive-node small { font-size: 14px; }
+html[data-ui="modern"] .temporary-receive-node.is-file > span { border-color: var(--night-line-active); background: var(--share-green); color: var(--night-accent); }
+html[data-ui="modern"] .temporary-receive-route-track { background: repeating-linear-gradient(90deg, var(--night-selected) 0 8px, transparent 8px 14px); }
+html[data-ui="modern"] .temporary-receive-route-track::after { background: linear-gradient(90deg, transparent, var(--night-accent), transparent); }
+html[data-ui="modern"] .temporary-receive-route-signal { border: 3px solid var(--night-line); background: var(--night-accent); box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.14), 0 0 15px rgba(0, 0, 0, 0.36); }
+html[data-ui="modern"] .temporary-receive-route b { border: 1px solid var(--night-line); background: color-mix(in srgb, var(--night-panel) 96%, transparent); color: var(--night-muted); font-size: 14px; box-shadow: 0 7px 18px rgba(0, 0, 0, 0.08); }
+html[data-ui="modern"] .temporary-receive-route b svg { fill: none; stroke: currentColor; }
+html[data-ui="modern"] .temporary-receive-visual.is-verifying .temporary-receive-route b { border-color: var(--night-line); color: var(--night-text); }
+html[data-ui="modern"] .temporary-receive-visual.is-verifying .temporary-receive-node.is-key > span { border-color: var(--night-line); box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.1); }
+html[data-ui="modern"] .temporary-receive-visual.is-complete .temporary-receive-route-track { background: linear-gradient(90deg, var(--night-selected), var(--night-accent)); }
+html[data-ui="modern"] .temporary-receive-visual.is-complete .temporary-receive-route b { border-color: var(--night-line); background: var(--night-panel); color: var(--night-text); }
+html[data-ui="modern"] .temporary-download-progress { border: 1px solid var(--night-line); background: var(--night-panel); }
+html[data-ui="modern"] .temporary-download-progress > div span { color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .temporary-download-progress > div strong { color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .temporary-download-progress small { color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .temporary-download-track { background: var(--night-raised); }
+html[data-ui="modern"] .temporary-download-track i { background: linear-gradient(90deg, var(--night-solid), var(--night-accent)); }
+html[data-ui="modern"] .temporary-download-progress.is-active { border-color: var(--night-line); background: var(--night-panel); box-shadow: 0 8px 22px rgba(0, 0, 0, 0.07); }
+html[data-ui="modern"] .temporary-download-progress.is-active > div strong,
+html[data-ui="modern"] .temporary-download-progress.is-complete > div strong { color: var(--night-accent); }
+html[data-ui="modern"] .temporary-download-progress.is-complete { border-color: var(--night-line); background: var(--night-panel); }
+html[data-ui="modern"] .temporary-download-button-copy strong { color: var(--night-text); font-size: 16px; }
+html[data-ui="modern"] .temporary-download-button-copy small { color: var(--night-text); font-size: 14px; }
+html[data-ui="modern"] .temporary-download-button-icon { background: var(--night-accent); color: var(--night-text); }
+html[data-ui="modern"] .temporary-download-button-icon svg { fill: none; stroke: currentColor; }
+html[data-ui="modern"] .temporary-download-button:not(:disabled):hover .temporary-download-button-icon { box-shadow: 0 5px 13px rgba(0, 0, 0, 0.2); }
+html[data-ui="modern"] .temporary-download-button.is-loading .temporary-download-button-icon { background: color-mix(in srgb, var(--night-panel) 14%, transparent); color: var(--night-accent); }
+html[data-ui="modern"] .temporary-download-button.is-complete .temporary-download-button-icon { background: var(--night-panel); }
+html[data-ui="modern"] .receive-guide li { border-bottom: 1px solid var(--night-line); }
+html[data-ui="modern"] .receive-guide li:last-child { border-bottom: 0; }
+html[data-ui="modern"] .receive-guide li > span { color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .receive-guide strong { font-size: 16px; }
+html[data-ui="modern"] .receive-guide p { color: var(--night-muted); }
+
+html[data-ui="modern"] .temporary-share-notice {
+  border: 1px solid var(--night-line);
+  background: var(--night-panel);
+}
+html[data-ui="modern"] .temporary-share-notice > span { background: var(--night-panel); color: var(--night-accent); }
+html[data-ui="modern"] .temporary-share-notice b { font-size: 14px; }
+html[data-ui="modern"] .temporary-share-notice.is-success { border-color: var(--night-line); background: var(--night-panel); }
+html[data-ui="modern"] .temporary-share-notice.is-error { border-color: var(--night-danger-line); background: var(--night-panel); color: var(--night-danger); }
+
+@media (max-width: 680px) {
+  html[data-ui="modern"] .temporary-share-intro-copy h2 { font-size: 32px; }
+  html[data-ui="modern"] .temporary-share-mode button strong { font-size: 16px; }
+  html[data-ui="modern"] .temporary-countdown strong { font-size: 30px; }
+}

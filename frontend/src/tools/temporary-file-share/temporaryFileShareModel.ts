@@ -3,8 +3,7 @@ export const FIXED_EXPIRY_MINUTES = 5
 export const FIXED_DOWNLOADS = 1
 
 export interface CreatedShare {
-  shareId: string
-  accessKey: string
+  pickupCode: string
   originalFilename: string
   sizeBytes: number
   sha256: string
@@ -14,8 +13,7 @@ export interface CreatedShare {
 }
 
 export interface ShareCredentials {
-  shareId: string
-  accessKey: string
+  pickupCode: string
 }
 
 export function validateFile(file: File): string | null {
@@ -27,8 +25,7 @@ export function validateFile(file: File): string | null {
 export function parseCreatedShare(value: unknown): CreatedShare {
   if (!isRecord(value)) throw new Error('服务端返回了无法识别的分享结果')
   const share: CreatedShare = {
-    shareId: requiredString(value.shareId),
-    accessKey: requiredString(value.accessKey),
+    pickupCode: requiredString(value.pickupCode),
     originalFilename: requiredString(value.originalFilename),
     sizeBytes: requiredNumber(value.sizeBytes),
     sha256: requiredString(value.sha256),
@@ -36,23 +33,30 @@ export function parseCreatedShare(value: unknown): CreatedShare {
     serverTime: requiredString(value.serverTime),
     maxDownloads: requiredNumber(value.maxDownloads),
   }
-  if (!Number.isFinite(Date.parse(share.expiresAt)) || !Number.isFinite(Date.parse(share.serverTime)) || share.maxDownloads !== FIXED_DOWNLOADS) {
+  if (!isPickupCode(share.pickupCode) || !Number.isFinite(Date.parse(share.expiresAt)) || !Number.isFinite(Date.parse(share.serverTime)) || share.maxDownloads !== FIXED_DOWNLOADS) {
     throw new Error('服务端返回了无法识别的分享策略')
   }
   return share
 }
 
 export function buildShareUrl(origin: string, share: ShareCredentials): string {
-  const params = new URLSearchParams({ share: share.shareId, key: share.accessKey })
+  const params = new URLSearchParams({ code: share.pickupCode })
   return `${origin}/tools/temporary-file-share#${params.toString()}`
 }
 
 export function parseShareFragment(hash: string): ShareCredentials | null {
   const params = new URLSearchParams(hash.replace(/^#/, ''))
-  const shareId = params.get('share')?.trim() ?? ''
-  const accessKey = params.get('key')?.trim() ?? ''
-  return shareId && accessKey ? { shareId, accessKey } : null
+  const pickupCode = params.get('code') ?? ''
+  return isPickupCode(pickupCode) ? { pickupCode } : null
 }
+
+export function isPickupCode(value: string): boolean { return /^[0-9]{8}$/.test(value) }
+
+export function normalizePickupCode(value: string): string {
+  return value.replace(/[０-９]/g, (digit) => String.fromCharCode(digit.charCodeAt(0) - 0xfee0)).replace(/[\s-]/g, '')
+}
+
+export function formatPickupCode(value: string): string { return `${value.slice(0, 4)} ${value.slice(4)}` }
 
 export function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`

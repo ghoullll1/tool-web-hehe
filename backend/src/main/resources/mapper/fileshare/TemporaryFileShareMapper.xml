@@ -5,7 +5,7 @@
 <mapper namespace="com.toolweb.platform.tool.fileshare.dao.TemporaryFileShareMapper">
 
     <sql id="temporaryFileShareColumns">
-        id, share_id, access_key_digest, object_key, object_path, original_filename, content_type,
+        id, share_id, access_key_digest, pickup_code_digest, object_key, object_path, original_filename, content_type,
         size_bytes, sha256, expires_at, download_count, max_downloads, status,
         created_at, consumed_at, deleted, deleted_at, version
     </sql>
@@ -13,7 +13,7 @@
     <select id="selectForUpdate" resultType="com.toolweb.platform.tool.fileshare.entity.TemporaryFileShare">
         SELECT <include refid="temporaryFileShareColumns"/>
         FROM temporary_file_share
-        WHERE share_id = #{shareId}
+        WHERE pickup_code_digest = #{pickupCodeDigest}
           AND deleted = FALSE
         FOR UPDATE
     </select>

@@ -160,7 +160,10 @@ describe('JsonFormatterTool', () => {
 
   it('exposes an editable text result view', () => {
     render(<JsonFormatterTool tool={tool} />)
+    expect(screen.getByRole('button', { name: '树形' }).getAttribute('aria-pressed')).toBe('true')
     fireEvent.click(screen.getByRole('button', { name: '文本' }))
+    expect(screen.getByRole('button', { name: '文本' }).getAttribute('aria-pressed')).toBe('true')
+    expect(screen.getByRole('button', { name: '树形' }).getAttribute('aria-pressed')).toBe('false')
 
     const result = screen.getByLabelText('JSON 结果') as HTMLTextAreaElement
     fireEvent.change(result, { target: { value: '{"edited":true}' } })

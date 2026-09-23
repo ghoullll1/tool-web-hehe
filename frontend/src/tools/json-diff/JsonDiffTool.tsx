@@ -1,3 +1,4 @@
+import { Icon } from "../../components/Icon"
 import {
   useEffect,
   useMemo,
@@ -195,7 +196,7 @@ export default function JsonDiffTool({ tool }: ToolViewProps) {
       </div>
 
       <div className={`json-diff-notice is-${notice.tone}`} role={notice.tone === 'error' ? 'alert' : 'status'}>
-        <span aria-hidden="true">{notice.tone === 'success' ? '✓' : notice.tone === 'error' ? '!' : 'i'}</span>
+        <span aria-hidden="true">{notice.tone === 'success' ? <Icon name="check" /> : notice.tone === 'error' ? <Icon name="alert" /> : <Icon name="info" />}</span>
         <p>{notice.message}</p>
       </div>
 
@@ -236,9 +237,9 @@ export default function JsonDiffTool({ tool }: ToolViewProps) {
             </div>
           )}
           <div className="json-diff-navigation" aria-label="差异导航">
-            <button type="button" onClick={() => moveActiveDiff(-1)} disabled={entryCount < 2} aria-label="上一个差异">↑</button>
+            <button type="button" onClick={() => moveActiveDiff(-1)} disabled={entryCount < 2} aria-label="上一个差异"><Icon name="arrowUp" /></button>
             <output>{entryCount === 0 ? '0 / 0' : `${activeDiffIndex + 1} / ${entryCount}`}</output>
-            <button type="button" onClick={() => moveActiveDiff(1)} disabled={entryCount < 2} aria-label="下一个差异">↓</button>
+            <button type="button" onClick={() => moveActiveDiff(1)} disabled={entryCount < 2} aria-label="下一个差异"><Icon name="arrowDown" /></button>
           </div>
         </header>
 
@@ -321,7 +322,7 @@ function DiffInputPanel({
 function EmptyDiff({ title, detail, success = false }: { title: string; detail: string; success?: boolean }) {
   return (
     <div className={`json-diff-empty${success ? ' is-success' : ''}`}>
-      <span aria-hidden="true">{success ? '✓' : '≠'}</span>
+      <span aria-hidden="true">{success ? <Icon name="check" /> : <Icon name="diff" />}</span>
       <strong>{title}</strong>
       <p>{detail}</p>
     </div>

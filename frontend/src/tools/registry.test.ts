@@ -49,6 +49,11 @@ describe('client tool registry', () => {
     expect(resolveClientTool('utilities.temporary.file.share.v1')).toBeDefined()
   })
 
+  it('preloads the temporary chat workbench from its catalog slug', async () => {
+    await preloadClientToolBySlug('temporary-chat')
+    expect(resolveClientTool('utilities.temporary.chat.v1')).toBeDefined()
+  })
+
   it('preloads the document conversion workbench from its catalog slug', async () => {
     await preloadClientToolBySlug('document-converter')
     expect(resolveClientTool('document.convert.markdown.v1')).toBeDefined()

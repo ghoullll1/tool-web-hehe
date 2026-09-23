@@ -62,13 +62,13 @@ export function createTemporaryShare(file: File, options: UploadOptions = {}): P
 }
 
 export async function downloadTemporaryShare(
-  shareId: string,
-  accessKey: string,
+  pickupCode: string,
   options: DownloadOptions = {},
 ): Promise<{ blob: Blob; filename: string; sha256: string | null }> {
-  const response = await fetch(`${API_BASE_URL}/api/v1/file-shares/${encodeURIComponent(shareId)}/download`, {
+  const response = await fetch(`${API_BASE_URL}/api/v1/file-shares/download`, {
     method: 'POST',
-    headers: { Accept: 'application/octet-stream', 'X-Share-Key': accessKey },
+    headers: { Accept: 'application/octet-stream', 'Content-Type': 'application/json' },
+    body: JSON.stringify({ pickupCode }),
     cache: 'no-store',
     credentials: 'omit',
     signal: options.signal,

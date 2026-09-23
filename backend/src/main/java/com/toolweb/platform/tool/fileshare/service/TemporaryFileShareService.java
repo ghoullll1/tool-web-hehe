@@ -8,6 +8,7 @@ import com.toolweb.platform.tool.fileshare.exception.FileShareStorageException;
 import com.toolweb.platform.tool.fileshare.storage.TemporaryObjectStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,15 +38,17 @@ public class TemporaryFileShareService {
     private final TemporaryFileShareProperties properties;
     private final SecureRandom secureRandom;
     private final Clock clock;
+    private final PickupCodes pickupCodes;
     private final Semaphore uploadCapacity;
 
     @Autowired
     public TemporaryFileShareService(
             TemporaryFileShareMapper mapper,
             TemporaryObjectStore objectStore,
-            TemporaryFileShareProperties properties
+            TemporaryFileShareProperties properties,
+            PickupCodes pickupCodes
     ) {
-        this(mapper, objectStore, properties, new SecureRandom(), Clock.systemUTC());
+        this(mapper, objectStore, properties, new SecureRandom(), Clock.systemUTC(), pickupCodes);
     }
 
     TemporaryFileShareService(
@@ -53,13 +56,15 @@ public class TemporaryFileShareService {
             TemporaryObjectStore objectStore,
             TemporaryFileShareProperties properties,
             SecureRandom secureRandom,
-            Clock clock
+            Clock clock,
+            PickupCodes pickupCodes
     ) {
         this.mapper = mapper;
         this.objectStore = objectStore;
         this.properties = properties;
         this.secureRandom = secureRandom;
         this.clock = clock;
+        this.pickupCodes = pickupCodes;
         this.uploadCapacity = new Semaphore(properties.maxConcurrentUploads(), true);
     }
 
@@ -86,13 +91,23 @@ public class TemporaryFileShareService {
                     now,
                     now.plus(properties.expiresAfter()),
                     properties.maxDownloads());
-            if (mapper.insert(entity) != 1) {
-                throw new IllegalStateException("Temporary file share insert affected no row");
+            for (int attempt = 0; attempt < 16; attempt++) {
+                var pickupCode = pickupCodes.generate();
+                entity.assignPickupCodeDigest(pickupCodes.digest(pickupCode));
+                try {
+                    if (mapper.insert(entity) != 1) {
+                        throw new IllegalStateException("Temporary file share insert affected no row");
+                    }
+                    return new CreatedShare(
+                            pickupCode, entity.originalFilename(), entity.sizeBytes(), entity.sha256(),
+                            entity.expiresAt(), now, entity.maxDownloads());
+                } catch (DuplicateKeyException collision) {
+                    if (attempt == 15) throw new FileShareStorageException(FileShareStorageException.Reason.CAPACITY_EXCEEDED);
+                }
             }
-            return new CreatedShare(
-                    entity.shareId(), accessKey, entity.originalFilename(), entity.sizeBytes(), entity.sha256(),
-                    entity.expiresAt(), now, entity.maxDownloads());
+            throw new IllegalStateException("Pickup allocation exhausted");
         } catch (FileShareStorageException exception) {
+            deleteAfterFailedCreate(stored, exception);
             throw exception;
         } catch (IOException exception) {
             throw new FileShareStorageException(FileShareStorageException.Reason.IO_FAILURE, exception);
@@ -105,12 +120,9 @@ public class TemporaryFileShareService {
     }
 
     @Transactional
-    public DownloadGrant authorizeDownload(String shareId, String accessKey) {
-        var share = mapper.selectForUpdate(normalizeShareId(shareId))
+    public DownloadGrant authorizeDownload(String pickupCode) {
+        var share = mapper.selectForUpdate(pickupCodes.digest(pickupCode))
                 .orElseThrow(() -> new FileShareAccessException(FileShareAccessException.Reason.INVALID));
-        if (!constantTimeEquals(share.accessKeyDigest(), digestHex(accessKey))) {
-            throw new FileShareAccessException(FileShareAccessException.Reason.INVALID);
-        }
         var now = clock.instant();
         if (!now.isBefore(share.expiresAt())) {
             throw new FileShareAccessException(FileShareAccessException.Reason.EXPIRED);
@@ -190,20 +202,6 @@ public class TemporaryFileShareService {
             return HexFormat.of().formatHex(digest);
         } catch (NoSuchAlgorithmException exception) {
             throw new IllegalStateException("SHA-256 is unavailable", exception);
-        }
-    }
-
-    private boolean constantTimeEquals(String persistedDigest, String candidateDigest) {
-        return MessageDigest.isEqual(
-                persistedDigest.getBytes(java.nio.charset.StandardCharsets.US_ASCII),
-                candidateDigest.getBytes(java.nio.charset.StandardCharsets.US_ASCII));
-    }
-
-    private String normalizeShareId(String shareId) {
-        try {
-            return UUID.fromString(shareId == null ? "" : shareId.strip()).toString();
-        } catch (IllegalArgumentException exception) {
-            throw new FileShareAccessException(FileShareAccessException.Reason.INVALID);
         }
     }
 

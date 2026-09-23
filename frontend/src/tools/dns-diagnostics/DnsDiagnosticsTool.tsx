@@ -1,3 +1,4 @@
+import { Icon } from "../../components/Icon"
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import type { ToolViewProps } from '../registry'
 import {
@@ -112,7 +113,7 @@ export default function DnsDiagnosticsTool({ tool }: ToolViewProps) {
         </label>
         {busy
           ? <button type="button" className="dns-run is-cancel" onClick={cancel}>取消查询</button>
-          : <button type="button" className="dns-run" onClick={() => void inspect()}>开始查询 <span>→</span></button>}
+          : <button type="button" className="dns-run" onClick={() => void inspect()}>开始查询 <span><Icon name="arrowRight" /></span></button>}
       </div>
       <div className="dns-record-selector">
         <div className="dns-selector-head">
@@ -127,7 +128,7 @@ export default function DnsDiagnosticsTool({ tool }: ToolViewProps) {
             aria-pressed={selectedTypes.has(recordType)}
             disabled={busy}
             onClick={() => toggleType(recordType)}
-          ><span>{recordType}</span><i aria-hidden="true">✓</i></button>)}
+          ><span>{recordType}</span><i aria-hidden="true"><Icon name="check" /></i></button>)}
         </div>
       </div>
       <footer>
@@ -138,7 +139,7 @@ export default function DnsDiagnosticsTool({ tool }: ToolViewProps) {
     </section>
 
     {(error || notice) && <div className={`dns-notice${error ? ' is-error' : ''}`} role={error ? 'alert' : 'status'}>
-      <span>{error ? '!' : '✓'}</span><p>{error || notice}</p>
+      <span>{error ? <Icon name="alert" /> : <Icon name="check" />}</span><p>{error || notice}</p>
     </div>}
 
     <section className={`dns-result${busy ? ' is-loading' : ''}`} aria-busy={busy}>
@@ -178,7 +179,7 @@ function DnsOverview({ result }: { result: DnsDiagnosticsResult }) {
   return <div className="dns-overview">
     <section className="dns-findings" aria-label="诊断结论">
       <header><span>ANALYSIS</span><h3>专业分析</h3></header>
-      <div>{result.findings.map((finding, index) => <article className={`is-${finding.level}`} key={`${finding.title}-${index}`}><span>{finding.level === 'success' ? '✓' : finding.level === 'warning' ? '!' : finding.level === 'error' ? '×' : 'i'}</span><div><h4>{finding.title}</h4><p>{finding.detail}</p></div></article>)}</div>
+      <div>{result.findings.map((finding, index) => <article className={`is-${finding.level}`} key={`${finding.title}-${index}`}><span>{finding.level === 'success' ? <Icon name="check" /> : finding.level === 'warning' ? <Icon name="alert" /> : finding.level === 'error' ? <Icon name="close" /> : <Icon name="info" />}</span><div><h4>{finding.title}</h4><p>{finding.detail}</p></div></article>)}</div>
     </section>
     <section className="dns-resolver-grid" aria-label="解析器状态">
       {result.resolvers.map((resolver, index) => <article className={`is-${resolver.status.toLowerCase()}`} style={{ '--resolver-index': index } as CSSProperties} key={resolver.id}>
@@ -216,7 +217,7 @@ function DnsChains({ result }: { result: DnsDiagnosticsResult }) {
   if (!hasChains) return <div className="dns-panel-empty"><span>↳</span><h3>没有发现 CNAME 跳转</h3><p>当前答案直接指向最终记录，或所选类型未返回别名链。</p></div>
   return <div className="dns-chain-grid">{result.resolvers.map((resolver) => <article key={resolver.id}>
     <header><div><span>RESOLVER</span><h3>{resolver.name}</h3></div><b>{resolver.cnameChain.length} 跳</b></header>
-    {resolver.cnameChain.length ? <ol>{resolver.cnameChain.map((link, index) => <li key={`${link.from}-${link.to}`}><span>{index + 1}</span><div><code>{link.from}</code><i>↓</i><code>{link.to}</code></div><small>TTL {formatTtl(link.ttl)}</small></li>)}</ol> : <p>此解析器未返回 CNAME 链。</p>}
+    {resolver.cnameChain.length ? <ol>{resolver.cnameChain.map((link, index) => <li key={`${link.from}-${link.to}`}><span>{index + 1}</span><div><code>{link.from}</code><i><Icon name="arrowDown" /></i><code>{link.to}</code></div><small>TTL {formatTtl(link.ttl)}</small></li>)}</ol> : <p>此解析器未返回 CNAME 链。</p>}
   </article>)}</div>
 }
 

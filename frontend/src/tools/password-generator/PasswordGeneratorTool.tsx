@@ -1,3 +1,4 @@
+import { Icon } from "../../components/Icon"
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import type { ToolViewProps } from '../registry'
 import {
@@ -126,7 +127,7 @@ export default function PasswordGeneratorTool({ tool }: ToolViewProps) {
 
     <section className="password-mode-switch" aria-label="密码形式">
       {MODES.map((item) => <button type="button" key={item.value} className={mode === item.value ? 'is-active' : ''} aria-pressed={mode === item.value} onClick={() => setMode(item.value)}>
-        <span>{item.index}</span><ModeIcon mode={item.value} /><div><strong>{item.title}</strong><small>{item.detail}</small></div><b aria-hidden="true">→</b>
+        <span>{item.index}</span><ModeIcon mode={item.value} /><div><strong>{item.title}</strong><small>{item.detail}</small></div><b aria-hidden="true"><Icon name="arrowRight" /></b>
       </button>)}
     </section>
 
@@ -148,7 +149,7 @@ export default function PasswordGeneratorTool({ tool }: ToolViewProps) {
         </header>
         <div className="password-result-toolbar">
           <p><strong>{values.length}</strong> 条结果 <span>·</span> {strength.detail}</p>
-          <div><button type="button" onClick={() => setVisible((current) => !current)}><EyeIcon hidden={visible} />{visible ? '隐藏' : '显示'}</button><button type="button" onClick={() => void copyAll()}><CopyIcon />复制全部</button><button type="button" className="is-primary" onClick={() => refresh()}><RefreshIcon />换一批</button></div>
+          <div><button type="button" onClick={() => setVisible((current) => !current)}><EyeIcon hidden={visible} />{visible ? '隐藏' : '显示'}</button><button type="button" onClick={() => void copyAll()}><CopyIcon />复制全部</button><button type="button" className="is-primary" onClick={() => refresh()}><span key={generation} className="password-refresh-icon" aria-hidden="true"><RefreshIcon /></span>换一批</button></div>
         </div>
         <div className="password-result-list" key={generation} aria-live="polite">
           {values.map((item, index) => <article key={`${generation}-${index}`} style={{ '--result-index': index } as CSSProperties}>
@@ -162,7 +163,7 @@ export default function PasswordGeneratorTool({ tool }: ToolViewProps) {
       </section>
     </div>
 
-    <div className={`password-notice is-${noticeTone}`} role={noticeTone === 'error' ? 'alert' : 'status'}><span>{noticeTone === 'error' ? '!' : noticeTone === 'success' ? '✓' : 'i'}</span><p>{notice}</p><b>数据仅在浏览器本地生成</b></div>
+    <div className={`password-notice is-${noticeTone}`} role={noticeTone === 'error' ? 'alert' : 'status'}><span>{noticeTone === 'error' ? <Icon name="alert" /> : noticeTone === 'success' ? <Icon name="check" /> : <Icon name="info" />}</span><p>{notice}</p><b>数据仅在浏览器本地生成</b></div>
   </div>
 }
 
@@ -182,7 +183,7 @@ function PasswordSettings({ options, setOptions, toggleGroup }: { options: Passw
 
 function TokenSettings({ options, setOptions }: { options: TokenOptions; setOptions: React.Dispatch<React.SetStateAction<TokenOptions>> }) {
   return <>
-    <fieldset className="password-choice-field"><legend>令牌格式</legend><div className="password-token-grid">{TOKEN_FORMATS.map((item) => <button type="button" key={item.value} className={options.format === item.value ? 'is-selected' : ''} aria-pressed={options.format === item.value} onClick={() => setOptions((current) => ({ ...current, format: item.value }))}><span>{options.format === item.value ? '✓' : ''}</span><strong>{item.title}</strong><small>{item.detail}</small></button>)}</div></fieldset>
+    <fieldset className="password-choice-field"><legend>令牌格式</legend><div className="password-token-grid">{TOKEN_FORMATS.map((item) => <button type="button" key={item.value} className={options.format === item.value ? 'is-selected' : ''} aria-pressed={options.format === item.value} onClick={() => setOptions((current) => ({ ...current, format: item.value }))}><span>{options.format === item.value ? <Icon name="check" /> : ''}</span><strong>{item.title}</strong><small>{item.detail}</small></button>)}</div></fieldset>
     {options.format === 'api-key' && <label className="password-text-field"><span>令牌前缀</span><input aria-label="令牌前缀" value={options.prefix} maxLength={24} spellCheck={false} autoComplete="off" placeholder="例如 tk_live_" onChange={(event) => setOptions((current) => ({ ...current, prefix: event.target.value.replace(/[^A-Za-z0-9_-]/g, '') }))} /><small>用于识别环境或用途，只支持字母、数字、_ 和 -。</small></label>}
     {options.format === 'uuid' ? <div className="password-fixed-strength"><span>固定强度</span><strong>UUID v4 · 122 bits 随机位</strong><p>适合作为不可预测标识；不要把 UUID 当作长期访问密钥。</p></div> : <fieldset className="password-segment-field"><legend>随机强度</legend><div>{([128, 192, 256] as TokenBits[]).map((bits) => <button type="button" key={bits} className={options.bits === bits ? 'is-selected' : ''} aria-pressed={options.bits === bits} onClick={() => setOptions((current) => ({ ...current, bits }))}>{bits}<small>bits</small></button>)}</div></fieldset>}
     <CountField count={options.count} onChange={(count) => setOptions((current) => ({ ...current, count }))} />
@@ -201,11 +202,11 @@ function PassphraseSettings({ options, setOptions }: { options: PassphraseOption
 }
 
 function RangeField({ label, value, min, max, valueNumber, onChange, ticks }: { label: string; value: string; min: number; max: number; valueNumber: number; onChange: (value: number) => void; ticks: string[] }) {
-  return <label className="password-range"><span><strong>{label}</strong><output>{value}</output></span><input type="range" min={min} max={max} value={valueNumber} onChange={(event) => onChange(Number(event.target.value))} /><small>{ticks.map((tick) => <b key={tick}>{tick}</b>)}</small></label>
+  return <label className="password-range"><span><strong>{label}</strong><output>{value}</output></span><input aria-label={label} type="range" min={min} max={max} value={valueNumber} style={{ '--range-progress': `${(valueNumber - min) / (max - min) * 100}%` } as CSSProperties} onChange={(event) => onChange(Number(event.target.value))} /><small>{ticks.map((tick) => <b key={tick}>{tick}</b>)}</small></label>
 }
 
 function ChoiceButton({ selected, title, sample, onClick }: { selected: boolean; title: string; sample: string; onClick: () => void }) {
-  return <button type="button" className={selected ? 'is-selected' : ''} aria-pressed={selected} onClick={onClick}><span>{selected ? '✓' : ''}</span><strong>{title}</strong><small>{sample}</small></button>
+  return <button type="button" className={selected ? 'is-selected' : ''} aria-pressed={selected} onClick={onClick}><span>{selected ? <Icon name="check" /> : ''}</span><strong>{title}</strong><small>{sample}</small></button>
 }
 
 function SwitchRow({ checked, title, detail, onChange }: { checked: boolean; title: string; detail: string; onChange: (checked: boolean) => void }) {
@@ -213,12 +214,12 @@ function SwitchRow({ checked, title, detail, onChange }: { checked: boolean; tit
 }
 
 function CountField({ count, onChange }: { count: number; onChange: (count: number) => void }) {
-  return <div className="password-count-field"><span><strong>生成数量</strong><small>单次最多 20 条</small></span><div><button type="button" aria-label="减少生成数量" disabled={count <= 1} onClick={() => onChange(count - 1)}>−</button><output>{count}</output><button type="button" aria-label="增加生成数量" disabled={count >= 20} onClick={() => onChange(count + 1)}>＋</button></div></div>
+  return <div className="password-count-field"><span><strong>生成数量</strong><small>单次最多 20 条</small></span><div><button type="button" aria-label="减少生成数量" disabled={count <= 1} onClick={() => onChange(count - 1)}><Icon name="minus" /></button><output>{count}</output><button type="button" aria-label="增加生成数量" disabled={count >= 20} onClick={() => onChange(count + 1)}><Icon name="plus" /></button></div></div>
 }
 
 function maskSecret(value: string) { return '•'.repeat(Math.min(28, Math.max(12, value.length))) }
 
-function GeneratorArtwork() { return <div className="password-art" aria-hidden="true"><span>••••••••</span><i /><span>tk_live_•••</span><i /><span>river-cloud-••</span><b>↻</b></div> }
+function GeneratorArtwork() { return <div className="password-art" aria-hidden="true"><span>••••••••</span><i /><span>tk_live_•••</span><i /><span>river-cloud-••</span><b><Icon name="refresh" /></b></div> }
 function ModeIcon({ mode }: { mode: GeneratorMode }) { return mode === 'password' ? <svg viewBox="0 0 24 24"><rect x="4" y="9" width="16" height="11" rx="3"/><path d="M8 9V7a4 4 0 0 1 8 0v2M9 14h.01M12 14h.01M15 14h.01"/></svg> : mode === 'token' ? <svg viewBox="0 0 24 24"><circle cx="8" cy="12" r="4"/><path d="M12 12h8m-3 0v3m-3-3v2"/></svg> : <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h11M4 18h8"/><circle cx="19" cy="17" r="2"/></svg> }
 function EyeIcon({ hidden }: { hidden: boolean }) { return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12s3.5-5 9-5 9 5 9 5-3.5 5-9 5-9-5-9-5Z"/><circle cx="12" cy="12" r="2.5"/>{hidden && <path d="m4 4 16 16"/>}</svg> }
 function CopyIcon() { return <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg> }

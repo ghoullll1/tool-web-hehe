@@ -1,3 +1,4 @@
+import { Icon } from "../../components/Icon"
 import {
   useRef,
   useState,
@@ -195,7 +196,7 @@ export default function SqlFormatterTool({ tool }: ToolViewProps) {
   return (
     <div className="sql-tool" data-tool={tool.slug}>
       <div className={`sql-notice is-${notice.tone}`} role={notice.tone === 'error' ? 'alert' : 'status'}>
-        <span aria-hidden="true">{notice.tone === 'error' ? '!' : notice.tone === 'success' ? '✓' : 'i'}</span>
+        <span aria-hidden="true">{notice.tone === 'error' ? <Icon name="alert" /> : notice.tone === 'success' ? <Icon name="check" /> : <Icon name="info" />}</span>
         <p>{notice.message}</p>
         <b>仅在浏览器本地处理</b>
       </div>
@@ -232,7 +233,7 @@ export default function SqlFormatterTool({ tool }: ToolViewProps) {
           <textarea ref={inputRef} value={source} spellCheck={false} aria-label="SQL 输入" placeholder="输入、粘贴或拖入 SQL 文件…" onChange={(event) => updateSource(event.target.value)} onPaste={handlePaste} onKeyDown={handleShortcut} />
           <footer className="sql-panel-footer">
             <span>{source.length.toLocaleString()} 字符</span><span>{formatSqlBytes(sourceBytes)}</span><span>{getSqlDialect(settings.dialect).label}</span>
-            <kbd>Ctrl</kbd><span>+</span><kbd>Enter</kbd><span>格式化</span>
+            <kbd>Ctrl</kbd><span><Icon name="plus" /></span><kbd>Enter</kbd><span>格式化</span>
           </footer>
         </section>
 
@@ -272,7 +273,7 @@ function DialectPicker({ open, value, onOpenChange, onChange }: { open: boolean;
 }
 
 function DialectGroup({ title, group, value, onChange }: { title: string; group: 'common' | 'data'; value: SqlLanguage; onChange: (value: SqlLanguage) => void }) {
-  return <section><h3>{title}</h3><div>{SQL_DIALECTS.filter((dialect) => dialect.group === group).map((dialect) => <button type="button" role="option" aria-selected={dialect.id === value} key={dialect.id} onClick={() => onChange(dialect.id)}><span>{dialect.label}</span>{dialect.id === value && <b aria-hidden="true">✓</b>}</button>)}</div></section>
+  return <section><h3>{title}</h3><div>{SQL_DIALECTS.filter((dialect) => dialect.group === group).map((dialect) => <button type="button" role="option" aria-selected={dialect.id === value} key={dialect.id} onClick={() => onChange(dialect.id)}><span>{dialect.label}</span>{dialect.id === value && <b aria-hidden="true"><Icon name="check" /></b>}</button>)}</div></section>
 }
 
 function SettingGroup({ label, children }: { label: string; children: React.ReactNode }) {
@@ -284,5 +285,5 @@ function OptionButton({ active, onClick, children }: { active: boolean; onClick:
 }
 
 function ResultEmpty({ error }: { error: boolean }) {
-  return <div className={`sql-result-empty${error ? ' is-error' : ''}`}><span aria-hidden="true">{error ? '!' : 'SQL'}</span><strong>{error ? '格式化失败' : '等待处理'}</strong><p>{error ? '请根据上方提示检查语法和数据库方言。' : '输入 SQL 后点击格式化或压缩。'}</p></div>
+  return <div className={`sql-result-empty${error ? ' is-error' : ''}`}><span aria-hidden="true">{error ? <Icon name="alert" /> : 'SQL'}</span><strong>{error ? '格式化失败' : '等待处理'}</strong><p>{error ? '请根据上方提示检查语法和数据库方言。' : '输入 SQL 后点击格式化或压缩。'}</p></div>
 }

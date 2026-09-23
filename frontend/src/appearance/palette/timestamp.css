@@ -1,0 +1,111 @@
+/* Generated color bridge for src/tools/timestamp/timestamp.css. See scripts/ui-palette.mjs. */
+html[data-ui="modern"] .ts-tool{color:var(--night-text);font-size:var(--tool-font-body)}
+html[data-ui="modern"] .ts-tool button:focus-visible,html[data-ui="modern"] .ts-tool input:focus-visible,html[data-ui="modern"] .ts-tool textarea:focus-visible{outline:3px solid color-mix(in srgb, var(--night-line-active) 25%, transparent)}
+html[data-ui="modern"] .ts-now{border:1px solid var(--night-line);background:linear-gradient(125deg,var(--night-solid) 0 40%,var(--night-panel) 40% 100%)}
+html[data-ui="modern"] .ts-now:after{border:1px solid color-mix(in srgb, var(--night-line) 12%, transparent);box-shadow:0 0 0 35px rgba(0, 0, 0, 0.035),0 0 0 70px rgba(0, 0, 0, 0.025)}
+html[data-ui="modern"] .ts-now-copy{color:var(--night-text)}
+html[data-ui="modern"] .ts-now-heading>span{font-size:var(--tool-font-secondary);color:var(--night-accent)}
+html[data-ui="modern"] .ts-now-copy h2{font:750 clamp(39px,5vw,63px)/1 ui-monospace,SFMono-Regular,Consolas,monospace}
+html[data-ui="modern"] .ts-now-copy h2 small{font-size:clamp(16px,.38em,24px);color:var(--night-accent)}
+html[data-ui="modern"] .ts-now-copy p{font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-now-copy>b{font-size:var(--tool-font-secondary);color:var(--night-muted)}
+html[data-ui="modern"] .ts-now-stamps button{border:1px solid var(--night-line);background:color-mix(in srgb, var(--night-panel) 82%, transparent);color:var(--night-text);box-shadow:0 8px 22px rgba(0, 0, 0, 0.06)}
+html[data-ui="modern"] .ts-now-stamps button:hover{border-color:var(--night-line);box-shadow:0 12px 26px rgba(0, 0, 0, 0.11)}
+html[data-ui="modern"] .ts-now-stamps span{font-size:var(--tool-font-secondary);color:var(--tool-text-secondary)}
+html[data-ui="modern"] .ts-now-stamps strong{font:700 clamp(22px,1.7vw,26px)/1.4 ui-monospace,SFMono-Regular,Consolas,monospace}
+html[data-ui="modern"] .ts-now-stamps i{font-size:var(--tool-font-secondary);color:var(--night-muted)}
+html[data-ui="modern"] .ts-live{border:1px solid var(--night-line-active);background:var(--night-solid);color:var(--night-text);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-live:hover{background:var(--night-solid);border-color:var(--night-line);box-shadow:0 3px 10px rgba(0, 0, 0, 0.14901960784313725)}
+html[data-ui="modern"] .ts-live i{background:var(--night-accent);box-shadow:0 0 0 4px rgba(0, 0, 0, 0.10196078431372549)}
+html[data-ui="modern"] .ts-live svg{fill:none;stroke:currentColor}
+html[data-ui="modern"] .ts-live:focus-visible{outline-color:var(--night-line)}
+html[data-ui="modern"] .ts-toolbar{border:1px solid var(--night-line);background:var(--night-panel)}
+html[data-ui="modern"] .ts-tabs button{border:0;background:transparent;color:var(--tool-text-secondary);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-tabs button[aria-pressed=true]{background:var(--night-panel);color:var(--night-text);box-shadow:0 3px 9px rgba(0, 0, 0, 0.09)}
+html[data-ui="modern"] .ts-zone-trigger{border:1px solid var(--night-line);background:var(--night-panel);color:var(--tool-text-secondary)}
+html[data-ui="modern"] .ts-zone-trigger:hover,html[data-ui="modern"] .ts-zone.is-open .ts-zone-trigger{border-color:var(--night-line);box-shadow:0 5px 14px rgba(0, 0, 0, 0.1)}
+html[data-ui="modern"] .ts-zone-trigger small{font-size:var(--tool-font-secondary);color:var(--tool-text-secondary)}
+html[data-ui="modern"] .ts-zone-trigger strong{font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-zone-trigger>b{font-size:var(--tool-font-secondary);color:var(--tool-text-secondary)}
+html[data-ui="modern"] .ts-zone-menu{border:1px solid var(--night-line);background:color-mix(in srgb, var(--night-panel) 98%, transparent);box-shadow:0 18px 45px rgba(0, 0, 0, 0.18)}
+html[data-ui="modern"] .ts-zone-menu button{border:1px solid transparent;background:transparent;color:var(--night-text)}
+html[data-ui="modern"] .ts-zone-menu button:hover,html[data-ui="modern"] .ts-zone-menu button[aria-selected=true]{border-color:var(--night-line);background:var(--night-panel)}
+html[data-ui="modern"] .ts-zone-menu span{font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-zone-menu small{color:var(--tool-text-secondary);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-zone-menu b{font-size:var(--tool-font-secondary);color:var(--night-muted)}
+html[data-ui="modern"] .ts-converter,html[data-ui="modern"] .ts-batch{border:1px solid var(--night-line);background:var(--night-panel)}
+html[data-ui="modern"] .ts-heading{border-bottom:1px solid var(--night-line);background:var(--night-panel)}
+html[data-ui="modern"] .ts-heading>span{font-size:var(--tool-font-secondary);color:var(--tool-text-secondary)}
+html[data-ui="modern"] .ts-icon{fill:none;stroke:currentColor}
+html[data-ui="modern"] .ts-heading .ts-icon{background:var(--night-panel);color:var(--night-muted)}
+html[data-ui="modern"] .ts-heading h3{font-size:var(--tool-font-heading)}
+html[data-ui="modern"] .ts-heading p{color:var(--tool-text-secondary);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-input-row input,html[data-ui="modern"] .ts-date-input input{border:1px solid var(--night-line);background:var(--night-panel);color:var(--night-text);font:var(--tool-font-code) ui-monospace,SFMono-Regular,Consolas,monospace}
+html[data-ui="modern"] .ts-input-row input:focus,html[data-ui="modern"] .ts-date-input input:focus{border-color:var(--night-line-active);background:var(--night-panel);box-shadow:0 5px 14px rgba(0, 0, 0, 0.08)}
+html[data-ui="modern"] .ts-input-row button{border:1px solid var(--night-line);background:var(--night-panel);color:var(--night-muted);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-option-block>span,html[data-ui="modern"] .ts-date-input>span{font-size:var(--tool-font-secondary);color:var(--tool-text-secondary)}
+html[data-ui="modern"] .ts-options button{border:1px solid var(--night-line);background:var(--night-panel);color:var(--tool-text-secondary);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-options button:hover,html[data-ui="modern"] .ts-options button[aria-pressed=true]{border-color:var(--night-line);background:var(--night-panel);color:var(--night-text)}
+html[data-ui="modern"] .ts-error,html[data-ui="modern"] .ts-warning{background:var(--night-panel);color:var(--night-danger);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-warning{background:var(--night-panel);color:var(--night-danger)}
+html[data-ui="modern"] .ts-date-preview,html[data-ui="modern"] .ts-stamp-result{border:1px solid var(--night-line)}
+html[data-ui="modern"] .ts-date-result{border:1px solid var(--night-line);background:var(--night-panel)}
+html[data-ui="modern"] .ts-big-date{background:linear-gradient(135deg,var(--night-solid),var(--night-solid));color:var(--night-text)}
+html[data-ui="modern"] .ts-big-date span{font-size:var(--tool-font-secondary);color:var(--night-muted)}
+html[data-ui="modern"] .ts-big-date strong{font:750 clamp(28px,3vw,38px) ui-monospace,SFMono-Regular,Consolas,monospace}
+html[data-ui="modern"] .ts-big-date p{color:var(--night-muted);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-format-heading{border-bottom:1px solid var(--night-line);background:var(--night-panel)}
+html[data-ui="modern"] .ts-format-heading h3{font-size:var(--tool-font-heading)}
+html[data-ui="modern"] .ts-format-source{border:1px solid var(--night-line);background:var(--night-panel);color:var(--night-muted);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-format-heading p,html[data-ui="modern"] .ts-format-note{color:var(--tool-text-secondary);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-format-note{border-top:1px solid var(--night-line)}
+html[data-ui="modern"] .ts-more-formats{border-top:1px solid var(--night-line)}
+html[data-ui="modern"] .ts-more-formats summary{color:var(--night-muted);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-more-formats summary:hover{background:var(--night-panel)}
+html[data-ui="modern"] .ts-more-formats summary:focus-visible{outline:3px solid color-mix(in srgb, var(--night-line-active) 33%, transparent)}
+html[data-ui="modern"] .ts-date-result dd small{font:var(--tool-font-secondary)/1.6 system-ui,sans-serif;color:var(--tool-text-secondary)}
+html[data-ui="modern"] .ts-date-result dl>div{border:1px solid var(--night-line);background:var(--night-panel)}
+html[data-ui="modern"] .ts-date-result dl>div:hover{border-color:var(--night-line);box-shadow:0 3px 12px rgba(0, 0, 0, 0.03137254901960784)}
+html[data-ui="modern"] .ts-stamp-result>div{border-top:1px solid var(--night-line)}
+html[data-ui="modern"] .ts-date-result dt,html[data-ui="modern"] .ts-stamp-result dt{color:var(--tool-text-secondary);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-date-result dd,html[data-ui="modern"] .ts-stamp-result dd{color:var(--night-text);font:var(--tool-font-code)/1.65 ui-monospace,SFMono-Regular,Consolas,monospace}
+html[data-ui="modern"] .ts-date-result dl button,html[data-ui="modern"] .ts-stamp-result>div button{border:1px solid var(--night-line);background:var(--night-panel);color:var(--night-muted)}
+html[data-ui="modern"] .ts-precision{border-top:1px solid var(--night-line);background:var(--night-panel);color:var(--tool-text-secondary);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-stamp-result>button{border:1px solid var(--night-line);background:var(--night-panel);color:var(--night-text)}
+html[data-ui="modern"] .ts-stamp-result>button:hover{border-color:var(--night-line)}
+html[data-ui="modern"] .ts-stamp-result>button span{font-size:var(--tool-font-secondary);color:var(--tool-text-secondary)}
+html[data-ui="modern"] .ts-stamp-result>button strong{font:700 22px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace}
+html[data-ui="modern"] .ts-stamp-result>button i{font-size:var(--tool-font-secondary);color:var(--night-muted)}
+html[data-ui="modern"] .ts-stamp-result>div{border-top:1px solid var(--night-line)}
+html[data-ui="modern"] .ts-empty{border:1px dashed var(--night-line);background:var(--night-panel);color:var(--tool-text-secondary)}
+html[data-ui="modern"] .ts-empty p{font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-batch>header{border-bottom:1px solid var(--night-line)}
+html[data-ui="modern"] .ts-batch>header .ts-heading{border:0}
+html[data-ui="modern"] .ts-batch>header>button{border:1px solid var(--night-line);background:var(--night-panel);color:var(--tool-text-secondary);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-batch-grid>div:first-child{border-right:1px solid var(--night-line)}
+html[data-ui="modern"] .ts-batch textarea{border:1px solid var(--night-line);background:var(--night-panel);color:var(--night-text);font:var(--tool-font-code)/1.8 ui-monospace,SFMono-Regular,Consolas,monospace}
+html[data-ui="modern"] .ts-primary{border:0;background:var(--night-solid);color:var(--night-text);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-primary:hover{background:var(--night-solid)}
+html[data-ui="modern"] .ts-batch-empty{color:var(--tool-text-secondary)}
+html[data-ui="modern"] .ts-batch-empty strong{font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-batch-empty p{font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-batch-results>header{border-bottom:1px solid var(--night-line);color:var(--night-muted);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-batch-results>header button{border:1px solid var(--night-line);background:var(--night-panel);color:var(--night-muted);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-batch-results article{border-bottom:1px solid var(--night-line)}
+html[data-ui="modern"] .ts-batch-results article>span{color:var(--tool-text-secondary);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-batch-results code{font-size:var(--tool-font-code)}
+html[data-ui="modern"] .ts-batch-results strong{font-size:var(--tool-font-code)}
+html[data-ui="modern"] .ts-batch-results small{color:var(--tool-text-secondary);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-batch-results article.is-error{background:var(--night-panel)}
+html[data-ui="modern"] .ts-batch-results article.is-error p{color:var(--night-danger);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-notice{border:1px solid var(--night-line);background:var(--night-panel);color:var(--tool-text-secondary);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-notice>span{background:var(--night-solid);color:var(--night-accent)}
+html[data-ui="modern"] .ts-notice>b{font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .ts-notice.is-success{border-color:var(--night-line);color:var(--night-muted)}
+html[data-ui="modern"] .ts-notice.is-error{border-color:var(--night-line);background:var(--night-panel);color:var(--night-danger)}
+html[data-ui="modern"] .ts-notice.is-error>span{background:var(--night-danger-surface);color:var(--night-text)}
+@media(max-width:1000px){html[data-ui="modern"] .ts-now{background:linear-gradient(155deg,var(--night-solid) 0 52%,var(--night-panel) 52% 100%)}
+html[data-ui="modern"] .ts-batch-grid>div:first-child{border-right:0;border-bottom:1px solid var(--night-line)}}
+@media (max-width: 650px) {
+  html[data-ui="modern"] .ts-now-copy h2 { font-size: clamp(32px, 9vw, 48px); }
+}

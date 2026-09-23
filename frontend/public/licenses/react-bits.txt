@@ -1,0 +1,62 @@
+SpotlightLink is adapted from React Bits SpotlightCard (TypeScript + CSS).
+Source: https://github.com/DavidHDev/react-bits/tree/main/src/ts-default/Components/SpotlightCard
+Retrieved: 2026-09-22. Adaptations: semantic router link, motion opt-out, pointer filtering, local theme.
+
+Shared visual effects (retrieved 2026-09-22):
+DarkVeil shader: https://github.com/DavidHDev/react-bits/tree/main/src/ts-default/Backgrounds/DarkVeil
+CountUp / GradientText: https://github.com/DavidHDev/react-bits/tree/main/src/ts-default/TextAnimations
+MagicBento / AnimatedList / GooeyNav / StarBorder / ElectricBorder:
+https://github.com/DavidHDev/react-bits/tree/main/src/ts-default/Components
+ClickSpark: https://github.com/DavidHDev/react-bits/tree/main/src/ts-default/Animations/ClickSpark
+Adaptations: DarkVeil shader retained, bounded FPS/DPR and resource lifecycle added;
+Motion-based counting/entry/selection, finite GSAP particles, CSS gradient/border
+and canvas spark/electric visual algorithms adapted to native application controls.
+These are scoped adaptations, not unmodified copies or complete upstream APIs.
+No sample catalogs or business events used.
+
+Light Studio backgrounds (retrieved 2026-09-22):
+https://github.com/DavidHDev/react-bits/tree/main/src/content/Backgrounds/Aurora
+https://github.com/DavidHDev/react-bits/tree/main/src/content/Backgrounds/Threads
+https://github.com/DavidHDev/react-bits/tree/main/src/content/Backgrounds/Iridescence
+https://github.com/DavidHDev/react-bits/tree/main/src/content/Backgrounds/LiquidChrome
+https://github.com/DavidHDev/react-bits/tree/main/src/content/Backgrounds/Balatro
+https://github.com/DavidHDev/react-bits/tree/main/src/content/Backgrounds/RippleGrid
+Original vertex/fragment shader algorithms retained verbatim in effects/backgrounds.
+AmbientField supplies shared OGL lifecycle, per-route palette/parameters, lazy shader
+imports, 30 FPS/DPR 1.5/internal resolution cap, visibility suspension and GPU disposal.
+Aurora/RippleGrid use upstream light mode; the other shaders use CSS opacity over the
+light canvas. Lightweight/off modes use a static route palette, without WebGL.
+The previous application-drawn line motifs have been replaced, not rebranded.
+Stack: https://github.com/DavidHDev/react-bits/tree/main/src/ts-default/Components/Stack
+ChromaGrid: https://github.com/DavidHDev/react-bits/tree/main/src/ts-default/Components/ChromaGrid
+Adaptations: stacked-card composition with finite CSS entry and explicit accessible
+next/previous controls (no autoplay, drag-only controls or upstream example data);
+per-card low-saturation accents and pointer spotlight use real catalog metadata.
+DarkVeil uses the upstream light-mode shader with low opacity. The application
+retains its original native controls and business logic.
+
+MIT + Commons Clause License Condition v1.0
+
+Copyright (c) 2026 David Haz
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, and distribute the Software as part of an application, website, or product, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+Commons Clause Restriction
+
+You may use this Software, including for any commercial purpose, so long as you do not sell, sublicense, or redistribute the components themselves-whether alone, in a bundle, or as a ported version.
+
+No Warranty
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

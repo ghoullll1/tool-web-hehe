@@ -2,6 +2,7 @@ package com.toolweb.platform.tool.fileshare.controller;
 
 import com.toolweb.platform.tool.fileshare.dto.TemporaryFileShareModels;
 import com.toolweb.platform.tool.fileshare.service.TemporaryFileShareService;
+import com.toolweb.platform.tool.fileshare.service.PickupAttemptLimiter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,9 +11,8 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,15 +24,16 @@ import java.nio.charset.StandardCharsets;
 @RequestMapping("/api/v1/file-shares")
 public class TemporaryFileShareController {
 
-    static final String SHARE_KEY_HEADER = "X-Share-Key";
     static final String FILE_SHA256_HEADER = "X-File-Sha256";
 
     private static final Logger log = LoggerFactory.getLogger(TemporaryFileShareController.class);
 
     private final TemporaryFileShareService service;
+    private final PickupAttemptLimiter limiter;
 
-    public TemporaryFileShareController(TemporaryFileShareService service) {
+    public TemporaryFileShareController(TemporaryFileShareService service, PickupAttemptLimiter limiter) {
         this.service = service;
+        this.limiter = limiter;
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -41,22 +42,23 @@ public class TemporaryFileShareController {
             HttpServletRequest request
     ) {
         var created = service.create(file);
-        log.info("Temporary file share created shareId={} sizeBytes={} requestId={}",
-                created.shareId(), created.sizeBytes(), request.getAttribute("requestId"));
+        log.info("Temporary file share created sizeBytes={} requestId={}",
+                created.sizeBytes(), request.getAttribute("requestId"));
         return ResponseEntity.status(201)
                 .cacheControl(CacheControl.noStore())
                 .body(created);
     }
 
-    @PostMapping(path = "/{shareId}/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @PostMapping(path = "/download", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     ResponseEntity<org.springframework.core.io.Resource> download(
-            @PathVariable String shareId,
-            @RequestHeader(SHARE_KEY_HEADER) String accessKey,
+            @RequestBody TemporaryFileShareModels.PickupRequest pickup,
             HttpServletRequest request
     ) {
-        var grant = service.authorizeDownload(shareId, accessKey);
-        log.info("Temporary file share download authorized shareId={} sizeBytes={} requestId={}",
-                shareId, grant.sizeBytes(), request.getAttribute("requestId"));
+        // Never trust caller-supplied X-Forwarded-For here; the trusted reverse proxy owns forwarding.
+        limiter.check(request.getRemoteAddr());
+        var grant = service.authorizeDownload(pickup.pickupCode());
+        log.info("Temporary file share download authorized sizeBytes={} requestId={}",
+                grant.sizeBytes(), request.getAttribute("requestId"));
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.noStore())
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)

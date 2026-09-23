@@ -1,0 +1,157 @@
+/* Generated color bridge for src/tools/dns-diagnostics/dnsDiagnostics.css. See scripts/ui-palette.mjs. */
+html[data-ui="modern"] .dns-diagnostic {
+  --dns-deep: var(--night-solid);
+  --dns-green: var(--night-selected);
+  --dns-lime: var(--night-accent);
+  --dns-line: var(--night-line);
+  --dns-soft: var(--night-panel);
+  --dns-muted: var(--night-muted);
+  color: var(--night-text);
+}
+
+html[data-ui="modern"] .dns-diagnostic button,
+html[data-ui="modern"] .dns-diagnostic input { font: inherit; }
+html[data-ui="modern"] .dns-diagnostic button:focus-visible,
+html[data-ui="modern"] .dns-diagnostic input:focus-visible { outline: 3px solid color-mix(in srgb, var(--night-line-active) 20%, transparent); }
+
+html[data-ui="modern"] .dns-composer,
+html[data-ui="modern"] .dns-result { border: 1px solid var(--dns-line); background: var(--night-panel); box-shadow: 0 14px 42px rgba(0, 0, 0, 0.06); }
+html[data-ui="modern"] .dns-composer > header { border-bottom: 1px solid var(--dns-line); background: linear-gradient(108deg, var(--night-panel) 0 66%, var(--night-panel)); }
+html[data-ui="modern"] .dns-composer > header > div > span,
+html[data-ui="modern"] .dns-findings > header span,
+html[data-ui="modern"] .dns-chain-grid article > header span,
+html[data-ui="modern"] .dns-domain-identity > span { color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-composer h2 { font-size: clamp(22px, 2vw, 30px); }
+html[data-ui="modern"] .dns-composer > header p { color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-composer > header p i { background: var(--dns-lime); box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.14); }
+html[data-ui="modern"] .dns-input-row label { border: 1px solid var(--night-line); background: var(--night-panel); color: var(--night-accent); }
+html[data-ui="modern"] .dns-input-row label:focus-within { border-color: var(--night-line-active); box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.11), 0 10px 24px rgba(0, 0, 0, 0.07); }
+html[data-ui="modern"] .dns-input-row label > span { font-size: 23px; }
+html[data-ui="modern"] .dns-input-row input { border: 0; background: transparent; color: var(--night-text); font-size: 16px; outline: 0; }
+html[data-ui="modern"] .dns-input-row input::placeholder { color: var(--night-muted); }
+html[data-ui="modern"] .dns-run { border: 1px solid var(--dns-deep); background: var(--dns-deep); color: var(--night-text); font-size: 15px; box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18); }
+html[data-ui="modern"] .dns-run:hover { background: var(--night-solid); box-shadow: 0 11px 24px rgba(0, 0, 0, 0.22); }
+html[data-ui="modern"] .dns-run span { color: var(--dns-lime); }
+html[data-ui="modern"] .dns-run.is-cancel { border-color: var(--night-danger-line); background: var(--night-panel); color: var(--night-danger); box-shadow: none; }
+html[data-ui="modern"] .dns-selector-head strong { font-size: 16px; }
+html[data-ui="modern"] .dns-selector-head span { color: var(--dns-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-selector-head button,
+html[data-ui="modern"] .dns-composer > footer button { border: 0; background: transparent; color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-record-selector [role=group] button { border: 1px solid var(--night-line); background: var(--night-panel); color: var(--night-muted); font-size: 15px; }
+html[data-ui="modern"] .dns-record-selector [role=group] button:hover { border-color: var(--night-line); background: var(--night-panel); }
+html[data-ui="modern"] .dns-record-selector [role=group] button i { background: var(--night-raised); color: var(--night-text); font-size: 14px; }
+html[data-ui="modern"] .dns-record-selector [role=group] button.is-selected { border-color: var(--night-line); background: linear-gradient(135deg, var(--night-panel), var(--night-panel)); color: var(--night-accent); box-shadow: inset 3px 0 rgba(0, 0, 0, 0.3); }
+html[data-ui="modern"] .dns-record-selector [role=group] button.is-selected i { background: var(--dns-deep); }
+html[data-ui="modern"] .dns-composer > footer { border-top: 1px solid var(--dns-line); background: var(--night-panel); }
+html[data-ui="modern"] .dns-composer > footer > span { color: var(--dns-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-composer > footer button { border: 1px solid transparent; }
+html[data-ui="modern"] .dns-composer > footer button:hover { border-color: var(--night-line); background: var(--night-panel); }
+html[data-ui="modern"] .dns-composer > footer p { color: var(--dns-muted); font-size: 14px; }
+
+html[data-ui="modern"] .dns-notice { border: 1px solid var(--night-line); background: var(--night-panel); color: var(--night-text); }
+html[data-ui="modern"] .dns-notice.is-error { border-color: var(--night-danger-line); background: var(--night-panel); color: var(--night-danger); }
+html[data-ui="modern"] .dns-notice > span { background: currentColor; color: var(--night-text); font-size: 14px; }
+html[data-ui="modern"] .dns-notice p { font-size: 15px; }
+html[data-ui="modern"] .dns-result-head { border-bottom: 1px solid var(--dns-line); background: linear-gradient(105deg, var(--night-solid) 0 31%, var(--night-panel) 31% 100%); }
+html[data-ui="modern"] .dns-domain-identity { color: var(--night-text); }
+html[data-ui="modern"] .dns-domain-identity > span { color: var(--night-muted); }
+html[data-ui="modern"] .dns-domain-identity h2 { font-size: clamp(22px, 2.5vw, 32px); }
+html[data-ui="modern"] .dns-domain-identity code { color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-summary-metrics article { border: 1px solid var(--night-line); background: color-mix(in srgb, var(--night-panel) 82%, transparent); }
+html[data-ui="modern"] .dns-summary-metrics span,
+html[data-ui="modern"] .dns-summary-metrics small { color: var(--dns-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-summary-metrics strong { font: 800 21px/1.25 ui-monospace, SFMono-Regular, Consolas, monospace; }
+html[data-ui="modern"] .dns-result-head > button { border: 1px solid var(--night-line); background: var(--night-panel); color: var(--night-accent); font-size: 14px; }
+
+html[data-ui="modern"] .dns-tabs { border-bottom: 1px solid var(--dns-line); background: var(--night-panel); }
+html[data-ui="modern"] .dns-tabs button { border: 0; background: transparent; color: var(--night-muted); font-size: 15px; }
+html[data-ui="modern"] .dns-tabs button::after { background: var(--dns-deep); }
+html[data-ui="modern"] .dns-tabs button:hover,
+html[data-ui="modern"] .dns-tabs button.is-active { color: var(--night-accent); }
+html[data-ui="modern"] .dns-tabs i { background: var(--night-raised); font-size: 14px; }
+html[data-ui="modern"] .dns-findings,
+html[data-ui="modern"] .dns-resolver-grid > article,
+html[data-ui="modern"] .dns-comparison,
+html[data-ui="modern"] .dns-chain-grid > article { border: 1px solid var(--dns-line); background: var(--night-panel); }
+html[data-ui="modern"] .dns-findings > header { border-bottom: 1px solid var(--dns-line); background: var(--dns-soft); }
+html[data-ui="modern"] .dns-findings h3,
+html[data-ui="modern"] .dns-chain-grid h3 { font-size: 18px; }
+html[data-ui="modern"] .dns-findings article { border-bottom: 1px solid var(--night-line); }
+html[data-ui="modern"] .dns-findings article:last-child { border-bottom: 0; }
+html[data-ui="modern"] .dns-findings article > span { background: var(--night-panel); color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-findings article.is-warning > span { background: var(--night-panel); color: var(--night-danger); }
+html[data-ui="modern"] .dns-findings article.is-error > span { background: var(--night-panel); color: var(--night-danger); }
+html[data-ui="modern"] .dns-findings article.is-info > span { background: var(--night-panel); color: var(--night-muted); }
+html[data-ui="modern"] .dns-findings h4 { font-size: 16px; }
+html[data-ui="modern"] .dns-findings p { color: var(--dns-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-resolver-grid header span { color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-resolver-grid h3 { font-size: 17px; }
+html[data-ui="modern"] .dns-resolver-grid header b { background: var(--night-panel); color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-resolver-grid article.is-partial header b { background: var(--night-panel); color: var(--night-danger); }
+html[data-ui="modern"] .dns-resolver-grid article.is-error header b { background: var(--night-panel); color: var(--night-danger); }
+html[data-ui="modern"] .dns-resolver-grid article > p { color: var(--dns-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-resolver-progress { background: var(--night-panel); }
+html[data-ui="modern"] .dns-resolver-progress i { background: linear-gradient(90deg, var(--dns-green), var(--dns-lime)); }
+html[data-ui="modern"] .dns-resolver-grid article > footer { color: var(--dns-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-resolver-grid footer strong { color: var(--night-text); }
+html[data-ui="modern"] .dns-comparison > header { border-bottom: 1px solid var(--dns-line); background: var(--night-panel); }
+html[data-ui="modern"] .dns-comparison > header strong { font: 900 20px/1 ui-monospace, SFMono-Regular, Consolas, monospace; }
+html[data-ui="modern"] .dns-comparison > header > div > span { background: var(--night-panel); color: var(--night-accent); font-size: 14px; }
+html[data-ui="modern"] .dns-comparison.is-divergent > header > div > span,
+html[data-ui="modern"] .dns-comparison.is-partial > header > div > span { background: var(--night-panel); color: var(--night-danger); }
+html[data-ui="modern"] .dns-comparison.is-unavailable > header > div > span { background: var(--night-panel); color: var(--night-danger); }
+html[data-ui="modern"] .dns-comparison > header > p { color: var(--dns-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-comparison dt { color: var(--dns-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-comparison dd { font-size: 14px; }
+html[data-ui="modern"] .dns-variant-table > section { border-right: 1px solid var(--night-line); }
+html[data-ui="modern"] .dns-variant-table > section:last-child { border-right: 0; }
+html[data-ui="modern"] .dns-variant-table h4 { font-size: 16px; }
+html[data-ui="modern"] .dns-variant-table section > div:first-child span { color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-variant-table section > div:first-child span.is-error,
+html[data-ui="modern"] .dns-variant-table section > div:first-child span.is-dns_error { color: var(--night-danger); }
+html[data-ui="modern"] .dns-query-flags span,
+html[data-ui="modern"] .dns-query-flags b { background: var(--night-panel); color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-query-flags b { background: var(--night-panel); color: var(--night-accent); }
+html[data-ui="modern"] .dns-query-flags i { color: var(--dns-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-values > div { border: 1px solid var(--night-line); background: var(--night-panel); }
+html[data-ui="modern"] .dns-values code { color: var(--night-text); font: 16px/1.55 ui-monospace, SFMono-Regular, Consolas, monospace; }
+html[data-ui="modern"] .dns-values button { border: 1px solid var(--night-line); background: var(--night-panel); color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-values > p { color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-variant-table section > small { color: var(--dns-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-chain-grid article > header { border-bottom: 1px solid var(--dns-line); background: var(--dns-soft); }
+html[data-ui="modern"] .dns-chain-grid article > header b { color: var(--night-accent); font-size: 14px; }
+html[data-ui="modern"] .dns-chain-grid li { border-bottom: 1px solid var(--night-line); }
+html[data-ui="modern"] .dns-chain-grid li > span { background: var(--dns-deep); color: var(--night-text); font-size: 14px; }
+html[data-ui="modern"] .dns-chain-grid code { color: var(--night-text); font: 16px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; }
+html[data-ui="modern"] .dns-chain-grid li i { color: var(--night-muted); }
+html[data-ui="modern"] .dns-chain-grid li small { color: var(--dns-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-chain-grid article > p { color: var(--dns-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-panel-empty > span { background: var(--night-panel); color: var(--night-accent); font-size: 27px; }
+html[data-ui="modern"] .dns-panel-empty h3,
+html[data-ui="modern"] .dns-empty h3 { font-size: 20px; }
+html[data-ui="modern"] .dns-panel-empty p,
+html[data-ui="modern"] .dns-empty p { color: var(--dns-muted); font-size: 15px; }
+html[data-ui="modern"] .dns-empty > div { border: 1px solid var(--night-line); background: radial-gradient(circle, var(--night-panel), var(--night-panel)); color: var(--night-accent); font-size: 32px; }
+html[data-ui="modern"] .dns-empty > div i { border: 2px solid var(--night-line); background: var(--dns-lime); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18); }
+html[data-ui="modern"] .dns-empty li { border: 1px solid var(--night-line); background: var(--night-panel); color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-radar { border: 1px solid var(--night-line); background: repeating-radial-gradient(circle, var(--night-panel) 0 22px, var(--night-panel) 23px 24px); }
+html[data-ui="modern"] .dns-radar::after { background: linear-gradient(35deg, color-mix(in srgb, var(--night-selected) 34%, transparent), transparent); }
+html[data-ui="modern"] .dns-radar i { background: var(--dns-lime); box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.17); }
+html[data-ui="modern"] .dns-radar span { background: var(--dns-deep); color: var(--night-text); font-size: 14px; }
+html[data-ui="modern"] .dns-loading > div > span { color: var(--night-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-loading h3 { font-size: 23px; }
+html[data-ui="modern"] .dns-loading p { color: var(--dns-muted); font-size: 15px; }
+html[data-ui="modern"] .dns-loading-lines i { background: linear-gradient(90deg, var(--night-panel) 20%, var(--night-accent) 45%, var(--night-panel) 70%); }
+
+html[data-ui="modern"] .dns-result-foot { border-top: 1px solid var(--dns-line); background: var(--night-panel); color: var(--dns-muted); font-size: 14px; }
+html[data-ui="modern"] .dns-result-foot code { font-size: 14px; }
+
+@media (max-width: 1120px) {
+  html[data-ui="modern"] .dns-result-head { background: linear-gradient(105deg, var(--night-solid) 0 36%, var(--night-panel) 36%); }
+}
+
+@media (max-width: 860px) {
+  html[data-ui="modern"] .dns-result-head { background: linear-gradient(180deg, var(--night-solid) 0 105px, var(--night-panel) 105px); }
+  html[data-ui="modern"] .dns-variant-table > section { border-right: 0; border-bottom: 1px solid var(--night-line); }
+  html[data-ui="modern"] .dns-variant-table > section:last-child { border-bottom: 0; }
+}

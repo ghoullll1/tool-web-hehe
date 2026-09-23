@@ -1,3 +1,4 @@
+import { Icon } from "../../components/Icon"
 import Markdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -15,7 +16,7 @@ const previewComponents: Components = {
   img: ({ node, alt }) => {
     void node
     return <span className="document-markdown-image-note" role="note">
-      <span aria-hidden="true">▧</span>
+      <span aria-hidden="true"><Icon name="image" /></span>
       图片“{alt?.trim() || '未命名'}”未在预览中加载
     </span>
   },

@@ -38,12 +38,47 @@ const tools: ToolDescriptor[] = [
 
 describe('App', () => {
   beforeEach(() => {
+    localStorage.clear()
     catalog.current = { tools: [], loading: false, error: null }
     registry.preloadClientToolBySlug.mockClear()
     api.recordToolUsage.mockClear()
   })
 
-  afterEach(cleanup)
+  afterEach(() => { cleanup(); localStorage.clear(); vi.unstubAllGlobals(); vi.restoreAllMocks() })
+
+  it('does not record another tool visit when changing appearance repeatedly', () => {
+    catalog.current = { tools, loading: false, error: null }
+    render(<MemoryRouter initialEntries={['/tools/hash']}><App /></MemoryRouter>)
+    for (let i = 0; i < 5; i++) {
+      fireEvent.click(screen.getByRole('button', { name: '经典版' }))
+      fireEvent.click(screen.getByRole('button', { name: '现代版' }))
+    }
+    expect(api.recordToolUsage).toHaveBeenCalledTimes(1)
+    expect(api.recordToolUsage).toHaveBeenCalledWith('hash')
+    expect(screen.getByRole('link', { name: '哈希计算' }).getAttribute('aria-current')).toBe('page')
+  })
+
+  it('contains mobile drawer focus and restores focus on Escape', () => {
+    catalog.current = { tools, loading: false, error: null }
+    vi.stubGlobal('matchMedia', (query: string) => ({ matches: query.includes('850'), addEventListener: vi.fn(), removeEventListener: vi.fn() }))
+    vi.spyOn(HTMLElement.prototype, 'getClientRects').mockReturnValue([{ width: 10, height: 10 }] as unknown as DOMRectList)
+    render(<MemoryRouter initialEntries={['/tools/hash']}><App /></MemoryRouter>)
+    const trigger = screen.getByRole('button', { name: '工具导航' })
+    fireEvent.click(trigger)
+    const dialog = screen.getByRole('dialog', { name: '工具导航' })
+    const close = within(dialog).getByRole('button', { name: '关闭工具导航' })
+    expect(document.activeElement).toBe(close)
+    const last = within(dialog).getAllByRole('link').at(-1)!
+    last.focus()
+    fireEvent.keyDown(document, { key: 'Tab' })
+    expect(document.activeElement).toBe(close)
+    fireEvent.keyDown(document, { key: 'Tab', shiftKey: true })
+    expect(document.activeElement).toBe(last)
+    fireEvent.keyDown(document, { key: 'Escape' })
+    expect(screen.queryByRole('dialog')).toBeNull()
+    expect(document.activeElement).toBe(trigger)
+    expect(document.body.style.overflow).not.toBe('hidden')
+  })
 
   it('renders the empty catalog foundation', () => {
     render(<MemoryRouter><App /></MemoryRouter>)
@@ -69,7 +104,7 @@ describe('App', () => {
     const navigation = screen.getByRole('navigation', { name: '工具导航' })
     const workspaceHeading = screen.getByRole('heading', { name: '工作区' })
     expect(navigation.contains(workspaceHeading)).toBe(false)
-    expect(workspaceHeading.closest('.sidebar-workspace')?.nextElementSibling).toBe(navigation)
+    expect(workspaceHeading.compareDocumentPosition(navigation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(screen.getByLabelText('5 个可用工具').textContent).toBe('5 项')
     const developerGroup = within(navigation).getByRole('region', { name: '开发工具' })
     expect(within(developerGroup).getAllByRole('link')).toHaveLength(2)
@@ -77,6 +112,35 @@ describe('App', () => {
     expect(within(developerGroup).getByRole('link', { name: '哈希计算' })).toBeTruthy()
     expect(within(developerGroup).getByRole('heading', { name: '开发工具' }).getAttribute('data-count')).toBe('2')
     expect(within(navigation).getByRole('link', { name: '控制台' }).closest('.nav-group')).toBeNull()
+  })
+
+  it('keeps the console outside the scrolling tools while retaining one navigation landmark', () => {
+    catalog.current = { tools, loading: false, error: null }
+    render(<MemoryRouter><App /></MemoryRouter>)
+    const nav = screen.getByRole('navigation', { name: '工具导航' })
+    const home = within(nav).getByRole('link', { name: '控制台' })
+    const tool = within(nav).getByRole('link', { name: '哈希计算' })
+    expect(home.closest('.navigation-home')).not.toBeNull()
+    expect(home.closest('.navigation-tools')).toBeNull()
+    expect(tool.closest('.navigation-tools')).not.toBeNull()
+    fireEvent.click(tool)
+    fireEvent.click(home)
+    expect(home.getAttribute('aria-current')).toBe('page')
+  })
+
+  it('exposes category chips as one filter group and keeps filtering across directory views', () => {
+    catalog.current = { tools, loading: false, error: null }
+    render(<MemoryRouter><App /></MemoryRouter>)
+    const chips = screen.getByRole('group', { name: '按分类筛选工具' })
+    const image = within(chips).getByRole('button', { name: '图片工具 1' })
+    fireEvent.click(image)
+    const directory = screen.getByRole('region', { name: '工具目录' })
+    expect(within(directory).getAllByRole('link')).toHaveLength(1)
+    expect(image.getAttribute('aria-pressed')).toBe('true')
+    fireEvent.click(screen.getByRole('button', { name: '列表' }))
+    expect(within(directory).getAllByRole('link')).toHaveLength(1)
+    fireEvent.click(within(chips).getByRole('button', { name: '全部 5' }))
+    expect(within(directory).getAllByRole('link')).toHaveLength(tools.length)
   })
 
   it('filters live by tool description and clears a no-result search', () => {
@@ -93,6 +157,54 @@ describe('App', () => {
     fireEvent.click(screen.getByRole('button', { name: '清除筛选' }))
     expect(search).toHaveProperty('value', '')
     expect(screen.getByText('显示 5 / 5 项')).toBeTruthy()
+  })
+
+  it('filters the real navigation catalog without filtering the main directory', () => {
+    catalog.current = { tools, loading: false, error: null }
+    render(<MemoryRouter><App /></MemoryRouter>)
+    fireEvent.change(screen.getByRole('textbox', { name: '筛选导航工具' }), { target: { value: '摘要' } })
+    const nav = within(screen.getByRole('navigation', { name: '工具导航' }))
+    expect(nav.getByRole('link', { name: '哈希计算' })).toBeTruthy()
+    expect(nav.queryByRole('link', { name: 'JSON 格式化' })).toBeNull()
+    expect(screen.getByText('显示 5 / 5 项')).toBeTruthy()
+  })
+
+  it('switches directory density without changing the actual catalog', () => {
+    catalog.current = { tools, loading: false, error: null }
+    const view = render(<MemoryRouter><App /></MemoryRouter>)
+    fireEvent.click(screen.getByRole('button', { name: '列表' }))
+    expect(view.container.querySelector('.dashboard')?.getAttribute('data-directory-view')).toBe('list')
+    expect(view.container.querySelectorAll('.dashboard-tool-card')).toHaveLength(tools.length)
+    fireEvent.click(screen.getByRole('button', { name: '卡片' }))
+    expect(view.container.querySelectorAll('.dashboard-tool-card')).toHaveLength(tools.length)
+  })
+
+  it('reveals search matches in collapsed groups and restores the collapse after clearing', () => {
+    catalog.current = { tools, loading: false, error: null }
+    render(<MemoryRouter><App /></MemoryRouter>)
+    const group = within(screen.getByRole('navigation', { name: '工具导航' })).getByRole('button', { name: '开发工具' })
+    fireEvent.click(group)
+    expect(group.getAttribute('aria-expanded')).toBe('false')
+    const search = screen.getByRole('textbox', { name: '筛选导航工具' })
+    fireEvent.change(search, { target: { value: '摘要' } })
+    expect(group.getAttribute('aria-expanded')).toBe('true')
+    expect(screen.getByRole('navigation', { name: '工具导航' }).querySelector('.nav-group-tools')?.hasAttribute('inert')).toBe(false)
+    fireEvent.change(search, { target: { value: '' } })
+    expect(group.getAttribute('aria-expanded')).toBe('false')
+  })
+
+  it('keeps focus layout consistent across edition switches without adding a visit', () => {
+    catalog.current = { tools, loading: false, error: null }
+    const view = render(<MemoryRouter initialEntries={['/tools/hash']}><App /></MemoryRouter>)
+    fireEvent.click(screen.getByRole('button', { name: '专注工作' }))
+    expect(view.container.querySelector('.tool-page')?.classList.contains('is-studio-focused')).toBe(true)
+    fireEvent.click(screen.getByRole('button', { name: '经典版' }))
+    expect(screen.queryByRole('button', { name: '完整布局' })).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: '现代版' }))
+    expect(screen.getByRole('button', { name: '完整布局' }).getAttribute('aria-pressed')).toBe('true')
+    fireEvent.click(screen.getByRole('button', { name: '完整布局' }))
+    expect(view.container.querySelector('.tool-page')?.classList.contains('is-studio-focused')).toBe(false)
+    expect(api.recordToolUsage).toHaveBeenCalledTimes(1)
   })
 
   it('filters by category and focuses search with the slash shortcut', () => {

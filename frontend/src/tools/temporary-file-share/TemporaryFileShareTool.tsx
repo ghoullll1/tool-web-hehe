@@ -1,5 +1,7 @@
+import { Icon } from "../../components/Icon"
+import { QRCodeSVG } from 'qrcode.react'
 import { useEffect, useRef, useState } from 'react'
-import type { DragEvent, PointerEvent as ReactPointerEvent } from 'react'
+import type { DragEvent } from 'react'
 import type { ToolViewProps } from '../registry'
 import { createTemporaryShare, downloadTemporaryShare } from './temporaryFileShareApi'
 import type { DownloadProgress } from './temporaryFileShareApi'
@@ -9,6 +11,9 @@ import {
   FIXED_EXPIRY_MINUTES,
   formatBytes,
   formatCountdown,
+  formatPickupCode,
+  isPickupCode,
+  normalizePickupCode,
   MAX_FILE_BYTES,
   parseShareFragment,
   secondsRemaining,
@@ -29,14 +34,14 @@ export default function TemporaryFileShareTool({ tool }: ToolViewProps) {
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(0)
   const [created, setCreated] = useState<CreatedShare | null>(null)
-  const [credentials, setCredentials] = useState<ShareCredentials>(initialCredentials ?? { shareId: '', accessKey: '' })
+  const [credentials, setCredentials] = useState<ShareCredentials>(initialCredentials ?? { pickupCode: '' })
   const [downloading, setDownloading] = useState(false)
   const [downloadProgress, setDownloadProgress] = useState<DownloadProgress>({ loadedBytes: 0, totalBytes: null, percentage: 0 })
   const [consumed, setConsumed] = useState(false)
   const [seconds, setSeconds] = useState(0)
   const [notice, setNotice] = useState({ tone: 'info' as NoticeTone, text: '文件由服务端临时保存，到期后自动失效并清理' })
-  const [copied, setCopied] = useState<'link' | 'id' | 'key' | null>(null)
-  const [revealed, setRevealed] = useState({ link: false, key: false })
+  const [copied, setCopied] = useState<'link' | 'code' | null>(null)
+  const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const uploadAbort = useRef<AbortController | null>(null)
   const downloadAbort = useRef<AbortController | null>(null)
   const serverClockOffset = useRef(0)
@@ -45,6 +50,7 @@ export default function TemporaryFileShareTool({ tool }: ToolViewProps) {
   useEffect(() => () => {
     uploadAbort.current?.abort()
     downloadAbort.current?.abort()
+    if (copyTimer.current) clearTimeout(copyTimer.current)
   }, [])
 
   useEffect(() => {
@@ -63,7 +69,7 @@ export default function TemporaryFileShareTool({ tool }: ToolViewProps) {
   }, [created])
 
   function chooseFile(candidate: File | null) {
-    if (!candidate) return
+    if (!candidate || uploading) return
     const error = validateFile(candidate)
     if (error) {
       setNotice({ tone: 'error', text: error })
@@ -71,7 +77,7 @@ export default function TemporaryFileShareTool({ tool }: ToolViewProps) {
     }
     setFile(candidate)
     setCreated(null)
-    setRevealed({ link: false, key: false })
+    setCopied(null)
     setProgress(0)
     setNotice({ tone: 'info', text: '文件已就绪；创建后固定五分钟有效且只能下载一次' })
   }
@@ -94,10 +100,11 @@ export default function TemporaryFileShareTool({ tool }: ToolViewProps) {
       serverClockOffset.current = Date.parse(result.serverTime) - Date.now()
       setSeconds(secondsRemaining(result.expiresAt, Date.now() + serverClockOffset.current))
       setCreated(result)
-      setRevealed({ link: false, key: false })
-      setCredentials({ shareId: result.shareId, accessKey: result.accessKey })
+      setCopied(null)
+      setConsumed(false)
+      setCredentials({ pickupCode: result.pickupCode })
       setProgress(100)
-      setNotice({ tone: 'success', text: '分享已创建，请在倒计时结束前把链接或密钥交给接收者' })
+      setNotice({ tone: 'success', text: '分享已创建：输入 8 位取件码、扫描二维码或打开链接，任选一种方式接收' })
     } catch (error) {
       if (error instanceof DOMException && error.name === 'AbortError') {
         setNotice({ tone: 'info', text: '上传已取消，文件没有创建分享' })
@@ -111,29 +118,30 @@ export default function TemporaryFileShareTool({ tool }: ToolViewProps) {
     }
   }
 
-  async function copy(value: string, kind: 'link' | 'id' | 'key') {
+  async function copy(value: string, kind: 'link' | 'code') {
     try {
       await navigator.clipboard.writeText(value)
       setCopied(kind)
       const text = kind === 'link'
-        ? '分享链接已复制，密钥随链接片段安全携带'
-        : kind === 'id' ? '分享 ID 已复制' : '访问密钥已复制'
+        ? '分享链接已复制，打开后点击下载即可接收'
+        : '8 位取件码已复制'
       setNotice({ tone: 'success', text })
-      window.setTimeout(() => setCopied(null), 1600)
+      if (copyTimer.current) clearTimeout(copyTimer.current)
+      copyTimer.current = setTimeout(() => setCopied(null), 1600)
     } catch {
       setNotice({ tone: 'error', text: '复制失败，请检查浏览器剪贴板权限' })
     }
   }
 
   async function download() {
-    if (!credentials.shareId.trim() || !credentials.accessKey.trim() || downloading || consumed) return
+    if (!isPickupCode(credentials.pickupCode) || downloading || consumed) return
     const controller = new AbortController()
     downloadAbort.current = controller
     setDownloading(true)
     setDownloadProgress({ loadedBytes: 0, totalBytes: null, percentage: null })
-    setNotice({ tone: 'info', text: '正在验证密钥并准备下载；成功授权后本次机会会被消耗' })
+    setNotice({ tone: 'info', text: '正在验证取件码并准备下载；成功授权后本次机会会被消耗' })
     try {
-      const result = await downloadTemporaryShare(credentials.shareId.trim(), credentials.accessKey.trim(), {
+      const result = await downloadTemporaryShare(credentials.pickupCode, {
         signal: controller.signal,
         onProgress: setDownloadProgress,
       })
@@ -157,7 +165,7 @@ export default function TemporaryFileShareTool({ tool }: ToolViewProps) {
     }
   }
 
-  const shareUrl = created ? buildShareUrl(window.location.origin, { shareId: created.shareId, accessKey: created.accessKey }) : ''
+  const shareUrl = created ? buildShareUrl(window.location.origin, created) : ''
   const expired = created !== null && seconds === 0
 
   return <div className="temporary-share" data-tool={tool.slug}>
@@ -165,23 +173,23 @@ export default function TemporaryFileShareTool({ tool }: ToolViewProps) {
       <div className="temporary-share-intro-copy">
         <span className="temporary-share-eyebrow"><i /> EPHEMERAL TRANSFER / 05 MIN TTL</span>
         <h2>交付一次，然后让它消失。</h2>
-        <p>文件不公开陈列。接收者需要持有分享 ID 与随机密钥，且只有一次成功下载机会。</p>
+        <p>一个 8 位取件码，就能跨设备接收文件。也可以扫码或打开链接，五分钟内取走一次。</p>
         <div className="temporary-share-seal"><ShieldCheckIcon /><span><strong>服务端密封交付</strong><small>到期清理 · 授权后即刻失效</small></span></div>
       </div>
-      <div className="temporary-vault" role="img" aria-label={`临时文件保险库：${FIXED_EXPIRY_MINUTES} 分钟有效，最多下载 ${FIXED_DOWNLOADS} 次，使用 256 bit 随机密钥`}>
+      <div className="temporary-vault" role="img" aria-label={`临时文件保险库：${FIXED_EXPIRY_MINUTES} 分钟有效，最多下载 ${FIXED_DOWNLOADS} 次，使用 8 位取件码`}>
         <i className="temporary-vault-ring is-outer" aria-hidden="true" />
         <i className="temporary-vault-ring is-inner" aria-hidden="true" />
         <i className="temporary-vault-orbit-dot" aria-hidden="true" />
         <div className="temporary-vault-core"><span>SEALED</span><SecureFileIcon /><strong>ONE-TIME</strong><small>临时文件舱</small><i /></div>
         <VaultMetric className="is-expiry" value={`${FIXED_EXPIRY_MINUTES}:00`} label="有效窗口" />
         <VaultMetric className="is-downloads" value={`${FIXED_DOWNLOADS}×`} label="下载授权" />
-        <VaultMetric className="is-entropy" value="256 bit" label="随机密钥" />
+        <VaultMetric className="is-entropy" value="8 位" label="取件码" />
       </div>
     </header>
 
     <div className="temporary-share-mode" role="tablist" aria-label="文件分享方式">
       <button type="button" role="tab" aria-selected={mode === 'send'} className={mode === 'send' ? 'is-active' : ''} onClick={() => setMode('send')}><span>01</span><strong>发送文件</strong><small>上传并创建一次性分享</small></button>
-      <button type="button" role="tab" aria-selected={mode === 'receive'} className={mode === 'receive' ? 'is-active' : ''} onClick={() => setMode('receive')}><span>02</span><strong>接收文件</strong><small>使用分享密钥下载</small></button>
+      <button type="button" role="tab" aria-selected={mode === 'receive'} className={mode === 'receive' ? 'is-active' : ''} onClick={() => setMode('receive')}><span>02</span><strong>接收文件</strong><small>输入 8 位取件码</small></button>
     </div>
 
     {mode === 'send' ? <section className="temporary-share-workspace is-send" role="tabpanel">
@@ -202,24 +210,31 @@ export default function TemporaryFileShareTool({ tool }: ToolViewProps) {
       </div>
 
       <div className={`temporary-share-card share-result${created ? ' has-result' : ''}`}>
-        <SectionHeader index="02" title="交给接收者" detail="密钥只在这次创建响应中出现" />
+        <SectionHeader index="02" title="交给接收者" detail="取件码、扫码、链接，三种方式任选" />
         {created ? <div className="temporary-created" aria-live="polite">
           <div className={`temporary-countdown${expired ? ' is-expired' : ''}`}><span>{expired ? '已失效' : '剩余有效时间'}</span><strong>{formatCountdown(seconds)}</strong><small>{expired ? '服务端已拒绝新的下载' : '倒计时由服务端过期时间计算'}</small></div>
-          <ResultField label="一次性分享链接" value={shareUrl} action={copied === 'link' ? '已复制' : '复制链接'} revealed={revealed.link} onToggleVisibility={() => setRevealed((current) => ({ ...current, link: !current.link }))} onCopy={() => void copy(shareUrl, 'link')} disabled={expired} />
-          <ResultField label="分享 ID" value={created.shareId} action={copied === 'id' ? '已复制' : '复制 ID'} revealed concealable={false} onCopy={() => void copy(created.shareId, 'id')} disabled={expired} />
-          <ResultField label="访问密钥" value={created.accessKey} action={copied === 'key' ? '已复制' : '复制密钥'} revealed={revealed.key} onToggleVisibility={() => setRevealed((current) => ({ ...current, key: !current.key }))} onCopy={() => void copy(created.accessKey, 'key')} disabled={expired} />
+          <div className="temporary-pickup-card">
+            <span>8 位取件码</span><strong aria-label={`取件码 ${created.pickupCode}`}>{formatPickupCode(created.pickupCode)}</strong>
+            <button type="button" disabled={expired} onClick={() => void copy(created.pickupCode, 'code')}>{copied === 'code' ? '已复制' : '复制取件码'}</button>
+          </div>
+          <div className="temporary-qr-share">
+            {expired ? <div className="temporary-qr-expired">二维码已过期</div> : <QRCodeSVG value={shareUrl} size={184} marginSize={4} level="M" bgColor="#ffffff" fgColor="#182432" role="img" title="扫描二维码接收文件" />}
+            <div><h4>扫码接收</h4><p>使用手机相机扫描，打开页面后点击下载。电脑接收时直接输入上方取件码。</p><small>二维码在本地生成，不会发送给第三方。</small></div>
+          </div>
+          <label className="temporary-pickup-link"><span>分享链接</span><input readOnly value={shareUrl} aria-label="分享链接" onFocus={(event) => event.currentTarget.select()} /><button type="button" disabled={expired} onClick={() => void copy(shareUrl, 'link')}>{copied === 'link' ? '已复制' : '复制链接'}</button></label>
+          <p className="temporary-code-warning">取件码、二维码与链接拥有相同的取件权限，请只交给接收者。</p>
           <div className="temporary-file-proof"><span>SHA-256</span><code>{created.sha256}</code></div>
-        </div> : <div className="temporary-result-empty"><LinkIcon /><strong>分享链接将在这里生成</strong><p>系统只返回一次随机密钥；数据库保存的是不可逆摘要。</p><div><span>5 MIN</span><span>1 DOWNLOAD</span><span>NO PREVIEW</span></div></div>}
+        </div> : <div className="temporary-result-empty"><LinkIcon /><strong>取件码与二维码将在这里生成</strong><p>上传完成后，接收者输入 8 位数字即可取件，不再需要分享 ID 或访问密钥。</p><div><span>8 位取件码</span><span>扫码接收</span><span>链接分享</span></div></div>}
       </div>
     </section> : <section className="temporary-share-workspace is-receive" role="tabpanel">
       <div className="temporary-share-card receive-card">
         <SectionHeader index="01" title="解锁一次性文件" detail="可直接打开发送者提供的完整链接" />
         <SecureHandoffVisual state={consumed ? 'complete' : downloading ? 'verifying' : 'idle'} />
-        <label><span>分享 ID</span><input value={credentials.shareId} autoComplete="off" spellCheck={false} placeholder="例如 40f68803-…" onChange={(event) => { setCredentials((current) => ({ ...current, shareId: event.target.value })); setConsumed(false); setDownloadProgress({ loadedBytes: 0, totalBytes: null, percentage: 0 }) }} /></label>
-        <label><span>访问密钥</span><input value={credentials.accessKey} type="password" autoComplete="off" spellCheck={false} placeholder="输入发送者提供的随机密钥" onChange={(event) => { setCredentials((current) => ({ ...current, accessKey: event.target.value })); setConsumed(false); setDownloadProgress({ loadedBytes: 0, totalBytes: null, percentage: 0 }) }} /></label>
+        <label className="temporary-code-entry"><span>8 位取件码</span><input value={credentials.pickupCode} inputMode="numeric" autoComplete="off" spellCheck={false} maxLength={16} disabled={downloading} placeholder="例如 5827 1936" aria-describedby="pickup-code-help" onChange={(event) => { setCredentials({ pickupCode: normalizePickupCode(event.target.value) }); setConsumed(false); setDownloadProgress({ loadedBytes: 0, totalBytes: null, percentage: 0 }) }} onKeyDown={(event) => { if (event.key === 'Enter' && !event.nativeEvent.isComposing) void download() }} /></label>
+        <p id="pickup-code-help" className="temporary-code-warning">输入发送者提供的 8 位数字；粘贴时支持空格与短横线。也可以使用手机相机扫描分享二维码。</p>
         <DownloadProgressPanel progress={downloadProgress} downloading={downloading} complete={consumed} />
-        <button type="button" className={`temporary-download-button${downloading ? ' is-loading' : ''}${consumed ? ' is-complete' : ''}`} disabled={!credentials.shareId.trim() || !credentials.accessKey.trim() || downloading || consumed} onClick={() => void download()}>
-          <span className="temporary-download-button-copy"><strong>{consumed ? '文件已接收' : downloading ? '正在安全接收' : '验证密钥并下载'}</strong><small>{consumed ? '本次下载机会已经使用' : downloading ? '请保持页面打开' : '验证通过后立即开始一次性下载'}</small></span>
+        <button type="button" className={`temporary-download-button${downloading ? ' is-loading' : ''}${consumed ? ' is-complete' : ''}`} disabled={!isPickupCode(credentials.pickupCode) || downloading || consumed} onClick={() => void download()}>
+          <span className="temporary-download-button-copy"><strong>{consumed ? '文件已接收' : downloading ? '正在安全接收' : '取件并下载'}</strong><small>{consumed ? '本次下载机会已经使用' : downloading ? '请保持页面打开' : '验证通过后立即开始一次性下载'}</small></span>
           <i className="temporary-download-button-icon"><DownloadActionIcon state={consumed ? 'complete' : downloading ? 'loading' : 'ready'} /></i>
         </button>
       </div>
@@ -229,7 +244,7 @@ export default function TemporaryFileShareTool({ tool }: ToolViewProps) {
       </aside>
     </section>}
 
-    <footer className={`temporary-share-notice is-${notice.tone}`} role={notice.tone === 'error' ? 'alert' : 'status'}><span>{notice.tone === 'error' ? '!' : notice.tone === 'success' ? '✓' : 'i'}</span><p>{notice.text}</p><b>固定 5 分钟 · 最多下载 1 次</b></footer>
+    <footer className={`temporary-share-notice is-${notice.tone}`} role={notice.tone === 'error' ? 'alert' : 'status'}><span>{notice.tone === 'error' ? <Icon name="alert" /> : notice.tone === 'success' ? <Icon name="check" /> : <Icon name="info" />}</span><p>{notice.text}</p><b>固定 5 分钟 · 最多下载 1 次</b></footer>
   </div>
 }
 
@@ -269,59 +284,6 @@ function SecureHandoffVisual({ state }: { state: 'idle' | 'verifying' | 'complet
     <div className="temporary-receive-node is-file"><span><SecureFileIcon /></span><small>一次性文件</small></div>
   </div>
 }
-function ResultField({ label, value, action, revealed, concealable = true, onToggleVisibility, onCopy, disabled = false }: { label: string; value: string; action: string; revealed: boolean; concealable?: boolean; onToggleVisibility?: () => void; onCopy: () => void; disabled?: boolean }) {
-  const visibilityLabel = revealed ? `隐藏${label}` : `显示${label}`
-  const valueElement = useRef<HTMLElement>(null)
-  const dragOrigin = useRef<{ pointerId: number; x: number; scrollLeft: number } | null>(null)
-  const [dragging, setDragging] = useState(false)
-
-  useEffect(() => {
-    if (valueElement.current) valueElement.current.scrollLeft = 0
-  }, [revealed, value])
-
-  function beginDrag(event: ReactPointerEvent<HTMLElement>) {
-    if (!revealed || event.pointerType !== 'mouse' || event.button !== 0) return
-    dragOrigin.current = { pointerId: event.pointerId, x: event.clientX, scrollLeft: event.currentTarget.scrollLeft }
-    event.currentTarget.setPointerCapture(event.pointerId)
-    setDragging(true)
-  }
-
-  function moveDrag(event: ReactPointerEvent<HTMLElement>) {
-    const origin = dragOrigin.current
-    if (!origin || origin.pointerId !== event.pointerId) return
-    event.preventDefault()
-    event.currentTarget.scrollLeft = origin.scrollLeft - (event.clientX - origin.x)
-  }
-
-  function endDrag(event: ReactPointerEvent<HTMLElement>) {
-    if (dragOrigin.current?.pointerId !== event.pointerId) return
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId)
-    dragOrigin.current = null
-    setDragging(false)
-  }
-
-  return <div className={`temporary-result-field${revealed ? ' is-revealed' : ''}${dragging ? ' is-dragging' : ''}`}>
-    <span>{label}</span>
-    <div className="temporary-result-control">
-      <code
-        ref={valueElement}
-        tabIndex={revealed ? 0 : -1}
-        aria-label={revealed ? `${label}完整内容，可左右拖动查看` : undefined}
-        title={revealed ? '按住左右拖动查看完整内容' : `${label}已隐藏`}
-        onPointerDown={beginDrag}
-        onPointerMove={moveDrag}
-        onPointerUp={endDrag}
-        onPointerCancel={endDrag}
-      >{revealed ? value : maskResultValue(value)}</code>
-      <div className="temporary-result-actions">
-        {concealable ? <button type="button" className="temporary-visibility-button" aria-label={visibilityLabel} aria-pressed={revealed} title={visibilityLabel} onClick={onToggleVisibility}><EyeIcon visible={revealed} /></button> : null}
-        <button type="button" className="temporary-copy-button" disabled={disabled} onClick={onCopy}>{action}</button>
-      </div>
-    </div>
-  </div>
-}
-function maskResultValue(value: string) { return value.length <= 14 ? '•'.repeat(value.length) : `${value.slice(0, 8)}${'•'.repeat(12)}${value.slice(-6)}` }
-function EyeIcon({ visible }: { visible: boolean }) { return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.8 12s3.2-5.2 9.2-5.2 9.2 5.2 9.2 5.2-3.2 5.2-9.2 5.2S2.8 12 2.8 12Z" /><circle cx="12" cy="12" r="2.6" />{visible ? <path className="eye-slash" d="m4.2 4.2 15.6 15.6" /> : null}</svg> }
 function ArrowRightIcon() { return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13m-5-5 5 5-5 5" /></svg> }
 function DownloadActionIcon({ state }: { state: 'ready' | 'loading' | 'complete' }) {
   if (state === 'loading') return <svg className="is-spinner" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" /></svg>

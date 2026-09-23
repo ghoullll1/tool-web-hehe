@@ -1,3 +1,4 @@
+import { Icon } from "../../components/Icon"
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import type { ToolViewProps } from '../registry'
 import {
@@ -236,7 +237,7 @@ export default function ImageConverterTool({ tool }: ToolViewProps) {
       <div className="image-converter-flow-heading"><span>FORMAT MAP</span><strong>主流格式自由转换</strong></div>
       <div className="image-converter-flow-track">
         {FORMATS.map((item, index) => <div key={item.value} className="image-converter-flow-item">
-          <span>{item.name}</span><small>{item.note}</small>{index < FORMATS.length - 1 && <b aria-hidden="true">↔</b>}
+          <span>{item.name}</span><small>{item.note}</small>{index < FORMATS.length - 1 && <b aria-hidden="true"><Icon name="swap" /></b>}
         </div>)}
       </div>
       <div className="image-converter-flow-limit"><span>批量上限</span><strong>30 张</strong><small>合计不超过 150 MB</small></div>
@@ -269,7 +270,7 @@ export default function ImageConverterTool({ tool }: ToolViewProps) {
             }} />
             <div className="image-converter-source-name"><strong title={source.file.name}>{source.file.name}</strong><span>{source.width && source.height ? `${source.width} × ${source.height} · ` : ''}{formatImageBytes(source.file.size)}</span>{failures[source.id] && <em>{failures[source.id]}</em>}</div>
             <StatusIcon status={activeId === source.id ? 'active' : failures[source.id] ? 'error' : results.some((result) => result.id === source.id) ? 'done' : 'ready'} />
-            <button type="button" disabled={locked} aria-label={`移除 ${source.file.name}`} onClick={() => removeSource(source.id)}>×</button>
+            <button type="button" disabled={locked} aria-label={`移除 ${source.file.name}`} onClick={() => removeSource(source.id)}><Icon name="close" /></button>
           </article>)}
         </div> : <div className="image-converter-empty"><PictureIcon /><p>可同时选择多张图片，转换顺序与当前列表一致。</p></div>}
       </section>
@@ -277,14 +278,14 @@ export default function ImageConverterTool({ tool }: ToolViewProps) {
       <aside className="image-converter-settings">
         <header><span>02</span><div><h3>输出设置</h3><p>所有图片统一应用</p></div></header>
         <fieldset disabled={locked}>
-          <legend>目标格式</legend>
-          <div className="image-converter-formats">{FORMATS.map((item) => <button type="button" key={item.value} aria-pressed={format === item.value} onClick={() => updateFormat(item.value)}><strong>{item.name}</strong><span>{item.note}</span><i aria-hidden="true">✓</i></button>)}</div>
+          <div><span className="image-converter-format-label" id="image-target-format">目标格式</span>
+          <div className="image-converter-formats" role="group" aria-labelledby="image-target-format">{FORMATS.map((item) => <button type="button" key={item.value} aria-pressed={format === item.value} onClick={() => updateFormat(item.value)}><strong>{item.name}</strong><span>{item.note}</span><i aria-hidden="true"><Icon name="check" /></i></button>)}</div></div>
           {format !== 'png' && <label className="image-converter-quality"><span><b>图片质量</b><output>{quality}%</output></span><input aria-label="图片质量" type="range" min="40" max="100" step="1" value={quality} onChange={(event) => { clearResults(); setQuality(Number(event.target.value)) }} /><small>{quality >= 90 ? '更清晰，文件通常更大' : quality >= 75 ? '清晰度与体积均衡' : '更小体积，细节会减少'}</small></label>}
           <div className="image-converter-field"><span>输出尺寸</span><div className="image-converter-scale">{SCALES.map((item) => <button type="button" key={item.value} aria-pressed={scale === item.value} onClick={() => updateScale(item.value)}>{item.label}</button>)}</div></div>
           {format === 'jpeg' && <label className="image-converter-background"><span>透明区域背景</span><div><input aria-label="透明区域背景颜色" type="color" value={background} onChange={(event) => { clearResults(); setBackground(event.target.value) }} /><code>{background.toUpperCase()}</code></div><small>JPG 不支持透明，透明像素会填充此颜色。</small></label>}
           {format === 'png' && <p className="image-converter-setting-note">PNG 采用无损编码并保留透明区域，因此无需设置质量。</p>}
         </fieldset>
-        <button type="button" className="image-converter-action" disabled={locked || !sources.length} onClick={() => void runConversion()}>{busy ? <><span className="image-converter-spinner" />正在转换 {Math.round(progress * 100)}%</> : <>开始批量转换 <span>→</span></>}</button>
+        <button type="button" className="image-converter-action" disabled={locked || !sources.length} onClick={() => void runConversion()}>{busy ? <><span className="image-converter-spinner" />正在转换 {Math.round(progress * 100)}%</> : <>开始批量转换 <span><Icon name="arrowRight" /></span></>}</button>
         {busy && <button type="button" className="image-converter-cancel" onClick={() => controllerRef.current?.abort()}>取消转换</button>}
         <div className="image-converter-progress" aria-hidden={!busy && progress === 0}><span style={{ width: `${progress * 100}%` }} /></div>
       </aside>
@@ -293,10 +294,10 @@ export default function ImageConverterTool({ tool }: ToolViewProps) {
     <div className={`image-converter-notice is-${noticeType}`} role={noticeType === 'error' ? 'alert' : 'status'}><StatusIcon status={noticeType === 'error' ? 'error' : noticeType === 'success' ? 'done' : 'ready'} /><span>{notice}</span><b>浏览器本地处理</b></div>
 
     <section className="image-converter-results">
-      <header><div><span>03</span><div><h3>转换结果</h3><p>{results.length ? `${results.length} 张 · ${formatImageBytes(totalResultBytes)}` : '完成后可对比并下载'}</p></div></div>{results.length > 0 && <button type="button" disabled={packing} onClick={() => void downloadAll()}>{packing ? '正在打包…' : '打包下载 ZIP'} <span>↓</span></button>}</header>
+      <header><div><span>03</span><div><h3>转换结果</h3><p>{results.length ? `${results.length} 张 · ${formatImageBytes(totalResultBytes)}` : '完成后可对比并下载'}</p></div></div>{results.length > 0 && <button type="button" disabled={packing} onClick={() => void downloadAll()}>{packing ? '正在打包…' : '打包下载 ZIP'} <span><Icon name="arrowDown" /></span></button>}</header>
       {results.length ? <div className="image-converter-result-grid">{results.map((result, index) => <article key={result.id} style={{ '--result-index': index } as CSSProperties}>
         <div className="image-converter-result-preview"><img loading="lazy" src={result.url} alt={`${result.sourceName} 转换结果`} /><span>{format.toUpperCase()}</span></div>
-        <div className="image-converter-result-copy"><strong title={result.name}>{result.name}</strong><p>{result.width} × {result.height}</p><div><span>{formatImageBytes(result.blob.size)}</span><b className={result.blob.size <= result.sourceBytes ? 'is-smaller' : ''}>{formatSizeDelta(result.sourceBytes, result.blob.size)}</b></div></div>
+        <div className="image-converter-result-copy"><strong title={result.name}>{result.name}</strong><p>{result.width} <Icon name="close" />{result.height}</p><div><span>{formatImageBytes(result.blob.size)}</span><b className={result.blob.size <= result.sourceBytes ? 'is-smaller' : ''}>{formatSizeDelta(result.sourceBytes, result.blob.size)}</b></div></div>
         <a href={result.url} download={result.name} aria-label={`下载 ${result.name}`}><DownloadIcon /> 下载</a>
       </article>)}</div> : <div className="image-converter-result-empty"><PictureIcon /><h4>还没有转换结果</h4><p>选择图片并设置目标格式，转换结果会在这里逐张出现。</p></div>}
     </section>
@@ -320,5 +321,5 @@ function DownloadIcon() {
 }
 
 function StatusIcon({ status }: { status: 'ready' | 'active' | 'done' | 'error' }) {
-  return <span className={`image-converter-status is-${status}`} aria-label={status === 'ready' ? '待处理' : status === 'active' ? '转换中' : status === 'done' ? '已完成' : '转换失败'}>{status === 'done' ? '✓' : status === 'error' ? '!' : status === 'active' ? '↻' : '•'}</span>
+  return <span className={`image-converter-status is-${status}`} aria-label={status === 'ready' ? '待处理' : status === 'active' ? '转换中' : status === 'done' ? '已完成' : '转换失败'}>{status === 'done' ? <Icon name="check" /> : status === 'error' ? <Icon name="alert" /> : status === 'active' ? <Icon name="refresh" /> : <Icon name="info" />}</span>
 }

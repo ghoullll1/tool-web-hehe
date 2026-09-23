@@ -29,6 +29,7 @@ const TOOL_MARKS: Readonly<Record<string, string>> = {
   clock: '◷',
   network: '↗',
   share: '⇧',
+  chat: '↔',
 }
 
 export function toolMark(tool: ToolDescriptor) {

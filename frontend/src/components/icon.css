@@ -1,0 +1,41 @@
+svg.ui-icon {
+  display: inline-block;
+  width: var(--icon-size, 18px);
+  height: var(--icon-size, 18px);
+  min-width: var(--icon-size, 18px);
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  vertical-align: -0.2em;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.dashboard-tool-mark, .dashboard-float-card > span { display: inline-grid; place-items: center; }
+
+/* Fixed-size symbol slots center the drawing, independent of font metrics. */
+:is(.json-notice-icon, .image-converter-status, .temporary-chat-closed-icon,
+  .temporary-chat-empty > span, .coordinate-empty > span, .pdf-output-empty > span) {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+/* Larger empty-state symbols have breathing room inside their existing tiles. */
+:is(.temporary-chat-closed-icon, .temporary-chat-empty > span,
+  .coordinate-empty > span, .json-diff-empty > span, .pdf-output-empty > span,
+  .pdf-merge-complete > span, .pic-pdf-ready > span, .hd-empty-radar > span,
+  .hd-panel-empty > span) > svg.ui-icon {
+  width: 28px;
+  height: 28px;
+}
+.dashboard-search button > svg.ui-icon { color: inherit; }
+.password-mode-switch button > b > svg.ui-icon { padding: 0; border: 0; background: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-icon { animation: none !important; transition: none !important; }
+}

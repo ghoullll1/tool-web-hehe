@@ -23,7 +23,7 @@
 .dt-dialog-header p{margin:3px 0 0;color:var(--tool-text-secondary);font-size:var(--tool-font-secondary);overflow-wrap:anywhere}
 .dt-dialog-header>.dt-icon-button{margin-left:auto;flex-shrink:0}
 .dt-icon-button{display:grid;place-items:center;width:36px;height:36px;padding:8px;border:1px solid transparent;border-radius:10px;background:transparent;color:#52674d}
-.dt-icon-button svg{width:20px;height:20px}
+.dt-icon-button svg{display:block;width:18px;height:18px;flex:0 0 auto}
 .dt-icon-button:hover{background:#eef4e8;border-color:#d4e2ca}
 .dt-dialog-body{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}
 .dt-calendar{min-width:0;padding:20px 24px 14px}

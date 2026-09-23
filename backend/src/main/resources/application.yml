@@ -78,6 +78,7 @@ tool-platform:
     trusted-private-hosts: ${HTTP_DIAGNOSTICS_TRUSTED_PRIVATE_HOSTS:}
     allowed-ports: ${HTTP_DIAGNOSTICS_ALLOWED_PORTS:80,443}
   temporary-file-share:
+    pickup-code-secret: ${TEMPORARY_FILE_SHARE_PICKUP_CODE_SECRET:development-only-change-me-pickup-code-secret}
     storage-provider: ${TEMPORARY_FILE_SHARE_STORAGE_PROVIDER:filesystem}
     storage-root: ${TEMPORARY_FILE_SHARE_STORAGE_ROOT:./data/temporary-file-shares}
     max-file-size: ${TEMPORARY_FILE_SHARE_MAX_FILE_SIZE:30MB}
@@ -109,3 +110,14 @@ tool-platform:
     connect-timeout: ${DOCUMENT_CONVERSION_CONNECT_TIMEOUT:3s}
     response-timeout: ${DOCUMENT_CONVERSION_RESPONSE_TIMEOUT:130s}
     max-concurrent-conversions: ${DOCUMENT_CONVERSION_MAX_CONCURRENT:4}
+  temporary-chat:
+    waiting-timeout: ${TEMPORARY_CHAT_WAITING_TIMEOUT:3m}
+    inactivity-timeout: ${TEMPORARY_CHAT_INACTIVITY_TIMEOUT:3m}
+    authentication-timeout: ${TEMPORARY_CHAT_AUTHENTICATION_TIMEOUT:5s}
+    heartbeat-interval: ${TEMPORARY_CHAT_HEARTBEAT_INTERVAL:25s}
+    heartbeat-timeout: ${TEMPORARY_CHAT_HEARTBEAT_TIMEOUT:75s}
+    cleanup-interval: ${TEMPORARY_CHAT_CLEANUP_INTERVAL:5s}
+    max-active-sessions: ${TEMPORARY_CHAT_MAX_ACTIVE_SESSIONS:1000}
+    max-message-characters: ${TEMPORARY_CHAT_MAX_MESSAGE_CHARACTERS:4000}
+    max-frame-bytes: ${TEMPORARY_CHAT_MAX_FRAME_BYTES:16384}
+    max-messages-per-ten-seconds: ${TEMPORARY_CHAT_MAX_MESSAGES_PER_TEN_SECONDS:20}

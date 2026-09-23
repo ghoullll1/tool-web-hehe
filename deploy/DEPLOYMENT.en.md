@@ -133,8 +133,9 @@ Browser smoke tests:
 1. Open `http://127.0.0.1:8088` and confirm the tool catalog loads.
 2. Refresh a `/tools/...` route and confirm it does not return 404.
 3. Upload a small test document and confirm Markdown conversion succeeds.
-4. Create a temporary file share, download it once, and confirm a second download is rejected.
-5. Confirm MySQL, the RustFS S3 API, the worker, and the backend container ports are not directly reachable from the public network.
+4. Create a temporary file share, claim it with its eight-digit pickup code or QR link, and confirm a second download is rejected.
+5. Create and join a temporary chat from two browser windows; confirm WebSocket messages flow both ways and that the server offers no message history after leaving.
+6. Confirm MySQL, the RustFS S3 API, the worker, and the backend container ports are not directly reachable from the public network.
 
 ## 7. Add an HTTPS reverse proxy
 
@@ -146,7 +147,7 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-When using Caddy, Traefik, Cloudflare Tunnel, or a load balancer, forward HTTPS traffic to `127.0.0.1:8088` and preserve the `Host`, `X-Forwarded-For`, and `X-Forwarded-Proto` headers.
+When using Caddy, Traefik, Cloudflare Tunnel, or a load balancer, forward HTTPS traffic to `127.0.0.1:8088`, preserve the `Host`, `X-Forwarded-For`, and `X-Forwarded-Proto` headers, and enable WebSocket Upgrade for `/ws/v1/temporary-chat`. The room registry is local to one backend process; do not horizontally scale backend replicas until a shared routing layer is added.
 
 ## 8. Main environment variables
 
@@ -160,8 +161,11 @@ When using Caddy, Traefik, Cloudflare Tunnel, or a load balancer, forward HTTPS 
 | `OBJECT_STORAGE_ACCESS_KEY` / `OBJECT_STORAGE_SECRET_KEY` | Yes | Backend object-storage credentials |
 | `OBJECT_STORAGE_BUCKET` | No | Private bucket; default `temp-files` |
 | `DOCUMENT_CONVERSION_WORKER_TOKEN` | Yes | Internal token shared by backend and worker |
+| `TEMPORARY_FILE_SHARE_PICKUP_CODE_SECRET` | Yes | Pickup-code HMAC secret, at least 32 random characters; rotating it invalidates existing codes |
 | `TEMPORARY_FILE_SHARE_MAX_FILE_SIZE` | No | Per-file limit; default 30 MB |
 | `TEMPORARY_FILE_SHARE_MAX_STORED_BYTES` | No | Total temporary-file quota; default 1 GB |
+| `TEMPORARY_CHAT_MAX_ACTIVE_SESSIONS` | No | Maximum active rooms in the single backend process; default 1000 |
+| `TEMPORARY_CHAT_MAX_MESSAGE_CHARACTERS` | No | Per-message character limit; default 4000 |
 | `HTTP_DIAGNOSTICS_ALLOWED_PORTS` | No | Allowed diagnostic target ports; default `80,443` |
 
 See `.env.example` for all defaults. Never commit real passwords, tokens, certificates, private keys, or the deployment `.env` file.
@@ -217,11 +221,21 @@ Check MySQL health, matching credentials, and Flyway migration errors.
 
 ### Temporary file sharing fails
 
-Confirm that `OBJECT_STORAGE_BUCKET` exists and the backend credentials can access it:
+Confirm that `OBJECT_STORAGE_BUCKET` exists, the backend credentials can access it, and `TEMPORARY_FILE_SHARE_PICKUP_CODE_SECRET` contains at least 32 random characters:
 
 ```bash
 docker compose --env-file .env -f compose.yml logs --tail=200 rustfs backend
 ```
+
+### Temporary chat cannot connect
+
+Confirm that `/ws/v1/temporary-chat` receives a WebSocket `101 Switching Protocols` response, that the outer reverse proxy forwards the `Upgrade` and `Connection` headers, and inspect:
+
+```bash
+docker compose --env-file .env -f compose.yml logs --tail=200 frontend backend
+```
+
+The current room registry lives in backend memory. Keep one backend replica; a multi-replica deployment first needs shared session routing, which ordinary HTTP load balancing or sticky sessions alone cannot provide.
 
 ### Document conversion is unavailable
 
@@ -239,6 +253,7 @@ Confirm that the worker image was built with `INSTALL_MARKITDOWN=true` and both 
 - Keep the RustFS console loopback-bound and access it through an SSH tunnel when needed.
 - Use a bucket-scoped object-storage service account instead of long-term RustFS administrator credentials.
 - Never commit `.env`, database dumps, certificates, private keys, or logs.
+- Use and back up a dedicated random pickup-code HMAC secret; rotating it immediately invalidates unclaimed existing codes.
 - Update base images regularly; replace RustFS `latest` with a tested version or digest in production.
 - Configure MySQL and RustFS backups and verify restoration.
 - Put OIDC/SSO or another access-control layer in front of the administration API before exposing it broadly.

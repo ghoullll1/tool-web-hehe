@@ -25,6 +25,23 @@ afterEach(() => {
 })
 
 describe('DocumentConverterTool', () => {
+  it('opens the file picker from the empty dropzone and accepts a dropped document without converting', () => {
+    const { container } = render(<DocumentConverterTool tool={tool} />)
+    const input = screen.getByLabelText('选择待转换文档')
+    const openPicker = vi.spyOn(input, 'click').mockImplementation(() => undefined)
+    fireEvent.click(screen.getByRole('button', { name: /拖入文档，或点击选择/ }))
+    expect(openPicker).toHaveBeenCalledTimes(1)
+    const zone = container.querySelector('.document-dropzone')!
+    fireEvent.dragEnter(zone)
+    expect(zone.classList.contains('is-dragging')).toBe(true)
+    fireEvent.drop(zone, { dataTransfer: { files: { item: () => new File(['content'], 'release.docx') } } })
+    expect(zone.classList.contains('is-dragging')).toBe(false)
+    expect(zone.classList.contains('has-file')).toBe(true)
+    expect(screen.getByRole('button', { name: '更换文档' })).toBeTruthy()
+    expect(api.convertDocument).not.toHaveBeenCalled()
+    openPicker.mockRestore()
+  })
+
   it('moves from file selection through conversion to a Markdown result', async () => {
     api.convertDocument.mockImplementation(async (_file, options) => {
       options.onUploadProgress?.(100)

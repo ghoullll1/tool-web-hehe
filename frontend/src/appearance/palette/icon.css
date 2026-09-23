@@ -1,0 +1,9 @@
+/* Generated color bridge for src/components/icon.css. See scripts/ui-palette.mjs. */
+html[data-ui="modern"] svg.ui-icon {
+  border: 0;
+  background: none;
+  fill: none;
+  stroke: currentColor;
+}
+html[data-ui="modern"] .dashboard-search button > svg.ui-icon { color: inherit; }
+html[data-ui="modern"] .password-mode-switch button > b > svg.ui-icon { border: 0; background: none; }

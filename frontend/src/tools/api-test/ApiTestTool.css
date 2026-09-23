@@ -181,7 +181,7 @@
   color: #718078;
   transition: color .2s ease, background .2s ease, border-color .2s ease, transform .22s ease;
 }
-.api-request-tab-icon svg { width: 17px; fill: none; stroke: currentColor; stroke-width: 1.65; stroke-linecap: round; stroke-linejoin: round; }
+.api-request-tab-icon svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.65; stroke-linecap: round; stroke-linejoin: round; }
 .api-request-tabs > button:hover .api-request-tab-icon { color: #3f6d47; transform: translateY(-1px); }
 .api-request-tabs > button.is-active .api-request-tab-icon { border-color: #9ebc91; background: #1b513e; color: var(--accent); }
 .api-request-tab-copy { min-width: 0; display: flex; align-items: center; gap: 7px; }
@@ -230,7 +230,7 @@
   transition: border-color .2s ease, background .2s ease, box-shadow .2s ease, transform .2s ease;
 }
 .api-pairs-header > button > span { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 8px; background: #1b513e; color: var(--accent); }
-.api-pairs-header > button svg { width: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; transition: transform .22s ease; }
+.api-pairs-header > button svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; transition: transform .22s ease; }
 .api-pairs-header > button:hover { border-color: #7fa36e; background: #eaf5e4; box-shadow: 0 9px 20px rgba(38, 83, 52, .11); transform: translateY(-2px); }
 .api-pairs-header > button:hover svg { transform: rotate(90deg); }
 .api-pairs-header > button:focus-visible { outline: 3px solid rgba(87, 137, 75, .17); outline-offset: 2px; }
@@ -317,7 +317,7 @@
 .api-pair-field input:hover { border-color: #b6c7af; background: #fff; }
 .api-pair-field input:focus { border-color: #6f9560; background: #fff; box-shadow: 0 0 0 3px rgba(101, 148, 84, .13); }
 .api-pair-direction { align-self: end; height: 43px; display: grid; place-items: center; color: #91a18f; }
-.api-pair-direction svg { width: 25px; fill: none; stroke: currentColor; stroke-width: 1.45; stroke-linecap: round; stroke-linejoin: round; transition: color .2s ease, transform .2s ease; }
+.api-pair-direction svg { width: 25px; height: 25px; fill: none; stroke: currentColor; stroke-width: 1.45; stroke-linecap: round; stroke-linejoin: round; transition: color .2s ease, transform .2s ease; }
 .api-pair-row:focus-within .api-pair-direction svg { color: #5e8a55; transform: translateX(2px); }
 .api-pair-row .api-pair-delete {
   align-self: end;
@@ -512,7 +512,8 @@
   white-space: nowrap;
 }
 .api-pair-row .api-pair-type-trigger svg {
-  width: 11px;
+  width: 16px;
+  height: 16px;
   flex: none;
   fill: none;
   stroke: currentColor;
@@ -565,7 +566,7 @@
 .api-parameter-type-menu > button > span { min-width: 0; display: grid; gap: 2px; }
 .api-parameter-type-menu > button strong { color: var(--option-color); font-size: 14px; line-height: 1.1; }
 .api-parameter-type-menu > button small { overflow: hidden; color: #748179; font-size: 14px; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap; }
-.api-parameter-type-menu > button svg { width: 17px; fill: none; stroke: var(--option-color); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; opacity: 0; transform: scale(.7); transition: opacity .15s ease, transform .15s ease; }
+.api-parameter-type-menu > button svg { width: 18px; height: 18px; fill: none; stroke: var(--option-color); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; opacity: 0; transform: scale(.7); transition: opacity .15s ease, transform .15s ease; }
 .api-parameter-type-menu > button.is-selected svg { opacity: 1; transform: scale(1); }
 @keyframes api-type-menu-in { from { opacity: 0; transform: translateY(-5px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
 .api-pair-row .api-pair-delete {

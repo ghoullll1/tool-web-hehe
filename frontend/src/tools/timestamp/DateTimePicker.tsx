@@ -1,3 +1,4 @@
+import { Icon } from '../../components/Icon'
 import { memo, useEffect, useId, useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { createPortal } from 'react-dom'
 import { calendarDays, currentDateTime, dateKey, pad, pickerInitialValue, shiftDay, shiftMonth, type CalendarDate } from './calendarModel'
@@ -212,7 +213,7 @@ function DateTimeDialog({ id, value, timeZone, onChange, onClose, label = '日�
       <div className="dt-selection"><span>已选时间</span><output>{normalized.replace('T', ' ')}</output></div>
       {error && <p id={`${id}-error`} className="dt-picker-error" role="alert">{error}</p>}
       {ambiguous && <p className="dt-picker-warning">此时间在夏令时结束时出现两次，将采用较早的时刻。</p>}
-      <div className="dt-footer-actions"><button onClick={closeDialog}>取消</button><button className="dt-apply" disabled={!!error} onClick={apply}>应用时间 <span aria-hidden="true">↗</span></button></div>
+      <div className="dt-footer-actions"><button onClick={closeDialog}>取消</button><button className="dt-apply" disabled={!!error} onClick={apply}>应用时间 <span aria-hidden="true"><Icon name="external" /></span></button></div>
     </footer>
   </dialog>
 }

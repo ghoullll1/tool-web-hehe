@@ -60,6 +60,7 @@ const clientToolRegistrations = [
   ['password.generator.v1', registerClientTool('password-generator', () => import('./password-generator/PasswordGeneratorTool'))],
   ['utilities.world-time.v1', registerClientTool('world-time', () => import('./world-time/WorldTimeTool'))],
   ['utilities.temporary.file.share.v1', registerClientTool('temporary-file-share', () => import('./temporary-file-share/TemporaryFileShareTool'))],
+  ['utilities.temporary.chat.v1', registerClientTool('temporary-chat', () => import('./temporary-chat/TemporaryChatTool'))],
 ] as const
 
 const clientToolRegistry = Object.freeze(Object.fromEntries(

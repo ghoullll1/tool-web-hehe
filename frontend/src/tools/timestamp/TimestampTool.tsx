@@ -1,3 +1,4 @@
+import { Icon } from '../../components/Icon'
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
 import type { ToolViewProps } from '../registry'
 import DateTimePicker from './DateTimePicker'
@@ -138,10 +139,10 @@ export default function TimestampTool({ tool }: ToolViewProps) {
       {timestampState.result && <DateFormats result={timestampState.result} timeZone={timeZone} onCopy={copy} />}
     </div> : <section className="ts-batch">
       <header><ConverterHeading index="BATCH" icon="digits" title="批量时间戳转换" detail={`每行一个，最多 ${MAX_BATCH_LINES} 行`} /><button onClick={() => { setBatchInput(''); setBatchOutput([]) }}>清空</button></header>
-      <div className="ts-batch-grid"><div><textarea aria-label="批量时间戳" value={batchInput} placeholder={'1704067200\n1719792000000\n1722470400123'} onChange={(event) => { setBatchInput(event.target.value); setBatchOutput([]) }} /><div className="ts-batch-actions"><OptionGroup label="输入单位" options={UNITS} value={batchUnit} onChange={changeBatchUnit} /><button className="ts-primary" onClick={runBatch}>开始转换 →</button></div></div><BatchResults rows={batchOutput} onCopy={copy} /></div>
+      <div className="ts-batch-grid"><div><textarea aria-label="批量时间戳" value={batchInput} placeholder={'1704067200\n1719792000000\n1722470400123'} onChange={(event) => { setBatchInput(event.target.value); setBatchOutput([]) }} /><div className="ts-batch-actions"><OptionGroup label="输入单位" options={UNITS} value={batchUnit} onChange={changeBatchUnit} /><button className="ts-primary" onClick={runBatch}>开始转换 <Icon name="arrowRight" /></button></div></div><BatchResults rows={batchOutput} onCopy={copy} /></div>
     </section>}
 
-    <div className={`ts-notice is-${notice.tone}`} role={notice.tone === 'error' ? 'alert' : 'status'}><span>{notice.tone === 'success' ? '✓' : notice.tone === 'error' ? '!' : 'i'}</span>{notice.message}<b>浏览器本地处理</b></div>
+    <div className={`ts-notice is-${notice.tone}`} role={notice.tone === 'error' ? 'alert' : 'status'}><span>{notice.tone === 'success' ? <Icon name="check" /> : notice.tone === 'error' ? <Icon name="alert" /> : <Icon name="info" />}</span>{notice.message}<b>浏览器本地处理</b></div>
   </div>
 }
 

@@ -1,3 +1,4 @@
+import { Icon } from "../../components/Icon"
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type CSSProperties, type DragEvent } from 'react'
 import type { ToolViewProps } from '../registry'
 import { formatPdfBytes, inspectPdfFiles, MAX_PDF_FILES, MAX_PDF_TOTAL_BYTES, mergePdfFiles, movePdfItem, updatePdfPageSelection, type PdfMergeItem } from './pdfMergeModel'
@@ -104,12 +105,12 @@ export default function PdfMergeTool({ tool }: ToolViewProps) {
 
   return (
     <div className="pdf-merge-tool" data-tool={tool.slug}>
-      <div className={`pdf-merge-notice is-${notice.tone}`} role={notice.tone === 'error' ? 'alert' : 'status'}><span aria-hidden="true">{notice.tone === 'error' ? '!' : notice.tone === 'success' ? '✓' : 'i'}</span><p>{notice.message}</p><b>文件仅在浏览器本地处理</b></div>
+      <div className={`pdf-merge-notice is-${notice.tone}`} role={notice.tone === 'error' ? 'alert' : 'status'}><span aria-hidden="true">{notice.tone === 'error' ? <Icon name="alert" /> : notice.tone === 'success' ? <Icon name="check" /> : <Icon name="info" />}</span><p>{notice.message}</p><b>文件仅在浏览器本地处理</b></div>
       <section className="pdf-merge-summary" aria-label="合并概览">
         <div><span>FILES</span><strong>{items.length.toString().padStart(2, '0')}</strong><p>已添加文件</p></div>
         <div><span>PAGES</span><strong>{totalPages.toLocaleString()}</strong><p>待合并页数</p></div>
         <div><span>SIZE</span><strong>{formatPdfBytes(totalBytes)}</strong><p>输入总大小</p></div>
-        <div className="pdf-merge-summary-action"><button type="button" disabled={items.length < 2 || busy || hasSelectionError} onClick={() => void merge()}>{busy ? `合并中 ${Math.round(progress * 100)}%` : '开始合并'}<span>→</span></button></div>
+        <div className="pdf-merge-summary-action"><button type="button" disabled={items.length < 2 || busy || hasSelectionError} onClick={() => void merge()}>{busy ? `合并中 ${Math.round(progress * 100)}%` : '开始合并'}<span><Icon name="arrowRight" /></span></button></div>
       </section>
       <div className="pdf-merge-workspace">
         <section className="pdf-merge-panel">
@@ -121,8 +122,8 @@ export default function PdfMergeTool({ tool }: ToolViewProps) {
             </div>
           ) : (
             <div className="pdf-file-list" onDragOver={(event) => event.preventDefault()} onDrop={handleDrop}>
-              {items.map((item, index) => <article key={item.id} className={`pdf-file-card${item.selectionError ? ' has-page-error' : ''}`}><span className="pdf-file-order">{String(index + 1).padStart(2, '0')}</span><span className="pdf-file-icon">PDF</span><div><h3 title={item.name}>{item.name}</h3><p>原文件 {item.pageCount} 页 · 已选 {item.pageIndices.length} 页 · {formatPdfBytes(item.size)}</p></div><div className="pdf-file-actions"><button type="button" disabled={index === 0 || busy} aria-label={`上移 ${item.name}`} onClick={() => reorder(index, index - 1)}>↑</button><button type="button" disabled={index === items.length - 1 || busy} aria-label={`下移 ${item.name}`} onClick={() => reorder(index, index + 1)}>↓</button><button type="button" disabled={busy} aria-label={`移除 ${item.name}`} onClick={() => remove(item.id)}>×</button></div><label className="pdf-page-selection"><span>合并页码</span><input type="text" value={item.pageSelection} disabled={busy} aria-label={`${item.name} 合并页码`} aria-invalid={Boolean(item.selectionError)} aria-describedby={`${item.id}-page-help`} onChange={(event) => changePageSelection(item.id, event.target.value)} /><small id={`${item.id}-page-help`}>{item.selectionError ?? '例如 1-3,5,7；2- 表示第 2 页到最后'}</small></label></article>)}
-              <button className="pdf-add-more" type="button" disabled={busy || items.length >= MAX_PDF_FILES} onClick={() => inputRef.current?.click()}>＋ 继续添加 PDF</button>
+              {items.map((item, index) => <article key={item.id} className={`pdf-file-card${item.selectionError ? ' has-page-error' : ''}`}><span className="pdf-file-order">{String(index + 1).padStart(2, '0')}</span><span className="pdf-file-icon">PDF</span><div><h3 title={item.name}>{item.name}</h3><p>原文件 {item.pageCount} 页 · 已选 {item.pageIndices.length} 页 · {formatPdfBytes(item.size)}</p></div><div className="pdf-file-actions"><button type="button" disabled={index === 0 || busy} aria-label={`上移 ${item.name}`} onClick={() => reorder(index, index - 1)}><Icon name="arrowUp" /></button><button type="button" disabled={index === items.length - 1 || busy} aria-label={`下移 ${item.name}`} onClick={() => reorder(index, index + 1)}><Icon name="arrowDown" /></button><button type="button" disabled={busy} aria-label={`移除 ${item.name}`} onClick={() => remove(item.id)}><Icon name="close" /></button></div><label className="pdf-page-selection"><span>合并页码</span><input type="text" value={item.pageSelection} disabled={busy} aria-label={`${item.name} 合并页码`} aria-invalid={Boolean(item.selectionError)} aria-describedby={`${item.id}-page-help`} onChange={(event) => changePageSelection(item.id, event.target.value)} /><small id={`${item.id}-page-help`}>{item.selectionError ?? '例如 1-3,5,7；2- 表示第 2 页到最后'}</small></label></article>)}
+              <button className="pdf-add-more" type="button" disabled={busy || items.length >= MAX_PDF_FILES} onClick={() => inputRef.current?.click()}><Icon name="plus" /> 继续添加 PDF</button>
             </div>
           )}
           <footer><span>先按文件顺序，再按填写的页码顺序合并</span><span>最多 2,000 页</span></footer>
@@ -130,7 +131,7 @@ export default function PdfMergeTool({ tool }: ToolViewProps) {
         <section className="pdf-merge-panel pdf-output-panel">
           <header><div><span>02</span><h2>合并结果</h2></div></header>
           <div className="pdf-output-content">
-            {busy ? <div className="pdf-merge-processing"><span style={{ '--progress': `${progress * 360}deg` } as CSSProperties}><i>{Math.round(progress * 100)}%</i></span><h3>正在合并 PDF</h3><p>请保持当前页面打开，文件不会上传。</p></div> : result ? <div className="pdf-merge-complete"><span aria-hidden="true">✓</span><small>MERGE COMPLETE</small><h3>{result.name}</h3><p>{totalPages.toLocaleString()} 页 · {formatPdfBytes(result.size)}</p><a href={result.url} download={result.name}>下载合并后的 PDF <b>↓</b></a><button type="button" onClick={() => void merge()}>重新合并</button></div> : <div className="pdf-output-empty"><span aria-hidden="true">⇄</span><h3>等待合并</h3><p>添加至少两个文件并确认顺序，合并结果将在这里生成。</p></div>}
+            {busy ? <div className="pdf-merge-processing"><span style={{ '--progress': `${progress * 360}deg` } as CSSProperties}><i>{Math.round(progress * 100)}%</i></span><h3>正在合并 PDF</h3><p>请保持当前页面打开，文件不会上传。</p></div> : result ? <div className="pdf-merge-complete"><span aria-hidden="true"><Icon name="check" /></span><small>MERGE COMPLETE</small><h3>{result.name}</h3><p>{totalPages.toLocaleString()} 页 · {formatPdfBytes(result.size)}</p><a href={result.url} download={result.name}>下载合并后的 PDF <b><Icon name="arrowDown" /></b></a><button type="button" onClick={() => void merge()}>重新合并</button></div> : <div className="pdf-output-empty"><span aria-hidden="true"><Icon name="swap" /></span><h3>等待合并</h3><p>添加至少两个文件并确认顺序，合并结果将在这里生成。</p></div>}
           </div>
           <footer><span>浏览器本地生成</span><span>建议下载后检查书签、表单与签名</span></footer>
         </section>

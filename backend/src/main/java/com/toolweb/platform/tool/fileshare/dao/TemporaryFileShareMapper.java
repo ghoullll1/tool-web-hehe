@@ -12,7 +12,7 @@ import java.util.Optional;
 @Mapper
 public interface TemporaryFileShareMapper extends BaseMapper<TemporaryFileShare> {
 
-    Optional<TemporaryFileShare> selectForUpdate(@Param("shareId") String shareId);
+    Optional<TemporaryFileShare> selectForUpdate(@Param("pickupCodeDigest") String pickupCodeDigest);
 
     List<TemporaryFileShare> selectExpiredActive(
             @Param("expiresAt") Instant expiresAt,

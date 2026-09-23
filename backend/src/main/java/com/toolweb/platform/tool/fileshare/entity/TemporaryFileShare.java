@@ -24,6 +24,8 @@ public class TemporaryFileShare {
 
     private String accessKeyDigest;
 
+    private String pickupCodeDigest;
+
     private String objectKey;
 
     private String objectPath;
@@ -109,6 +111,8 @@ public class TemporaryFileShare {
     public Long id() { return id; }
     public String shareId() { return shareId; }
     public String accessKeyDigest() { return accessKeyDigest; }
+    public String pickupCodeDigest() { return pickupCodeDigest; }
+    public void assignPickupCodeDigest(String digest) { pickupCodeDigest = Objects.requireNonNull(digest); }
     public String objectKey() { return objectKey; }
     public String objectPath() { return objectPath; }
     public String storagePath() { return objectPath == null || objectPath.isBlank() ? objectKey : objectPath; }

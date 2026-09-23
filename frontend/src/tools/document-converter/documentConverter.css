@@ -99,7 +99,7 @@
 .document-pipeline-source small,
 .document-pipeline-output small { color: #547064; font-size: 14px; font-weight: 700; line-height: 1.2; letter-spacing: .02em; }
 .document-pipeline-core { width: 78px; height: 78px; border-radius: 50%; color: white; border: 8px solid #ddf1d0; background: var(--dc-deep); }
-.document-pipeline-core svg { width: 34px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.document-pipeline-core svg { width: 34px; height: 34px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .document-pipeline-core span { position: absolute; inset: -13px; border: 1px dashed #448464; border-radius: 50%; animation: dc-orbit 12s linear infinite; }
 .document-pipeline-route { height: 2px; position: relative; background: #84a785; }
 .document-pipeline-route > span { position: absolute; top: -3px; left: 0; width: 8px; height: 8px; border-radius: 50%; background: var(--dc-lime); box-shadow: 0 0 0 4px #a8f4312e; opacity: 0; }
@@ -144,7 +144,7 @@
 .document-dropzone.is-dragging .document-dropzone-scan,
 .document-dropzone.is-busy .document-dropzone-scan { opacity: .8; animation: dc-scan 2s ease-in-out infinite; }
 .document-choose-action { z-index: 2; display: grid; justify-items: center; gap: 8px; border: 0; color: var(--dc-ink); background: transparent; cursor: pointer; }
-.document-choose-action svg { width: 64px; margin-bottom: 7px; fill: #eff9e8; stroke: var(--dc-deep); stroke-width: 1.6; transition: transform .22s ease; }
+.document-choose-action svg { width: 56px; height: 56px; flex: 0 0 auto; margin-bottom: 7px; fill: #eff9e8; stroke: var(--dc-deep); stroke-width: 1.6; transition: transform .22s ease; }
 .document-choose-action:hover svg { transform: translateY(-5px); }
 .document-choose-action strong { font-size: 18px; }
 .document-choose-action small { color: #68796f; font-size: 14px; }
@@ -279,7 +279,7 @@
 .document-markdown-preview.is-empty p { margin: 0; font-size: 14px; }
 .document-output-profile { padding: 22px 18px; background: #f5f8f2; }
 .document-output-seal { display: inline-flex; align-items: center; gap: 6px; padding: 6px 9px; border-radius: 7px; color: var(--dc-deep); background: #e3f4d8; font: 700 12px ui-monospace, SFMono-Regular, Consolas, monospace; }
-.document-output-seal svg { width: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
+.document-output-seal svg { width: 18px; height: 18px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 2; }
 .document-output-profile > strong { display: block; margin-top: 22px; font: 800 34px/1 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: -.04em; }
 .document-output-profile > small { display: block; margin-top: 6px; color: #63746a; font-size: 14px; }
 .document-output-profile dl { margin: 24px 0 0; }

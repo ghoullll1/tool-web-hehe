@@ -1,0 +1,72 @@
+/* Generated color bridge for src/tools/timestamp/dateTimePicker.css. See scripts/ui-palette.mjs. */
+html[data-ui="modern"] .ts-date-input>label{font-size:var(--tool-font-secondary);color:var(--tool-text-secondary)}
+html[data-ui="modern"] .dt-field{border:1px solid var(--night-line);background:var(--night-panel)}
+html[data-ui="modern"] .dt-field:hover{border-color:var(--night-line);background:var(--night-panel)}
+html[data-ui="modern"] .dt-field:focus-within,html[data-ui="modern"] .dt-field.is-open{border-color:var(--night-line-active);background:var(--night-panel);box-shadow:0 0 0 4px rgba(0, 0, 0, 0.09411764705882353),0 5px 15px rgba(0, 0, 0, 0.0392156862745098)}
+html[data-ui="modern"] .ts-date-input .dt-field input{border:0;background:none;box-shadow:none;outline:none}
+html[data-ui="modern"] .ts-date-input .dt-field input:focus{background:none;box-shadow:none;outline:none}
+html[data-ui="modern"] .dt-field button{border:0;background:var(--night-panel);color:var(--night-muted)}
+html[data-ui="modern"] .dt-field button:hover{background:var(--night-raised)}
+html[data-ui="modern"] .dt-dialog{border:1px solid var(--night-line);background:var(--night-panel);color:var(--night-text);box-shadow:0 30px 100px rgba(0, 0, 0, 0.2);font-size:var(--tool-font-body)}
+html[data-ui="modern"] .dt-dialog::backdrop{background:color-mix(in srgb, var(--night-solid) 38%, transparent)}
+html[data-ui="modern"] .dt-dialog button,html[data-ui="modern"] .dt-dialog input{font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .dt-dialog button:focus-visible,html[data-ui="modern"] .dt-dialog input:focus-visible{outline:3px solid color-mix(in srgb, var(--night-line-active) 33%, transparent)}
+html[data-ui="modern"] .dt-dialog-header{border-bottom:1px solid var(--night-line)}
+html[data-ui="modern"] .dt-heading-icon{background:var(--night-panel);color:var(--night-muted)}
+html[data-ui="modern"] .dt-dialog-header h3{font-size:20px}
+html[data-ui="modern"] .dt-dialog-header p{color:var(--tool-text-secondary);font-size:var(--tool-font-secondary)}
+html[data-ui="modern"] .dt-icon-button{border:1px solid transparent;background:transparent;color:var(--night-muted)}
+html[data-ui="modern"] .dt-icon-button:hover{background:var(--night-panel);border-color:var(--night-line)}
+html[data-ui="modern"] .dt-month-title{border:0;background:transparent;color:var(--night-text);font-size:18px!important}
+html[data-ui="modern"] .dt-month-title:hover{background:var(--night-panel)}
+html[data-ui="modern"] .dt-month-title svg{color:var(--night-muted)}
+html[data-ui="modern"] .dt-weekdays{color:var(--tool-text-secondary);font-size:14px}
+html[data-ui="modern"] .dt-days button{border:1px solid transparent;background:transparent;color:var(--night-text);font:600 16px ui-monospace,SFMono-Regular,Consolas,monospace}
+html[data-ui="modern"] .dt-days button:hover{background:var(--night-panel);border-color:var(--night-line)}
+html[data-ui="modern"] .dt-days button.is-outside{color:var(--night-muted)}
+html[data-ui="modern"] .dt-days button[aria-pressed=true]{border-color:var(--night-line-active);background:var(--night-solid);color:var(--night-text);box-shadow:0 3px 9px rgba(0, 0, 0, 0.16470588235294117)}
+html[data-ui="modern"] .dt-days button i{background:var(--night-selected)}
+html[data-ui="modern"] .dt-days button[aria-pressed=true] i{background:var(--night-accent)}
+html[data-ui="modern"] .dt-calendar-footer{border-top:1px solid var(--night-line);font-size:14px}
+html[data-ui="modern"] .dt-calendar-footer span{color:var(--tool-text-secondary)}
+html[data-ui="modern"] .dt-calendar-footer i{background:var(--night-selected)}
+html[data-ui="modern"] .dt-calendar-footer button{border:0;background:transparent;color:var(--night-muted)}
+html[data-ui="modern"] .dt-calendar-footer button:hover{background:var(--night-panel)}
+html[data-ui="modern"] .dt-month-picker>p{color:var(--tool-text-secondary);font-size:14px}
+html[data-ui="modern"] .dt-month-picker button{border:1px solid var(--night-line);background:var(--night-panel);color:var(--night-text)}
+html[data-ui="modern"] .dt-month-picker button:hover,html[data-ui="modern"] .dt-month-picker button[aria-pressed=true]{background:var(--night-panel);border-color:var(--night-line)}
+html[data-ui="modern"] .dt-year-grid button{border:1px solid transparent;background:var(--night-panel);color:var(--night-text);font-size:16px}
+html[data-ui="modern"] .dt-year-grid button:hover{background:var(--night-panel);border-color:var(--night-line)}
+html[data-ui="modern"] .dt-year-grid button[aria-pressed=true]{background:var(--night-solid);color:var(--night-text);border-color:var(--night-line-active)}
+html[data-ui="modern"] .dt-year-jumps button{border:1px solid var(--night-line);background:var(--night-panel);color:var(--night-muted);font-size:14px}
+html[data-ui="modern"] .dt-time-panel{background:var(--night-panel);border-left:1px solid var(--night-line)}
+html[data-ui="modern"] .dt-time-heading h4{font-size:18px}
+html[data-ui="modern"] .dt-time-heading>span{font-size:14px;color:var(--tool-text-secondary)}
+html[data-ui="modern"] .dt-wheel>span{color:var(--tool-text-secondary);font-size:14px}
+html[data-ui="modern"] .dt-wheel-shell{border:1px solid var(--night-line);background:var(--night-panel)}
+html[data-ui="modern"] .dt-wheel-shell:focus-within{border-color:var(--night-line-active);box-shadow:0 0 0 3px rgba(0, 0, 0, 0.13333333333333333)}
+html[data-ui="modern"] .dt-wheel-scroll{outline:none}
+html[data-ui="modern"] .dt-wheel-track button{border:0;background:transparent;color:var(--night-muted);font:500 16px/36px ui-monospace,SFMono-Regular,Consolas,monospace}
+html[data-ui="modern"] .dt-wheel-track button:hover{color:var(--night-text)}
+html[data-ui="modern"] .dt-wheel-track button[aria-selected=true]{color:var(--night-text);font-size:20px}
+html[data-ui="modern"] .dt-wheel-selection{border:1px solid var(--night-line);background:var(--night-panel)}
+html[data-ui="modern"] .dt-millisecond-field>label{color:var(--tool-text-secondary);font-size:14px}
+html[data-ui="modern"] .dt-millisecond-field input{border:1px solid var(--night-line);background:var(--night-panel);color:var(--night-text);font:650 20px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace}
+html[data-ui="modern"] .dt-millisecond-field input:focus{border-color:var(--night-line-active);box-shadow:0 0 0 3px rgba(0, 0, 0, 0.13333333333333333)}
+html[data-ui="modern"] .dt-millisecond-field input[aria-invalid=true]{border-color:var(--night-danger-line);background:var(--night-panel)}
+html[data-ui="modern"] .dt-millisecond-field>div>span{color:var(--tool-text-secondary);font-size:14px}
+html[data-ui="modern"] .dt-time-shortcuts button{border:1px solid var(--night-line);background:var(--night-panel);color:var(--night-muted)}
+html[data-ui="modern"] .dt-time-shortcuts button:hover{background:var(--night-raised);border-color:var(--night-line)}
+html[data-ui="modern"] .dt-time-hint{color:var(--tool-text-secondary);font-size:14px}
+html[data-ui="modern"] .dt-dialog-footer{border-top:1px solid var(--night-line);background:var(--night-panel)}
+html[data-ui="modern"] .dt-selection>span{font-size:14px;color:var(--tool-text-secondary)}
+html[data-ui="modern"] .dt-selection output{font:600 16px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--night-text)}
+html[data-ui="modern"] .dt-footer-actions button{border:1px solid var(--night-line);background:var(--night-panel);color:var(--night-muted)}
+html[data-ui="modern"] .dt-footer-actions button:hover{background:var(--night-panel)}
+html[data-ui="modern"] .dt-footer-actions button.dt-apply{border-color:var(--night-line-active);background:var(--night-solid);color:var(--night-text)}
+html[data-ui="modern"] .dt-footer-actions button.dt-apply:hover{background:var(--night-solid);box-shadow:0 4px 12px rgba(0, 0, 0, 0.1568627450980392)}
+html[data-ui="modern"] .dt-apply span{font-size:20px;color:var(--night-accent)}
+html[data-ui="modern"] .dt-picker-error,html[data-ui="modern"] .dt-picker-warning{font-size:14px}
+html[data-ui="modern"] .dt-picker-error{background:var(--night-panel);color:var(--night-danger)}html[data-ui="modern"] .dt-picker-warning{background:var(--night-panel);color:var(--night-danger)}
+@media(max-width:600px){html[data-ui="modern"] .dt-time-panel{border-left:0;border-top:1px solid var(--night-line)}}
+@media(max-width:600px){html[data-ui="modern"] .dt-dialog-header{background:var(--night-panel)}html[data-ui="modern"] .dt-dialog-footer{background:var(--night-panel);box-shadow:0 -8px 20px rgba(0, 0, 0, 0.03137254901960784)}}

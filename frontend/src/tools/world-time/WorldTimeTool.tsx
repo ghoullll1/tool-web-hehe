@@ -1,3 +1,4 @@
+import { Icon } from '../../components/Icon'
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import type { ToolViewProps } from '../registry'
 import DateTimePicker from '../timestamp/DateTimePicker'
@@ -19,7 +20,9 @@ type TimeMode = 'live' | 'planned'
 type Notice = { tone: 'neutral' | 'success' | 'error'; message: string }
 
 function PeriodIcon({ period }: { period: DayPeriod }) {
-  return <span className={`world-period-icon is-${period.key}`} aria-hidden="true">{period.icon}</span>
+  const name = ['midnight', 'deep-night', 'pre-dawn', 'evening'].includes(period.key) ? 'moon'
+    : ['dawn', 'early-morning'].includes(period.key) ? 'sunrise' : period.key === 'dusk' ? 'sunset' : 'sun'
+  return <span className={`world-period-icon is-${period.key}`} aria-hidden="true"><Icon name={name} size={16} /></span>
 }
 
 const DAY_BAND_SEGMENTS = [
@@ -152,7 +155,7 @@ export default function WorldTimeTool({ tool }: ToolViewProps) {
   return (
     <div className="world-time-tool" data-tool={tool.slug}>
       <div className={`world-time-notice is-${activeError ? 'error' : notice.tone}`} role={activeError || notice.tone === 'error' ? 'alert' : 'status'}>
-        <span aria-hidden="true">{activeError ? '!' : notice.tone === 'success' ? '✓' : '◷'}</span>
+        <span aria-hidden="true">{activeError ? <Icon name="alert" /> : notice.tone === 'success' ? <Icon name="check" /> : <Icon name="clock" />}</span>
         <p>{activeError ?? notice.message}</p>
         <b>浏览器本地换算 · 自动处理夏令时</b>
       </div>
@@ -207,7 +210,7 @@ export default function WorldTimeTool({ tool }: ToolViewProps) {
 
       <section className="world-time-control">
         <div className="world-time-mode" aria-label="时间模式">
-          <button type="button" className={mode === 'live' ? 'is-active' : ''} aria-pressed={mode === 'live'} onClick={() => chooseMode('live')}><i />当前时间</button>
+          <button type="button" className={mode === 'live' ? 'is-active' : ''} aria-pressed={mode === 'live'} onClick={() => chooseMode('live')}><Icon name="clock" />当前时间</button>
           <button type="button" className={mode === 'planned' ? 'is-active' : ''} aria-pressed={mode === 'planned'} onClick={() => chooseMode('planned')}>指定时间</button>
         </div>
         {mode === 'planned' && <div className="world-time-planner">
@@ -219,9 +222,9 @@ export default function WorldTimeTool({ tool }: ToolViewProps) {
 
       <section className="world-time-library">
         <header><div><span>01</span><h2>添加城市</h2></div><p>{cityIds.length} / {MAX_CITIES} 个时钟</p></header>
-        <label className="world-city-search"><span aria-hidden="true">⌕</span><input type="search" aria-label="搜索城市或时区" placeholder="搜索城市、国家或 IANA 时区，例如 Tokyo" value={query} onChange={(event) => setQuery(event.target.value)} />{query && <button type="button" aria-label="清空城市搜索" onClick={() => setQuery('')}>×</button>}</label>
+        <label className="world-city-search"><span aria-hidden="true"><Icon name="search" /></span><input type="search" aria-label="搜索城市或时区" placeholder="搜索城市、国家或 IANA 时区，例如 Tokyo" value={query} onChange={(event) => setQuery(event.target.value)} />{query && <button type="button" aria-label="清空城市搜索" onClick={() => setQuery('')}><Icon name="close" /></button>}</label>
         <div className="world-city-suggestions" aria-label={query ? '搜索结果' : '推荐城市'}>
-          {candidates.map((city) => <button type="button" key={city.id} onClick={() => addCity(city.id)}><span>{city.name}</span><small>{city.country} · {city.timeZone}</small><b>＋</b></button>)}
+          {candidates.map((city) => <button type="button" key={city.id} onClick={() => addCity(city.id)}><span>{city.name}</span><small>{city.country} · {city.timeZone}</small><b><Icon name="plus" /></b></button>)}
           {!candidates.length && <p>没有找到可添加的城市，或者它已经在时间面板中。</p>}
         </div>
       </section>
@@ -238,10 +241,10 @@ export default function WorldTimeTool({ tool }: ToolViewProps) {
               <div className="world-city-timeline"><DayPeriodBand /><span aria-hidden="true" /><div><small>00</small><small>06</small><small>12</small><small>18</small><small>24</small></div></div>
               <div className="world-city-exact"><strong>{clock.time}</strong><span>:{clock.seconds}</span><p>{clock.date} · {clock.weekday}</p></div>
               <div className="world-city-offset"><b><PeriodIcon period={clock.dayPeriod} />{clock.dayPeriod.label}</b><span>{clock.dayPeriod.range}</span><small>{clock.offset} · {differenceText}</small></div>
-              <button type="button" aria-label={`移除${clock.city.name}`} onClick={() => removeCity(clock.city.id)}>×</button>
+              <button type="button" aria-label={`移除${clock.city.name}`} onClick={() => removeCity(clock.city.id)}><Icon name="close" /></button>
             </article>
           })}
-          {!clocks.length && <div className="world-clock-empty"><span>◷</span><h3>等待有效时间</h3><p>请检查指定的当地时间。</p></div>}
+          {!clocks.length && <div className="world-clock-empty"><span><Icon name="clock" /></span><h3>等待有效时间</h3><p>请检查指定的当地时间。</p></div>}
         </div>
       </section>
 

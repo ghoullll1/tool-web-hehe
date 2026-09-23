@@ -1,3 +1,4 @@
+import { Icon } from '../../components/Icon'
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import type { ToolViewProps } from '../registry'
 import { COMMON_PORTS, PORT_CATEGORIES, type CommonPort, type PortTransport } from './commonPortsData'
@@ -98,7 +99,7 @@ export default function CommonPortsTool({ tool }: ToolViewProps) {
               spellCheck={false}
             />
             {query
-              ? <button type="button" onClick={() => { setQuery(''); searchRef.current?.focus() }} aria-label="清除端口搜索">×</button>
+              ? <button type="button" onClick={() => { setQuery(''); searchRef.current?.focus() }} aria-label="清除端口搜索"><Icon name="close" /></button>
               : <kbd>/</kbd>}
           </label>
         </div>
@@ -183,7 +184,7 @@ export default function CommonPortsTool({ tool }: ToolViewProps) {
             </li>
           })}
         </ol> : <div className="port-empty">
-          <span>Ø</span><strong>没有匹配的端口</strong><p>换一个关键词，或重置分类与协议筛选。</p>
+          <span><Icon name="search" size={28} /></span><strong>没有匹配的端口</strong><p>换一个关键词，或重置分类与协议筛选。</p>
           <button type="button" onClick={() => { setQuery(''); setCategory('all'); setTransport('all') }}>显示全部端口</button>
         </div>}
       </section>
@@ -209,13 +210,13 @@ export default function CommonPortsTool({ tool }: ToolViewProps) {
             <div><dt>端口区间</dt><dd>{portBandLabel(portBand(activePort.port))}</dd></div>
             <div><dt>默认用途</dt><dd>{activePort.name}</dd></div>
           </dl>
-          {activePort.note && <div className="port-detail-note"><span>!</span><p>{activePort.note}</p></div>}
+          {activePort.note && <div className="port-detail-note"><span><Icon name="alert" /></span><p>{activePort.note}</p></div>}
           <div className="port-related">
             <div><strong>同类邻近端口</strong><span>继续浏览</span></div>
             <div>{activeRelated.map((entry) => <button key={entry.port} type="button" onClick={() => openRelated(entry)}><b>{entry.port}</b><span>{entry.service}</span></button>)}</div>
           </div>
           <footer><InfoIcon /><p>端口可以由应用重新配置。诊断开放状态时，应结合防火墙、监听地址与实际进程核对。</p></footer>
-        </div> : <div className="port-detail-empty"><span>Ø</span><strong>等待有效匹配</strong></div>}
+        </div> : <div className="port-detail-empty"><span><Icon name="search" size={28} /></span><strong>等待有效匹配</strong></div>}
       </aside>
     </main>
     <footer className="port-source-note">

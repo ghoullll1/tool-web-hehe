@@ -1,8 +1,8 @@
 # Tool Web
 
-Tool Web 是一个面向开发者与日常办公场景的开源在线工具箱，集成 18 个即开即用的工具。当前有 15 个工具主要在浏览器本地处理数据；需要网络探测、临时存储或文档解析的能力由受限的后端服务完成。
+Tool Web 是一个面向开发者与日常办公场景的开源在线工具箱，集成 19 个即开即用的工具。当前有 15 个工具主要在浏览器本地处理数据；需要网络探测、临时存储、实时会话或文档解析的能力由受限的后端服务完成。
 
-Tool Web is an open-source toolbox for developers and everyday productivity, with 18 ready-to-use utilities. Fifteen tools process data primarily in the browser, while network diagnostics, temporary storage, and document parsing are handled by constrained backend services.
+Tool Web is an open-source toolbox for developers and everyday productivity, with 19 ready-to-use utilities. Fifteen tools process data primarily in the browser, while network diagnostics, temporary storage, real-time chat, and document parsing are handled by constrained backend services.
 
 **在线体验 / Live demo:** [https://tool.hehesakura.cn/](https://tool.hehesakura.cn/)
 
@@ -14,7 +14,7 @@ Tool Web is an open-source toolbox for developers and everyday productivity, wit
 - **图片工具 / Image tools（1）**：JPG、PNG、WebP 批量格式转换、压缩、缩放和透明背景处理。
 - **密码工具 / Password tools（1）**：随机密码、开发者令牌与口令短语生成，并提供强度评估和批量输出。
 - **PDF 与文档工具 / PDF and document tools（3）**：PDF 合并、PDF 与图片互转，以及 PDF、Word、PowerPoint、Excel、HTML 等文档转 Markdown。
-- **其他工具 / Other utilities（2）**：世界时间与时区换算、五分钟有效且限下载一次的临时文件分享。
+- **其他工具 / Other utilities（3）**：世界时间与时区换算、五分钟有效且限下载一次的临时文件分享，以及不保存消息内容的双人临时会话。
 
 所有工具的详细功能、在线地址和实际页面截图见下方[工具一览](#tool-gallery)。
 
@@ -25,17 +25,17 @@ See the [tool gallery](#tool-gallery) below for detailed capabilities, direct li
 | 层级 / Layer | 核心技术 / Core technologies | 职责 / Responsibilities |
 |---|---|---|
 | 前端 / Frontend | React 19、TypeScript 6、Vite 8、React Router 7 | 单页应用、工具注册与路由、本地数据处理、文件预览与下载。Single-page UI, tool routing, browser-local processing, file preview, and downloads. |
-| 浏览器工具库 / Browser libraries | PDF.js、pdf-lib、Noble Hashes、SQL Formatter、Lossless JSON、YAML、fflate | 在客户端完成 PDF、图片、哈希、JSON/YAML、SQL 与压缩相关处理，减少数据上传。Client-side PDF, image, hashing, structured-data, SQL, and archive processing. |
-| 后端 API / Backend API | Java 25、Spring Boot 4.1、Spring MVC、Spring Security、Validation、Actuator | 提供工具目录、受控网络诊断、临时文件分享、文档转换编排、健康检查与安全边界。Catalog APIs, controlled diagnostics, temporary sharing, conversion orchestration, health checks, and security boundaries. |
-| 数据访问 / Data access | MyBatis-Plus、Flyway、MySQL 8.4 | 保存工具目录与临时分享元数据，并通过版本化迁移初始化数据库。Tool catalog and temporary-share metadata with versioned database migrations. |
+| 浏览器工具库 / Browser libraries | PDF.js、pdf-lib、Noble Hashes、SQL Formatter、Lossless JSON、YAML、fflate、GSAP、Motion、OGL、QRCode | 在客户端完成数据处理、文件转换、二维码和可降级视觉效果。Client-side data processing, file conversion, QR generation, and progressively enhanced visual effects. |
+| 后端 API / Backend API | Java 25、Spring Boot 4.1、Spring MVC、Spring WebSocket、Spring Security、Validation、Actuator、Micrometer | 提供工具目录、受控网络诊断、临时文件分享、无消息留存的实时会话、文档转换编排、健康检查与指标。Catalog APIs, controlled diagnostics, temporary sharing, no-history real-time chat, conversion orchestration, health checks, and metrics. |
+| 数据访问 / Data access | MyBatis-Plus、Flyway、MySQL 8.4 | 保存工具目录、临时分享和会话生命周期元数据，并通过版本化迁移初始化数据库。Tool catalog, temporary-share, and chat-lifecycle metadata with versioned migrations. |
 | 文档转换 / Document conversion | Python 3.11–3.14、FastAPI、Uvicorn、MarkItDown | 在隔离 Worker 中将常见办公文档转换为 Markdown，并限制文件大小、并发量和处理时长。Isolated, bounded conversion of common office documents to Markdown. |
 | 对象存储 / Object storage | RustFS、AWS SDK for Java（S3 API） | 保存临时分享文件；生产环境使用私有 Bucket 和短生命周期访问流程。Private S3-compatible storage for short-lived shared files. |
 | 部署与入口 / Delivery | Docker Compose、Nginx、Docker | 编排 MySQL、RustFS、Worker、后端和前端；仅由 Nginx 对外提供统一入口。Container orchestration and a single public Nginx entry point. |
 | 质量保障 / Quality | Vitest、Testing Library、ESLint、JUnit、Maven、pytest、Ruff、mypy | 覆盖前后端与 Worker 的测试、静态检查和生产构建。Tests, static analysis, and production builds across all components. |
 
-整体采用“**浏览器本地优先 + 服务端能力隔离**”的架构：格式化、转换、计算等工具尽量在客户端完成；只有必须依赖服务器的功能才进入 Spring Boot API，并将文档解析进一步隔离到独立 Worker。生产部署通过私有网络连接 MySQL、RustFS 和 Worker，只公开 Nginx 前端入口。
+整体采用“**浏览器本地优先 + 服务端能力隔离**”的架构：格式化、转换、计算等工具尽量在客户端完成；只有必须依赖服务器的功能才进入 Spring Boot HTTP/WebSocket API，并将文档解析进一步隔离到独立 Worker。生产部署通过私有网络连接 MySQL、RustFS 和 Worker，只公开 Nginx 前端入口。
 
-The architecture is **browser-local first with isolated server capabilities**. Formatting, conversion, and calculation stay client-side whenever possible. Server-only operations enter the Spring Boot API, while document parsing runs in a separate worker. In production, MySQL, RustFS, and the worker remain on the private network, with only the Nginx frontend exposed publicly.
+The architecture is **browser-local first with isolated server capabilities**. Formatting, conversion, and calculation stay client-side whenever possible. Server-only operations enter the Spring Boot HTTP/WebSocket API, while document parsing runs in a separate worker. In production, MySQL, RustFS, and the worker remain on the private network, with only the Nginx frontend exposed publicly.
 
 [![Tool Web 在线工具箱首页 / Tool Web live dashboard](docs/screenshots/home.png)](https://tool.hehesakura.cn/)
 
@@ -173,9 +173,17 @@ Every screenshot below was captured from the live website with Chrome. Select a 
     </td>
     <td width="50%" valign="top">
       <a href="https://tool.hehesakura.cn/tools/temporary-file-share"><strong>文件临时分享 / Temporary File Sharing</strong></a>
-      <p>上传文件并生成带密钥的分享链接；链接固定五分钟有效，且仅允许下载一次。<br><sub>Upload a file and create a keyed share link that expires after five minutes and permits one download.</sub></p>
+      <p>上传文件并生成 8 位取件码、领取链接和二维码；固定五分钟有效，且仅允许下载一次。<br><sub>Upload a file and create an eight-digit pickup code, claim link, and QR code that expire after five minutes and permit one download.</sub></p>
       <a href="https://tool.hehesakura.cn/tools/temporary-file-share"><img src="docs/screenshots/temporary-file-share.png" alt="文件临时分享工具截图" width="100%"></a>
     </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="https://tool.hehesakura.cn/tools/temporary-chat"><strong>临时会话 / Temporary Chat</strong></a>
+      <p>通过一次性会话密钥建立双人 WebSocket 实时聊天；三分钟等待与活跃检测，服务端不保存消息内容。<br><sub>Start a two-person WebSocket chat with a one-time session key, three-minute waiting and activity limits, and no server-side message history.</sub></p>
+      <a href="https://tool.hehesakura.cn/tools/temporary-chat"><img src="docs/screenshots/temporary-chat.png" alt="临时会话工具截图" width="100%"></a>
+    </td>
+    <td width="50%" valign="top"></td>
   </tr>
 </table>
 

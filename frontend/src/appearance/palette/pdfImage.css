@@ -1,0 +1,30 @@
+/* Generated color bridge for src/tools/pdf-image/pdfImage.css. See scripts/ui-palette.mjs. */
+html[data-ui="modern"] .pic-tool { color:var(--night-text); }
+html[data-ui="modern"] .pic-eyebrow { color:var(--night-muted); font-size:14px; }
+html[data-ui="modern"] .pic-intro h2 { font-size:clamp(22px,2.3vw,32px); }
+html[data-ui="modern"] .pic-intro p { color:var(--night-muted); font-size:14px; }
+html[data-ui="modern"] .pic-local { border:1px solid var(--night-line); background:var(--night-panel); color:var(--night-muted); font-size:14px; }
+html[data-ui="modern"] .pic-tool button { font:inherit; }
+html[data-ui="modern"] .pic-tool button:focus-visible,html[data-ui="modern"] .pic-tool a:focus-visible { outline:3px solid var(--night-line); }
+html[data-ui="modern"] .pic-modes button { border:1px solid var(--night-line); background:var(--night-panel); color:var(--night-muted); }
+html[data-ui="modern"] .pic-mode-art { color:var(--night-muted); }
+html[data-ui="modern"] .pic-mode-art svg { fill:none; stroke:currentColor; }
+html[data-ui="modern"] .pic-modes strong { font-size:17px; }html[data-ui="modern"] .pic-modes small { font-size:14px; }
+html[data-ui="modern"] .pic-modes button[aria-pressed=true] { background:var(--night-solid); color:var(--night-text); border-color:var(--night-line-active); box-shadow:0 8px 20px rgba(0, 0, 0, 0.10588235294117647); }
+html[data-ui="modern"] .pic-modes button[aria-pressed=true] .pic-mode-art { color:var(--night-accent); }
+html[data-ui="modern"] .pic-files,html[data-ui="modern"] .pic-settings,html[data-ui="modern"] .pic-results { border:1px solid var(--night-line); background:var(--night-panel); }
+html[data-ui="modern"] .pic-tool h3 { font-size:16px; }
+html[data-ui="modern"] .pic-files>header,html[data-ui="modern"] .pic-results>header { border-bottom:1px solid var(--night-line); }
+html[data-ui="modern"] .pic-files>header button,html[data-ui="modern"] .pic-results>header button,html[data-ui="modern"] .pic-settings>button:not(.pic-convert) { border:1px solid var(--night-line); background:var(--night-panel); color:var(--night-text); font-size:14px; }
+html[data-ui="modern"] .pic-drop { border:1.5px dashed var(--night-line); background:linear-gradient(140deg,var(--night-panel),var(--night-panel)); color:var(--night-muted); }
+html[data-ui="modern"] .pic-drop:hover,html[data-ui="modern"] .pic-drop.is-dragging { background:var(--night-panel); border-color:var(--night-line-active); box-shadow:inset 0 0 0 3px rgba(0, 0, 0, 0.2); }
+html[data-ui="modern"] .pic-upload { background:var(--night-raised); font-size:27px; }
+html[data-ui="modern"] .pic-drop strong { font-size:15px; }html[data-ui="modern"] .pic-drop small { font-size:14px; }
+html[data-ui="modern"] .pic-source-list article { border-top:1px solid var(--night-line); }
+html[data-ui="modern"] .pic-source-list img,html[data-ui="modern"] .pic-pdf-symbol { background:var(--night-panel); }html[data-ui="modern"] .pic-pdf-symbol { color:var(--night-danger); font-size:14px; }html[data-ui="modern"] .pic-source-list strong { font-size:14px; }html[data-ui="modern"] .pic-source-list small { font-size:14px; color:var(--night-muted); }html[data-ui="modern"] .pic-order button { background:var(--night-panel); border:1px solid var(--night-line); color:var(--night-muted); }
+html[data-ui="modern"] .pic-source-empty { color:var(--night-muted); }html[data-ui="modern"] .pic-empty-icon { fill:none; stroke:var(--night-line); }html[data-ui="modern"] .pic-source-empty p { font-size:14px; }html[data-ui="modern"] .pic-settings fieldset { border:0; }html[data-ui="modern"] .pic-settings label { font-size:14px; }
+html[data-ui="modern"] .pic-settings input:not([type=range]) { border:1px solid var(--night-line); font-size:14px; }html[data-ui="modern"] .pic-settings input:focus { outline:none; border-color:var(--night-line-active); box-shadow:0 0 0 3px rgba(0, 0, 0, 0.14901960784313725); }html[data-ui="modern"] .pic-settings input[type=range] { accent-color:var(--night-muted); }html[data-ui="modern"] .pic-options button { border:1px solid var(--night-line); background:var(--night-panel); color:var(--night-muted); font-size:14px; }html[data-ui="modern"] .pic-options button[aria-pressed=true] { border-color:var(--night-line); background:var(--night-panel); color:var(--night-text); }
+html[data-ui="modern"] .pic-settings p { color:var(--night-muted); font-size:14px; }html[data-ui="modern"] .pic-convert { border:0; background:var(--night-accent); color:var(--night-text); }html[data-ui="modern"] .pic-convert:hover:not(:disabled) { box-shadow:0 7px 15px rgba(0, 0, 0, 0.2); }html[data-ui="modern"] .pic-settings progress { accent-color:var(--night-muted); }
+html[data-ui="modern"] .pic-notice { background:var(--night-panel); color:var(--night-muted); font-size:14px; }html[data-ui="modern"] .pic-notice.is-error { background:var(--night-panel); color:var(--night-danger); }
+html[data-ui="modern"] .pic-results>header span { color:var(--night-muted); font-size:14px; }html[data-ui="modern"] .pic-result-grid article { border:1px solid var(--night-line); }html[data-ui="modern"] .pic-result-grid img { background:var(--night-panel); }html[data-ui="modern"] .pic-result-grid footer strong { font-size:14px; }html[data-ui="modern"] .pic-result-grid small { color:var(--night-muted); font-size:14px; }html[data-ui="modern"] .pic-result-grid footer a { color:var(--night-muted); font-size:14px; }
+html[data-ui="modern"] .pic-result-empty { color:var(--night-muted); font-size:14px; }html[data-ui="modern"] .pic-pdf-ready { background:var(--night-panel); }html[data-ui="modern"] .pic-pdf-ready span { font-size:40px; color:var(--night-accent); }html[data-ui="modern"] .pic-pdf-ready p { color:var(--night-muted); font-size:14px; }

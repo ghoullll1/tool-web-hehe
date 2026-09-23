@@ -1,3 +1,4 @@
+import { Icon } from '../../components/Icon'
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
 import { createPortal } from 'react-dom'
 import { formatUtcOffset, getTimeZoneOffsetMinutes, type WorldCity } from './worldTimeModel'
@@ -146,14 +147,14 @@ export default function WorldCityPicker({ cities, value, referenceDate, onChange
     <div id={dialogId} className={`world-city-menu is-${position.placement}`} role="dialog" aria-modal="true" aria-labelledby={titleId}>
       <header className="world-city-menu-header">
         <span><small>REFERENCE CITY</small><strong id={titleId}>选择时间所属城市</strong></span>
-        <button type="button" aria-label="关闭时间所属城市选择" onClick={() => close(true)}>×</button>
+        <button type="button" aria-label="关闭时间所属城市选择" onClick={() => close(true)}><Icon name="close" /></button>
       </header>
-      <label className="world-city-menu-search"><span aria-hidden="true">⌕</span><input ref={search} type="search" aria-label="筛选时间所属城市" placeholder="搜索城市、国家或时区" value={query} onChange={(event) => setQuery(event.target.value)} /></label>
+      <label className="world-city-menu-search"><span aria-hidden="true"><Icon name="search" /></span><input ref={search} type="search" aria-label="筛选时间所属城市" placeholder="搜索城市、国家或时区" value={query} onChange={(event) => setQuery(event.target.value)} /></label>
       <div id={listId} role="listbox" aria-label="时间所属城市选项">
         {results.map((city) => <button type="button" role="option" aria-selected={city.id === value} key={city.id} onClick={() => { onChange(city.id); close(true) }}>
           <span><strong>{city.name}</strong><small>{city.country} · {city.timeZone}</small></span>
           <b>{formatUtcOffset(getTimeZoneOffsetMinutes(referenceDate, city.timeZone))}</b>
-          <i aria-hidden="true">✓</i>
+          <i aria-hidden="true"><Icon name="check" /></i>
         </button>)}
         {!results.length && <p>没有匹配的已添加城市</p>}
       </div>

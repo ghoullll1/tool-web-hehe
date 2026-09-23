@@ -59,7 +59,7 @@
 .image-converter-art > div { display: grid; gap: 12px; }
 .image-converter-art > div > span { width: 104px; height: 62px; border-radius: 17px; font-size: 16px; }
 .image-converter-art .is-webp { background: var(--image-deep); color: #f6fff0; animation: image-card-float 4s .7s ease-in-out infinite; }
-.image-converter-art svg { width: 100%; min-width: 110px; fill: none; stroke: #3f7156; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.image-converter-art svg { display: block; width: 100%; height: auto; aspect-ratio: 3 / 1; min-width: 0; fill: none; stroke: #3f7156; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .image-converter-art svg circle { fill: var(--image-accent); stroke: #f5fff0; animation: image-dot-run 2.8s ease-in-out infinite alternate; }
 .image-converter-art svg circle:nth-of-type(2) { animation-delay: .35s; }
 
@@ -135,6 +135,7 @@
 .image-converter-settings > header { justify-content: flex-start; }
 .image-converter-settings fieldset { min-width: 0; display: grid; gap: 22px; margin: 0; padding: 21px 19px 18px; border: 0; }
 .image-converter-settings legend { width: 100%; margin-bottom: 12px; color: #52655a; font-size: 15px; font-weight: 800; }
+.image-converter-format-label { display:block; margin-bottom:12px; color:#52655a; font-size:15px; font-weight:800; }
 .image-converter-formats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .image-converter-formats button { position: relative; min-width: 0; min-height: 78px; display: grid; place-content: center; gap: 4px; overflow: hidden; border: 1px solid #d9e2d5; border-radius: 12px; background: #fafcf8; color: #627269; transition: .18s ease; }
 .image-converter-formats button:hover { border-color: #9db394; background: #f3f8ef; transform: translateY(-2px); }

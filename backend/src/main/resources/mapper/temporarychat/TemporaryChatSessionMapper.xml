@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toolweb.platform.tool.temporarychat.dao.TemporaryChatSessionMapper">
+
+    <sql id="temporaryChatSessionColumns">
+        id, session_id, session_key_digest, creator_client_id, creator_display_name,
+        participant_client_id, participant_display_name, status, created_at, join_deadline_at,
+        creator_connected_at, participant_connected_at, connected_at,
+        creator_last_message_at, participant_last_message_at, closed_at, close_reason, version
+    </sql>
+
+    <select id="selectByKeyDigestForUpdate" resultType="com.toolweb.platform.tool.temporarychat.entity.TemporaryChatSession">
+        SELECT <include refid="temporaryChatSessionColumns"/>
+        FROM temporary_chat_session
+        WHERE session_key_digest = #{sessionKeyDigest}
+        FOR UPDATE
+    </select>
+
+    <update id="reserveParticipant">
+        UPDATE temporary_chat_session
+        SET participant_client_id = #{participantClientId},
+            participant_display_name = #{participantDisplayName},
+            version = version + 1
+        WHERE session_id = #{sessionId}
+          AND status = 'WAITING'
+          AND participant_client_id IS NULL
+          AND join_deadline_at > #{now}
+    </update>
+
+    <update id="markActive">
+        UPDATE temporary_chat_session
+        SET status = 'ACTIVE',
+            creator_connected_at = COALESCE(creator_connected_at, #{creatorConnectedAt}),
+            participant_connected_at = COALESCE(participant_connected_at, #{participantConnectedAt}),
+            connected_at = COALESCE(connected_at, #{connectedAt}),
+            creator_last_message_at = COALESCE(creator_last_message_at, #{connectedAt}),
+            participant_last_message_at = COALESCE(participant_last_message_at, #{connectedAt}),
+            version = version + 1
+        WHERE session_id = #{sessionId}
+          AND status = 'WAITING'
+          AND participant_client_id IS NOT NULL
+    </update>
+
+    <update id="touchMessage">
+        UPDATE temporary_chat_session
+        SET creator_last_message_at = CASE WHEN #{role} = 'CREATOR' THEN #{messageAt} ELSE creator_last_message_at END,
+            participant_last_message_at = CASE WHEN #{role} = 'PARTICIPANT' THEN #{messageAt} ELSE participant_last_message_at END,
+            version = version + 1
+        WHERE session_id = #{sessionId}
+          AND status = 'ACTIVE'
+    </update>
+
+    <update id="closeSession">
+        UPDATE temporary_chat_session
+        SET status = #{status},
+            closed_at = #{closedAt},
+            close_reason = #{closeReason},
+            version = version + 1
+        WHERE session_id = #{sessionId}
+          AND status IN ('WAITING', 'ACTIVE')
+    </update>
+
+    <update id="closeAllNonTerminal">
+        UPDATE temporary_chat_session
+        SET status = 'CLOSED',
+            closed_at = #{closedAt},
+            close_reason = #{closeReason},
+            version = version + 1
+        WHERE status IN ('WAITING', 'ACTIVE')
+    </update>
+
+</mapper>

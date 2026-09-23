@@ -1,3 +1,4 @@
+import { Icon } from "../../components/Icon"
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { executeServerTool } from '../../api/toolCatalog'
 import type { ToolViewProps } from '../registry'
@@ -146,12 +147,12 @@ export default function HttpDiagnosticsTool({ tool }: ToolViewProps) {
         {(['GET', 'HEAD'] as const).map((item) => <button type="button" key={item} className={method === item ? 'is-active' : ''} aria-pressed={method === item} onClick={() => setMethod(item)}>{item}</button>)}
       </div>
       <label className="hd-url">
-        <span aria-hidden="true">↗</span>
+        <span aria-hidden="true"><Icon name="external" /></span>
         <input aria-label="目标 URL" value={url} onChange={(event) => setUrl(event.target.value)} placeholder="例如：https://www.example.com/resource" spellCheck={false} onKeyDown={(event) => { if (event.key === 'Enter') void inspect() }} />
       </label>
       {busy
         ? <button type="button" className="hd-run is-cancel" onClick={cancel}>取消诊断</button>
-        : <button type="button" className="hd-run" onClick={() => void inspect()}>开始诊断 <span>→</span></button>}
+        : <button type="button" className="hd-run" onClick={() => void inspect()}>开始诊断 <span><Icon name="arrowRight" /></span></button>}
       <button type="button" className={`hd-advanced-trigger${advanced ? ' is-open' : ''}`} aria-expanded={advanced} aria-controls="http-diagnostics-advanced" onClick={() => setAdvanced((value) => !value)}>高级设置 <span className="hd-chevron" aria-hidden="true" /></button>
       <div id="http-diagnostics-advanced" className={`hd-advanced${advanced ? ' is-open' : ''}`} aria-hidden={!advanced} inert={!advanced}>
         <div className="hd-request-options">
@@ -179,18 +180,18 @@ export default function HttpDiagnosticsTool({ tool }: ToolViewProps) {
             {([['NONE', '无认证'], ['BASIC', 'Basic'], ['BEARER', 'Bearer'], ['API_KEY', 'API Key']] as const).map(([value, label]) => <button type="button" key={value} className={authType === value ? 'is-active' : ''} aria-pressed={authType === value} onClick={() => changeAuthentication(value)}>{label}</button>)}
           </div>
           {authType === 'NONE'
-            ? <div className="hd-auth-empty"><span>✓</span><p>本次请求不会携带 Authorization 或 API Key。</p></div>
+            ? <div className="hd-auth-empty"><span><Icon name="check" /></span><p>本次请求不会携带 Authorization 或 API Key。</p></div>
             : <div className="hd-auth-fields">
               {authType === 'BASIC' && <label><span>用户名</span><input aria-label="认证用户名" value={authUsername} onChange={(event) => setAuthUsername(event.target.value)} autoComplete="off" /></label>}
               {authType === 'API_KEY' && <label><span>请求头名称</span><input aria-label="API Key 请求头名称" value={apiKeyHeader} onChange={(event) => setApiKeyHeader(event.target.value)} placeholder="X-API-Key" autoComplete="off" /></label>}
               <label className="hd-secret-field"><span>{authType === 'BASIC' ? '密码' : authType === 'BEARER' ? '令牌' : 'API Key'}</span><div><input aria-label="认证凭证" type={showSecret ? 'text' : 'password'} value={authSecret} onChange={(event) => setAuthSecret(event.target.value)} autoComplete="new-password" spellCheck={false} /><button type="button" aria-label={showSecret ? '隐藏凭证' : '显示凭证'} onClick={() => setShowSecret((value) => !value)}>{showSecret ? '隐藏' : '显示'}</button></div></label>
             </div>}
-          <div className="hd-auth-note"><span>i</span><p>凭证不会出现在诊断结果或日志中；一旦重定向改变协议、域名或端口，系统会自动停止转发。</p></div>
+          <div className="hd-auth-note"><span><Icon name="info" /></span><p>凭证不会出现在诊断结果或日志中；一旦重定向改变协议、域名或端口，系统会自动停止转发。</p></div>
         </div>
       </div>
     </section>
 
-    {(error || notice) && <div className={`hd-notice${error ? ' is-error' : ''}`} role={error ? 'alert' : 'status'}><span>{error ? '!' : '✓'}</span>{error || notice}</div>}
+    {(error || notice) && <div className={`hd-notice${error ? ' is-error' : ''}`} role={error ? 'alert' : 'status'}><span>{error ? <Icon name="alert" /> : <Icon name="check" />}</span>{error || notice}</div>}
 
     <section className={`hd-results${busy ? ' is-loading' : ''}`} aria-busy={busy}>
       {busy && <LoadingState />}
@@ -242,9 +243,9 @@ function Overview({ result }: { result: HttpDiagnosticsResult }) {
     </section>
     <section className="hd-control-matrix" aria-label="安全响应头检查">
       <header><div><span>CONTROL MATRIX</span><h3>安全响应头检查</h3></div><p>{result.security.cookieCount ? `${result.security.cookieCount} 个 Cookie · ${result.security.weakCookieCount} 个需复核` : '未设置 Cookie'}</p></header>
-      <div>{result.security.controls.map((control) => <article className={`is-${control.status}`} key={control.name}><span>{control.status === 'pass' ? '✓' : control.status === 'warning' ? '!' : 'i'}</span><div><h4>{control.name}</h4><p>{control.detail}</p></div></article>)}</div>
+      <div>{result.security.controls.map((control) => <article className={`is-${control.status}`} key={control.name}><span>{control.status === 'pass' ? <Icon name="check" /> : control.status === 'warning' ? <Icon name="alert" /> : <Icon name="info" />}</span><div><h4>{control.name}</h4><p>{control.detail}</p></div></article>)}</div>
     </section>
-    <section className="hd-findings" aria-label="诊断结论">{result.findings.map((finding, index) => <article className={`is-${finding.level}`} key={`${finding.title}-${index}`}><span>{finding.level === 'success' ? '✓' : finding.level === 'warning' ? '!' : finding.level === 'error' ? '×' : 'i'}</span><div><h3>{finding.title}</h3><p>{finding.detail}</p></div></article>)}</section>
+    <section className="hd-findings" aria-label="诊断结论">{result.findings.map((finding, index) => <article className={`is-${finding.level}`} key={`${finding.title}-${index}`}><span>{finding.level === 'success' ? <Icon name="check" /> : finding.level === 'warning' ? <Icon name="alert" /> : finding.level === 'error' ? <Icon name="close" /> : <Icon name="info" />}</span><div><h3>{finding.title}</h3><p>{finding.detail}</p></div></article>)}</section>
   </div>
 }
 
@@ -258,7 +259,7 @@ function Redirects({ result }: { result: HttpDiagnosticsResult }) {
 }
 
 function Headers({ rows, query, onQuery, onCopy }: { result: HttpDiagnosticsResult; rows: HttpDiagnosticsResult['headers']; query: string; onQuery: (value: string) => void; onCopy: (value: string, message: string) => Promise<void> }) {
-  return <div className="hd-headers"><label className="hd-header-search"><span>⌕</span><input value={query} onChange={(event) => onQuery(event.target.value)} placeholder="搜索响应头名称、内容或作用" /><b>{rows.length} 项</b></label><div>{rows.map((header, index) => {
+  return <div className="hd-headers"><label className="hd-header-search"><span><Icon name="search" /></span><input value={query} onChange={(event) => onQuery(event.target.value)} placeholder="搜索响应头名称、内容或作用" /><b>{rows.length} 项</b></label><div>{rows.map((header, index) => {
     const help = describeHeader(header.name)
     return <article key={`${header.name}-${index}`}>
       <div className="hd-header-name"><strong>{header.name}</strong><span>{help.category}</span></div>
@@ -337,7 +338,7 @@ function Timing({ result }: { result: HttpDiagnosticsResult }) {
         </article>)}
       </div>
     </section>
-    <p className="hd-timing-note"><span aria-hidden="true">i</span><strong>读法：</strong>DNS、连接与响应头、结果分析相加等于完整流程；TLS 是连接阶段内部的子项。毫秒取整时，边界值可能存在约 1 ms 差异。所有耗时均在服务端所在网络测得，可能与浏览器本地 DevTools 不同。</p>
+    <p className="hd-timing-note"><span aria-hidden="true"><Icon name="info" /></span><strong>读法：</strong>DNS、连接与响应头、结果分析相加等于完整流程；TLS 是连接阶段内部的子项。毫秒取整时，边界值可能存在约 1 ms 差异。所有耗时均在服务端所在网络测得，可能与浏览器本地 DevTools 不同。</p>
   </div>
 }
 
@@ -347,7 +348,7 @@ function formatCertificateDate(value: string | null) {
 }
 
 function EmptyState() {
-  return <div className="hd-empty"><div className="hd-empty-radar"><i /><i /><span>↗</span></div><h2>等待一次真实的响应</h2><p>输入公开 URL 后，服务端会安全发起请求并在这里呈现完整诊断。</p><div><span>状态码</span><span>重定向</span><span>缓存</span><span>压缩</span><span>耗时</span></div></div>
+  return <div className="hd-empty"><div className="hd-empty-radar"><i /><i /><span><Icon name="external" /></span></div><h2>等待一次真实的响应</h2><p>输入公开 URL 后，服务端会安全发起请求并在这里呈现完整诊断。</p><div><span>状态码</span><span>重定向</span><span>缓存</span><span>压缩</span><span>耗时</span></div></div>
 }
 
 function LoadingState() {
@@ -355,5 +356,5 @@ function LoadingState() {
 }
 
 function PanelEmpty({ title, detail }: { title: string; detail: string }) {
-  return <div className="hd-panel-empty"><span>✓</span><h3>{title}</h3><p>{detail}</p></div>
+  return <div className="hd-panel-empty"><span><Icon name="check" /></span><h3>{title}</h3><p>{detail}</p></div>
 }

@@ -1,3 +1,4 @@
+import { Icon } from "../../components/Icon"
 import {
   useDeferredValue,
   useMemo,
@@ -305,7 +306,7 @@ export default function JsonFormatterTool({ tool }: ToolViewProps) {
   return (
     <div className="json-tool">
       <div className={`json-notice is-${notice.tone}`} role={notice.tone === 'error' ? 'alert' : 'status'}>
-        <span className="json-notice-icon">{notice.tone === 'success' ? '✓' : notice.tone === 'error' ? '!' : 'i'}</span>
+        <span className="json-notice-icon">{notice.tone === 'success' ? <Icon name="check" /> : notice.tone === 'error' ? <Icon name="alert" /> : <Icon name="info" />}</span>
         <span>{notice.message}</span>
         {notice.tone === 'error' && notice.diagnostic && (
           <strong>第 {notice.diagnostic.line} 行，第 {notice.diagnostic.column} 列</strong>
@@ -358,7 +359,7 @@ export default function JsonFormatterTool({ tool }: ToolViewProps) {
                         onClick={() => selectIndent(option.value)}
                       >
                         <strong>{option.label}</strong>
-                        <span className="json-indent-check" aria-hidden="true">✓</span>
+                        <span className="json-indent-check" aria-hidden="true"><Icon name="check" /></span>
                       </button>
                     ))}
                   </div>
@@ -387,7 +388,7 @@ export default function JsonFormatterTool({ tool }: ToolViewProps) {
             <span>{source.length.toLocaleString()} 字符</span>
             <span>{formatBytes(sourceBytes)}</span>
             <span className={sourceBytes > MAX_JSON_BYTES ? 'is-over-limit' : ''}>上限 {formatBytes(MAX_JSON_BYTES)}</span>
-            <kbd>Ctrl</kbd><span>+</span><kbd>Enter</kbd><span>格式化</span>
+            <kbd>Ctrl</kbd><span><Icon name="plus" /></span><kbd>Enter</kbd><span>格式化</span>
           </footer>
         </section>
 
@@ -396,8 +397,8 @@ export default function JsonFormatterTool({ tool }: ToolViewProps) {
             <div><span className="json-panel-index">02</span><h2>结果</h2></div>
             <div className="json-panel-actions">
               <div className="json-view-switch" role="group" aria-label="结果视图">
-                <button className={viewMode === 'tree' ? 'is-active' : ''} type="button" onClick={() => setViewMode('tree')}>树形</button>
-                <button className={viewMode === 'text' ? 'is-active' : ''} type="button" onClick={() => setViewMode('text')}>文本</button>
+                <button className={viewMode === 'tree' ? 'is-active' : ''} type="button" aria-pressed={viewMode === 'tree'} onClick={() => setViewMode('tree')}>树形</button>
+                <button className={viewMode === 'text' ? 'is-active' : ''} type="button" aria-pressed={viewMode === 'text'} onClick={() => setViewMode('text')}>文本</button>
               </div>
               <button type="button" onClick={sortResult} disabled={!parsedOutput}>键排序</button>
               <button type="button" onClick={() => void copyOutput()} disabled={!output}>复制</button>
@@ -409,7 +410,7 @@ export default function JsonFormatterTool({ tool }: ToolViewProps) {
             <div className="json-tree-shell">
               <div className="json-tree-tools">
                 <label className="json-search">
-                  <span aria-hidden="true">⌕</span>
+                  <span aria-hidden="true"><Icon name="search" /></span>
                   <input
                     value={searchQuery}
                     onChange={(event) => updateSearchQuery(event.target.value)}

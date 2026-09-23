@@ -1,8 +1,14 @@
+import { Icon, ToolIcon } from '../components/Icon'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import { SpotlightLink } from '../appearance/SpotlightLink'
+import { NebulaBackdrop } from '../appearance/NebulaBackdrop'
+import { CountUp } from '../appearance/CountUp'
+import { StudioStack } from '../appearance/StudioStack'
+import { studioProfile } from '../appearance/studioProfiles'
+import { useAppearance } from '../appearance/AppearanceContext'
 import type { ToolDescriptor } from '../types/tool'
-import { compareCategoryCodes, formatCategory, toolHref, toolMark } from './dashboardModel'
+import { compareCategoryCodes, formatCategory, toolHref } from './dashboardModel'
 
 interface DashboardProps {
   tools: ToolDescriptor[]
@@ -11,6 +17,8 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ tools, loading, error }: DashboardProps) {
+  const { edition } = useAppearance()
+  const [directoryView, setDirectoryView] = useState<'grid' | 'list'>('grid')
   const [query, setQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const searchRef = useRef<HTMLInputElement>(null)
@@ -64,11 +72,12 @@ export default function Dashboard({ tools, loading, error }: DashboardProps) {
   }
 
   return (
-    <div className="dashboard dashboard-console">
+    <div className="dashboard dashboard-console" data-directory-view={directoryView}>
       <section className="dashboard-hero" aria-labelledby="dashboard-title">
+        <NebulaBackdrop />
         <div className="dashboard-hero-copy">
           <div className="dashboard-kicker"><span /> TOOL WORKSPACE <b>ONLINE</b></div>
-          <h1 id="dashboard-title">把开发中的小麻烦，<br /><em>留给顺手的工具。</em></h1>
+          <h1 id="dashboard-title">{edition === 'modern' ? <>把想法，<br />变成<em>顺手的日常。</em></> : <>把开发中的小麻烦，<br /><em>留给顺手的工具。</em></>}</h1>
           <p>格式化、校验、计算与转换集中在一个工作台。找到工具，打开即用，敏感内容优先在浏览器本地处理。</p>
 
           <div className="dashboard-search" role="search">
@@ -88,16 +97,17 @@ export default function Dashboard({ tools, loading, error }: DashboardProps) {
                 }
               }}
             />
-            {query ? <button type="button" onClick={() => setQuery('')} aria-label="清空搜索">×</button> : <kbd>/</kbd>}
+            {query ? <button type="button" onClick={() => setQuery('')} aria-label="清空搜索"><Icon name="close" /></button> : <kbd>/</kbd>}
           </div>
 
           <div className="dashboard-metrics" aria-label="工具平台数据">
-            <div><strong>{tools.length.toString().padStart(2, '0')}</strong><span>可用工具</span></div>
-            <div><strong>{categories.length.toString().padStart(2, '0')}</strong><span>功能分类</span></div>
-            <div><strong>{localToolCount.toString().padStart(2, '0')}</strong><span>本地处理</span></div>
+            <div><CountUp value={tools.length} /><span>可用工具</span></div>
+            <div><CountUp value={categories.length} /><span>功能分类</span></div>
+            <div><CountUp value={localToolCount} /><span>本地处理</span></div>
           </div>
         </div>
 
+        {edition === 'modern' && !error && <StudioStack tools={tools} />}
         <div className="dashboard-visual" aria-hidden="true">
           <div className="dashboard-glow dashboard-glow-one" />
           <div className="dashboard-glow dashboard-glow-two" />
@@ -105,15 +115,15 @@ export default function Dashboard({ tools, loading, error }: DashboardProps) {
             <header><i /><i /><i /><span>tool-web / console</span><b>LIVE</b></header>
             <div className="dashboard-terminal-body">
               <p><span>›</span> catalog.load()</p>
-              <p><i>✓</i> {tools.length || '—'} tools published</p>
+              <p><i><Icon name="check" /></i> {tools.length || '—'} tools published</p>
               <p><span>›</span> runtime.strategy</p>
-              <p><i>✓</i> browser-first / server-ready</p>
+              <p><i><Icon name="check" /></i> browser-first / server-ready</p>
               <div><span /><span /><span /><span /></div>
             </div>
           </div>
           {featuredTools.map((tool, index) => (
             <div className={`dashboard-float-card float-${index + 1}`} key={tool.slug}>
-              <span>{toolMark(tool)}</span><b>{tool.displayName}</b>
+              <span><ToolIcon tool={tool} size={22} /></span><b>{tool.displayName}</b>
             </div>
           ))}
         </div>
@@ -127,12 +137,12 @@ export default function Dashboard({ tools, loading, error }: DashboardProps) {
           </div>
           <div className="dashboard-quick-grid">
             {featuredTools.map((tool, index) => (
-              <Link to={toolHref(tool)} key={tool.slug} className="dashboard-quick-card">
+              <SpotlightLink to={toolHref(tool)} key={tool.slug} className="dashboard-quick-card" data-studio-tone={studioProfile(tool.slug).tone}>
                 <span className="dashboard-card-number">0{index + 1}</span>
-                <span className="dashboard-tool-mark">{toolMark(tool)}</span>
+                <span className="dashboard-tool-mark"><ToolIcon tool={tool} size={24} /></span>
                 <div><small>{formatCategory(tool.categoryCode)}</small><h3>{tool.displayName}</h3><p>{tool.description}</p></div>
-                <b aria-hidden="true">↗</b>
-              </Link>
+                <b aria-hidden="true"><Icon name="external" /></b>
+              </SpotlightLink>
             ))}
           </div>
         </section>
@@ -142,10 +152,11 @@ export default function Dashboard({ tools, loading, error }: DashboardProps) {
         <div className="dashboard-section-heading">
           <div><span>TOOL DIRECTORY</span><h2 id="directory-title">工具目录</h2></div>
           <p aria-live="polite">{loading ? '正在同步目录' : `显示 ${visibleTools.length} / ${tools.length} 项`}</p>
+          {edition === 'modern' && <div className="studio-directory-view" role="group" aria-label="目录显示方式"><button type="button" aria-pressed={directoryView === 'grid'} onClick={() => setDirectoryView('grid')}><Icon name="grid" size={16} />卡片</button><button type="button" aria-pressed={directoryView === 'list'} onClick={() => setDirectoryView('list')}><Icon name="file" size={16} />列表</button></div>}
         </div>
 
         {tools.length > 0 ? (
-          <div className="dashboard-category-bar" aria-label="按分类筛选工具">
+          <div className="dashboard-category-bar" role="group" aria-label="按分类筛选工具">
             <button type="button" className={activeCategory === 'all' ? 'is-active' : ''} aria-pressed={activeCategory === 'all'} onClick={() => setSelectedCategory('all')}>
               全部 <span>{tools.length}</span>
             </button>
@@ -171,11 +182,11 @@ export default function Dashboard({ tools, loading, error }: DashboardProps) {
                 <header><h3 id={`category-${category}`}>{formatCategory(category)}</h3><span>{categoryTools.length} 项工具</span></header>
                 <div className="dashboard-tool-grid">
                   {categoryTools.map((tool) => (
-                    <Link to={toolHref(tool)} key={tool.slug} className="dashboard-tool-card">
-                      <span className="dashboard-tool-mark">{toolMark(tool)}</span>
+                    <SpotlightLink to={toolHref(tool)} key={tool.slug} className="dashboard-tool-card" data-studio-tone={studioProfile(tool.slug).tone}>
+                      <span className="dashboard-tool-mark"><ToolIcon tool={tool} size={24} /></span>
                       <div><small>{tool.executionMode === 'CLIENT' ? '浏览器本地' : tool.executionMode === 'SERVER' ? '服务端执行' : '前后端协同'}</small><h4>{tool.displayName}</h4><p>{tool.description}</p></div>
-                      <span className="dashboard-open-label">打开工具 <b>↗</b></span>
-                    </Link>
+                      <span className="dashboard-open-label">打开工具 <b><Icon name="external" /></b></span>
+                    </SpotlightLink>
                   ))}
                 </div>
               </section>
@@ -195,7 +206,7 @@ function DashboardState({ mode, title, detail, action }: {
 }) {
   return (
     <div className={`dashboard-state is-${mode}`} role={mode === 'error' ? 'alert' : 'status'}>
-      <span>{mode === 'loading' ? <i /> : mode === 'error' ? '!' : mode === 'search' ? '⌕' : '＋'}</span>
+      <span>{mode === 'loading' ? <i /> : mode === 'error' ? <Icon name="alert" /> : mode === 'search' ? <Icon name="search" /> : <Icon name="plus" />}</span>
       <div><h3>{title}</h3><p>{detail}</p>{action}</div>
     </div>
   )

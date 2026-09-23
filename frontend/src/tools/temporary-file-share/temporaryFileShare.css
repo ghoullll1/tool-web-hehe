@@ -88,7 +88,7 @@
 }
 
 .temporary-share-seal { width: fit-content; display: flex; align-items: center; gap: 11px; margin-top: 22px; padding: 9px 13px 9px 10px; border: 1px solid rgba(195, 229, 204, .2); border-radius: 13px; background: rgba(255, 255, 255, .055); backdrop-filter: blur(8px); }
-.temporary-share-seal > svg { width: 25px; height: 25px; padding: 6px; border-radius: 9px; background: rgba(178, 243, 62, .12); color: #b5f640; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; }
+.temporary-share-seal > svg { width: 32px; height: 32px; flex: 0 0 auto; padding: 6px; border-radius: 9px; background: rgba(178, 243, 62, .12); color: #b5f640; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; }
 .temporary-share-seal > span { display: grid; gap: 1px; }
 .temporary-share-seal strong { color: #eef9ef; font-size: 14px; }
 .temporary-share-seal small { color: #a9c2b4; font-size: 14px; line-height: 1.45; }
@@ -239,6 +239,28 @@
   transition: border-color .2s ease, background .2s ease, transform .2s ease, box-shadow .2s ease;
 }
 
+/* A single readable code is the credential for manual, link and QR pickup. */
+.temporary-pickup-card { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:12px; padding:20px; border:1px solid var(--line); border-radius:16px; background:var(--paper); }
+.temporary-pickup-card > span { grid-column:1/-1; font-size:14px; color:var(--tool-text-secondary); }
+.temporary-pickup-card > strong { font:750 clamp(24px,3vw,36px)/1.3 ui-monospace,monospace; letter-spacing:.08em; white-space:nowrap; color:var(--share-green); }
+.temporary-pickup-card button,.temporary-pickup-link button { padding:10px 14px; border:1px solid var(--line); border-radius:10px; background:var(--paper); color:var(--share-green); font-size:14px; cursor:pointer; }
+.temporary-qr-share { display:flex; align-items:center; gap:22px; padding:20px; border:1px solid var(--line); border-radius:16px; background:var(--paper); }
+.temporary-qr-share > svg { flex:none; width:184px; height:184px; background:#fff; border-radius:8px; }
+.temporary-qr-share h4 { margin:0 0 8px; font-size:18px; }
+.temporary-qr-share p,.temporary-qr-share small,.temporary-code-warning { font-size:14px; line-height:1.6; color:var(--tool-text-secondary); }
+.temporary-qr-share small { display:block; }
+.temporary-qr-expired { flex:none; width:184px; min-height:184px; display:grid; place-items:center; border:1px dashed var(--line); border-radius:8px; font-size:16px; color:var(--tool-text-secondary); }
+.temporary-pickup-link { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:center; font-size:14px; }
+.temporary-pickup-link > span { grid-column:1/-1; }
+.temporary-pickup-link input { min-width:0; width:100%; padding:12px; border:1px solid var(--line); border-radius:10px; font-size:16px; color:var(--ink); background:var(--paper); }
+.receive-card .temporary-code-entry input { font:700 26px/1.5 ui-monospace,monospace; letter-spacing:.12em; }
+.receive-card > .temporary-code-warning { margin:0 24px 18px; }
+@media(max-width:680px) {
+ .temporary-pickup-card { grid-template-columns:1fr; }
+ .temporary-qr-share { flex-direction:column; align-items:center; padding:16px; }
+ .temporary-pickup-link { grid-template-columns:1fr; }
+}
+
 .temporary-dropzone.is-dragging {
   border-color: #4d8a48;
   background: #effbdf;
@@ -318,7 +340,7 @@
 .temporary-upload-actions button:not(:disabled):active,
 .temporary-download-button:not(:disabled):active { transform: translateY(0) scale(.985); }
 .temporary-action-icon { width: 30px; height: 30px; display: grid; flex: 0 0 30px; place-items: center; border-radius: 9px; background: rgba(183, 250, 69, .14); color: #b7fa45; transition: transform .2s ease, background .2s ease; }
-.temporary-action-icon svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.9; }
+.temporary-action-icon svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.9; }
 .temporary-upload-actions button:not(:disabled):hover .temporary-action-icon { transform: translateX(3px); background: rgba(183, 250, 69, .22); }
 
 .share-result { min-height: 510px; }

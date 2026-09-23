@@ -5,7 +5,8 @@ public class FileShareAccessException extends RuntimeException {
     public enum Reason {
         INVALID,
         EXPIRED,
-        CONSUMED
+        CONSUMED,
+        RATE_LIMITED
     }
 
     private final Reason reason;

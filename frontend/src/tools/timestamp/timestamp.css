@@ -19,7 +19,7 @@
 .ts-live{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:112px;min-height:34px;padding:5px 12px;border:1px solid #719582;border-radius:9px;background:#244d3f;color:#f1faee;font-size:var(--tool-font-secondary);font-weight:700;line-height:1.5;white-space:nowrap;transition:background .18s,border-color .18s,box-shadow .18s}
 .ts-live:hover{background:#315d4d;border-color:#aed492;box-shadow:0 3px 10px #0e2c2426}
 .ts-live i{width:7px;height:7px;border-radius:50%;background:#b8fa57;box-shadow:0 0 0 4px #b8fa571a;animation:ts-pulse 1.8s ease-in-out infinite}
-.ts-live svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.ts-live svg{width:16px;height:16px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 .ts-live:focus-visible{outline-color:#bff36f;outline-offset:3px}
 .ts-toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:9px;border:1px solid #dce4d7;border-radius:14px;background:#f7f9f4}
 .ts-tabs{display:flex;gap:4px}

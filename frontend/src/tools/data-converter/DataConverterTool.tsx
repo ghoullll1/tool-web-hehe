@@ -1,3 +1,4 @@
+import { Icon } from "../../components/Icon"
 import {
   useEffect,
   useId,
@@ -11,6 +12,7 @@ import {
   type KeyboardEvent,
 } from 'react'
 import type { ToolViewProps } from '../registry'
+import { useAppearance } from '../../appearance/AppearanceContext'
 import {
   convertData,
   DataConversionError,
@@ -63,6 +65,9 @@ function initialResult() {
 }
 
 export default function DataConverterTool({ tool }: ToolViewProps) {
+  const { edition } = useAppearance()
+  const [rulesFolded, setRulesFolded] = useState(false)
+  const rulesId = useId()
   const [sourceFormat, setSourceFormat] = useState<SourceFormat>('auto')
   const [targetFormat, setTargetFormat] = useState<DataFormat>('yaml')
   const [source, setSource] = useState(SAMPLE_BY_FORMAT.properties)
@@ -318,7 +323,7 @@ export default function DataConverterTool({ tool }: ToolViewProps) {
           <div className="data-orbit-node is-json"><strong>{'{ }'}</strong><span><b>JSON</b><small>对象语法</small></span></div>
           <div className="data-orbit-node is-yaml"><strong>Y</strong><span><b>YAML</b><small>层级配置</small></span></div>
           <div className="data-orbit-node is-properties"><strong>.P</strong><span><b>Properties</b><small>键值配置</small></span></div>
-          <div className="data-orbit-core"><span>↔</span><strong>统一结构</strong><small>双向转换</small></div>
+          <div className="data-orbit-core"><span><Icon name="swap" size={24} /></span><strong>转换</strong></div>
         </div>
       </section>
 
@@ -345,12 +350,13 @@ export default function DataConverterTool({ tool }: ToolViewProps) {
         </div>
       </section>
 
-      <section className="data-settings-panel" aria-label="转换和格式化设置">
+      <section className={`data-settings-panel${edition === 'modern' && rulesFolded ? ' is-folded' : ''}`} aria-label="转换和格式化设置">
         <header>
           <div><span>FORMAT RULES</span><h3>结构与排版</h3></div>
-          <p>{settingsSummary}</p>
+            <p>{settingsSummary}</p>
+            {edition === 'modern' && <button className="data-settings-collapse" type="button" aria-expanded={!rulesFolded} aria-controls={rulesId} onClick={() => setRulesFolded(value => !value)}>{rulesFolded ? '展开' : '收起'}<Icon name="chevronDown" size={16} /></button>}
         </header>
-        <div className="data-settings-layout">
+        <div id={rulesId} className="data-settings-layout" inert={edition === 'modern' && rulesFolded ? true : undefined}>
           <section className="data-settings-group">
             <header><span>01</span><div><strong>结构规则</strong><small>决定如何解析、合并与整理字段</small></div></header>
             <div className="data-settings-grid is-structure">
@@ -444,14 +450,14 @@ export default function DataConverterTool({ tool }: ToolViewProps) {
       </div>
 
       <div className={`data-converter-notice is-${notice.tone}`} role={notice.tone === 'error' ? 'alert' : 'status'}>
-        <span className="data-notice-mark" aria-hidden="true">{notice.tone === 'success' ? '✓' : notice.tone === 'error' ? '!' : 'i'}</span>
+        <span className="data-notice-mark" aria-hidden="true">{notice.tone === 'success' ? <Icon name="check" /> : notice.tone === 'error' ? <Icon name="alert" /> : <Icon name="info" />}</span>
         <p>{notice.text}</p>
         <strong>浏览器本地处理</strong>
       </div>
 
       {result && (
         <section className="data-result-summary" aria-label="转换统计">
-          <div><span>识别格式</span><strong>{formatLabel(actualSourceFormat ?? result.sourceFormat)} → {formatLabel(targetFormat)}</strong></div>
+          <div><span>识别格式</span><strong>{formatLabel(actualSourceFormat ?? result.sourceFormat)} <Icon name="arrowRight" />{formatLabel(targetFormat)}</strong></div>
           <div><span>配置字段</span><strong>{result.statistics.keys}</strong></div>
           <div><span>结构深度</span><strong>{result.statistics.maxDepth}</strong></div>
           <div><span>数组节点</span><strong>{result.statistics.arrays}</strong></div>
@@ -606,7 +612,7 @@ function SelectSetting({ label, detail, value, onChange, options }: { label: str
                 onClick={() => choose(optionValue)}
                 onKeyDown={(event) => handleOptionKeyDown(event, index)}
               >
-                <span>{optionLabel}</span><i aria-hidden="true">{optionValue === value ? '✓' : ''}</i>
+                <span>{optionLabel}</span><i aria-hidden="true">{optionValue === value ? <Icon name="check" /> : ''}</i>
               </button>
             ))}
           </div>

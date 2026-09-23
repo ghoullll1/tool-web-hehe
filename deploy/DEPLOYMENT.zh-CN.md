@@ -133,8 +133,9 @@ curl --fail http://127.0.0.1:8088/api/v1/tools
 1. 打开 `http://127.0.0.1:8088`，工具目录正常加载。
 2. 刷新任意 `/tools/...` 路由不会返回 404。
 3. 上传一个小型测试文档，确认能够转换为 Markdown。
-4. 创建一个临时文件分享并下载一次，确认第二次下载被拒绝。
-5. 确认公网无法直接访问 MySQL、RustFS S3 API、Worker 和后端容器端口。
+4. 创建一个临时文件分享，使用 8 位取件码或二维码链接领取，并确认第二次下载被拒绝。
+5. 用两个浏览器窗口创建并加入临时会话，确认 WebSocket 消息双向送达、离开后服务端不提供历史消息。
+6. 确认公网无法直接访问 MySQL、RustFS S3 API、Worker 和后端容器端口。
 
 ## 7. 配置 HTTPS 反向代理
 
@@ -146,7 +147,7 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-如果使用 Caddy、Traefik、Cloudflare Tunnel 或负载均衡器，只需把 HTTPS 流量转发到 `127.0.0.1:8088`，并保留 `Host`、`X-Forwarded-For` 和 `X-Forwarded-Proto` 请求头。
+如果使用 Caddy、Traefik、Cloudflare Tunnel 或负载均衡器，把 HTTPS 流量转发到 `127.0.0.1:8088`，保留 `Host`、`X-Forwarded-For` 和 `X-Forwarded-Proto` 请求头，并确保 `/ws/v1/temporary-chat` 支持 WebSocket Upgrade。当前会话注册表位于单个后端进程内；未接入共享路由层之前不要横向扩展后端副本。
 
 ## 8. 主要环境变量
 
@@ -160,8 +161,11 @@ sudo systemctl reload nginx
 | `OBJECT_STORAGE_ACCESS_KEY` / `OBJECT_STORAGE_SECRET_KEY` | 是 | 后端访问对象存储的凭据 |
 | `OBJECT_STORAGE_BUCKET` | 否 | 私有 Bucket，默认 `temp-files` |
 | `DOCUMENT_CONVERSION_WORKER_TOKEN` | 是 | 后端和 Worker 共用的内部 Token |
+| `TEMPORARY_FILE_SHARE_PICKUP_CODE_SECRET` | 是 | 取件码 HMAC 密钥，至少 32 个随机字符；更换后旧取件码会失效 |
 | `TEMPORARY_FILE_SHARE_MAX_FILE_SIZE` | 否 | 单个临时文件上限，默认 30 MB |
 | `TEMPORARY_FILE_SHARE_MAX_STORED_BYTES` | 否 | 临时文件总配额，默认 1 GB |
+| `TEMPORARY_CHAT_MAX_ACTIVE_SESSIONS` | 否 | 单后端进程最大活跃会话数，默认 1000 |
+| `TEMPORARY_CHAT_MAX_MESSAGE_CHARACTERS` | 否 | 单条消息字符上限，默认 4000 |
 | `HTTP_DIAGNOSTICS_ALLOWED_PORTS` | 否 | HTTP 诊断允许的目标端口，默认 `80,443` |
 
 完整默认项见 `.env.example`。不要把真实密码、Token、证书或 `.env` 提交到 Git。
@@ -217,11 +221,21 @@ docker compose --env-file .env -f compose.yml logs --tail=200 mysql backend
 
 ### 临时文件分享失败
 
-确认 RustFS 中已创建 `OBJECT_STORAGE_BUCKET`，后端凭据能够访问该 Bucket，并查看：
+确认 RustFS 中已创建 `OBJECT_STORAGE_BUCKET`，后端凭据能够访问该 Bucket，且 `TEMPORARY_FILE_SHARE_PICKUP_CODE_SECRET` 至少包含 32 个随机字符，并查看：
 
 ```bash
 docker compose --env-file .env -f compose.yml logs --tail=200 rustfs backend
 ```
+
+### 临时会话无法连接
+
+确认浏览器请求 `/ws/v1/temporary-chat` 时返回 WebSocket `101 Switching Protocols`，外层反向代理传递了 `Upgrade` 和 `Connection` 请求头，并查看：
+
+```bash
+docker compose --env-file .env -f compose.yml logs --tail=200 frontend backend
+```
+
+当前会话注册表位于后端内存中。保持一个后端副本；多副本部署需要先实现共享会话路由，普通 HTTP 负载均衡或仅配置粘性会话不能替代该能力。
 
 ### 文档转换不可用
 
@@ -239,6 +253,7 @@ docker compose --env-file .env -f compose.yml exec markitdown-worker \
 - RustFS 控制台保持回环绑定，必要时通过 SSH 隧道访问。
 - 为对象存储使用 Bucket 级服务账号，不长期使用 RustFS 管理员凭据。
 - 禁止提交 `.env`、数据库备份、证书、私钥和日志。
+- 使用独立的随机取件码 HMAC 密钥并安全备份；轮换会立即使尚未领取的旧取件码失效。
 - 定期更新基础镜像；生产环境将 RustFS `latest` 替换为验证过的版本或镜像摘要。
 - 配置 MySQL 与 RustFS 备份，并验证恢复流程。
 - 管理 API 面向互联网前，建议接入 OIDC/SSO 或额外访问控制。

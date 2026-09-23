@@ -6,6 +6,8 @@ import com.toolweb.platform.tool.document.controller.DocumentConversionControlle
 import com.toolweb.platform.tool.document.service.DocumentConversionService;
 import com.toolweb.platform.tool.fileshare.dao.TemporaryFileShareMapper;
 import com.toolweb.platform.tool.fileshare.service.TemporaryFileShareService;
+import com.toolweb.platform.tool.temporarychat.dao.TemporaryChatSessionMapper;
+import com.toolweb.platform.tool.temporarychat.service.TemporaryChatService;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.session.Configuration;
 import org.junit.jupiter.api.Test;
@@ -27,14 +29,18 @@ class BackendPackageArchitectureTest {
         assertThat(DocumentConversionController.class.getPackageName()).endsWith(".document.controller");
         assertThat(ToolDefinitionMapper.class.getPackageName()).endsWith(".catalog.dao");
         assertThat(TemporaryFileShareMapper.class.getPackageName()).endsWith(".fileshare.dao");
+        assertThat(TemporaryChatService.class.getPackageName()).endsWith(".temporarychat.service");
+        assertThat(TemporaryChatSessionMapper.class.getPackageName()).endsWith(".temporarychat.dao");
     }
 
     @Test
     void keepsCustomSqlOutOfMapperAnnotationsAndInMapperResources() {
         assertThat(hasStatementAnnotation(ToolDefinitionMapper.class)).isFalse();
         assertThat(hasStatementAnnotation(TemporaryFileShareMapper.class)).isFalse();
+        assertThat(hasStatementAnnotation(TemporaryChatSessionMapper.class)).isFalse();
         assertThat(new ClassPathResource("mapper/catalog/ToolDefinitionMapper.xml").exists()).isTrue();
         assertThat(new ClassPathResource("mapper/fileshare/TemporaryFileShareMapper.xml").exists()).isTrue();
+        assertThat(new ClassPathResource("mapper/temporarychat/TemporaryChatSessionMapper.xml").exists()).isTrue();
     }
 
     @Test
@@ -42,10 +48,13 @@ class BackendPackageArchitectureTest {
         var configuration = new Configuration();
         parseMapper(configuration, "mapper/catalog/ToolDefinitionMapper.xml");
         parseMapper(configuration, "mapper/fileshare/TemporaryFileShareMapper.xml");
+        parseMapper(configuration, "mapper/temporarychat/TemporaryChatSessionMapper.xml");
 
         assertThat(configuration.hasStatement(ToolDefinitionMapper.class.getName() + ".selectPublished")).isTrue();
         assertThat(configuration.hasStatement(TemporaryFileShareMapper.class.getName() + ".selectForUpdate")).isTrue();
         assertThat(configuration.hasStatement(TemporaryFileShareMapper.class.getName() + ".markDeleted")).isTrue();
+        assertThat(configuration.hasStatement(TemporaryChatSessionMapper.class.getName() + ".reserveParticipant")).isTrue();
+        assertThat(configuration.hasStatement(TemporaryChatSessionMapper.class.getName() + ".closeSession")).isTrue();
     }
 
     private boolean hasStatementAnnotation(Class<?> mapperType) {

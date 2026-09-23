@@ -1,3 +1,4 @@
+import { Icon } from "../../components/Icon"
 import { useEffect, useMemo, useRef, useState, type DragEvent } from 'react'
 import type { ToolViewProps } from '../registry'
 import { convertDocument } from './documentConversionApi'
@@ -205,12 +206,12 @@ export default function DocumentConverterTool({ tool }: ToolViewProps) {
       </aside>}
     </section>
 
-    <footer className={`document-converter-notice is-${notice.tone}`} role={notice.tone === 'error' ? 'alert' : 'status'}><span>{notice.tone === 'error' ? '!' : notice.tone === 'success' ? '✓' : 'i'}</span><p>{notice.text}</p><b>最大 {formatBytes(MAX_DOCUMENT_BYTES)}</b></footer>
+    <footer className={`document-converter-notice is-${notice.tone}`} role={notice.tone === 'error' ? 'alert' : 'status'}><span>{notice.tone === 'error' ? <Icon name="alert" /> : notice.tone === 'success' ? <Icon name="check" /> : <Icon name="info" />}</span><p>{notice.text}</p><b>最大 {formatBytes(MAX_DOCUMENT_BYTES)}</b></footer>
   </div>
 }
 
 function PhaseStep({ index, label, active, complete }: { index: string; label: string; active: boolean; complete: boolean }) {
-  return <div className={`${active ? 'is-active' : ''}${complete ? ' is-complete' : ''}`}><span>{complete ? '✓' : index}</span><strong>{label}</strong></div>
+  return <div className={`${active ? 'is-active' : ''}${complete ? ' is-complete' : ''}`}><span>{complete ? <Icon name="check" /> : index}</span><strong>{label}</strong></div>
 }
 function PipelineVisual({ phase }: { phase: Phase }) {
   return <div className={`document-pipeline-visual is-${phase}`} role="img" aria-label="文档转换为 Markdown 的处理流程">
